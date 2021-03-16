@@ -2,7 +2,7 @@
  * Middleware de validation Joi
  */
 
-const fs = require('fs');
+const {deleteImg} = require('../helpers/imageHelper');
 
 /**
  * Valide ou non les datas dans la requête et enregistre les datas validées dans la requête
@@ -14,15 +14,11 @@ module.exports = function validate(joiSchema, model) {
         const paramValid = joiSchema.validate(defineDataFromReq(req, model));
 
         if(paramValid.error !== undefined) {
-            if(req.file) fs.unlink(fs.realpathSync(req.file.path), (err) => { if (err) throw err; });
+            if(req.file) { deleteImg(req.file.path)}
             return res.status(400).json( paramValid.error );
         }
 
         req.store.valideData = paramValid.value;
-
-        if(req.file) {
-            fs.rename(fs.realpathSync(req.file.path), fs.realpathSync(req.file.path).replace('\\temp', ''), (err) => { if (err) throw err; });
-        }
 
         next();
     }
@@ -38,7 +34,7 @@ function defineDataFromReq(req, model) {
     if(req.file) {
         return {
             ...JSON.parse(req.body[model]),
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            [ req.file.fieldname ] : `/images/${model}/${req.file.filename}`
         }
     }
 

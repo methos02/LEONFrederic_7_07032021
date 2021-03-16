@@ -4,6 +4,8 @@ const Post = require('../models').Post;
 const User = require('../models').User;
 const Like = require('../models').Like;
 const Comment = require('../models').Comment;
+const { moveFromTemp, deleteImg } = require('../helpers/imageHelper');
+const postType = require('../helpers/postType');
 
 /**
  * Retourne toutes les posts du site
@@ -24,16 +26,31 @@ exports.index = async (req, res) => {
  */
 exports.show = (req, res) => {
     Post.findByPk( req.params.id , { include: [User, Comment]})
-        .then(thing => res.status(200).json(thing))
+        .then(post => res.status(200).json(post))
         .catch(error => res.status(404).json({ error }));
 };
+
+/**
+ * Retourne un post précise en fonction de l'id présent dans la requète
+ */
+exports.type = (req, res) => {
+    const type = Object.keys(postType).filter(function(key) { return postType[key]['slug'] === req.params.type; })
+    if(type.length === 0) { return res.status(404).json({ error: 'Type introuvable' }); }
+
+    Post.findAll( { where: {type: postType[type]['id']}, include: [User, Comment]})
+        .then(post => res.status(200).json(post))
+        .catch(error => res.status(404).json({ error }));
+};
+
 
 /**
  * Enregistre un post en bdd
  */
 exports.store = (req, res) => {
-    Post.create( { ...req.store.valideData, UserId: req.body.UserId } )
-        .then((post) => res.status(201).json({ message: 'Post enregistré !', post : post}))
+    if (req.file) { moveFromTemp(req.file.path, 'post') }
+
+    Post.create( req.store.valideData, { fields : defineCreateFields(req.store.valideData.type)} )
+        .then((post) => res.status(201).json({ message: 'Post enregistré !', post}))
         .catch(error => res.status(400).json({ message : 'Erreur de post :' + error }));
 };
 
@@ -41,7 +58,13 @@ exports.store = (req, res) => {
  * Met à jour un post en bdd
  */
 exports.update = (req, res) => {
-    Post.update({ ...req.store.valideData, id: req.params.id }, { where: { id: req.params.id }, fields: ['title', 'content']})
+
+    if (req.file) {
+        if(req.store.Post.image !== null) { deleteImg(req.store.Post.image)}
+        moveFromTemp(req.file.path, 'post')
+    }
+
+    Post.update( req.store.valideData, { where: { id: req.params.id }, fields: defineUpdateFields(req.store.Post.type)})
         .then(() => res.status(200).json({ message: 'Post modifié !'}))
         .catch(error => res.status(400).json({ error }));
 }
@@ -50,6 +73,8 @@ exports.update = (req, res) => {
  * Supprime un post en fonction de l'id présent dans la requête
  */
 exports.delete = (req, res) => {
+    if(req.store.Post.image !== null) { deleteImg(req.store.Post.image)}
+
     Post.destroy({ where: { id: req.params.id } })
         .then(() => res.status(200).json({ message: 'Post supprimé !'}))
         .catch(error => res.status(400).json({ error }));
@@ -85,4 +110,14 @@ function calculLikeDislike(post, like, vote) {
     if(vote === -1) { post.dislike++; }
 
     return { like: post.like, dislike: post.dislike }
+}
+
+function defineCreateFields(type) {
+    const fields = ['UserId', 'type', 'image'];
+    return type === postType.ARTICLE.id ? [...fields, 'title', 'content'] : fields;
+}
+
+function defineUpdateFields(type) {
+    const fields = ['image'];
+    return type === postType.ARTICLE.id ? [...fields, 'title', 'content'] : fields;
 }

@@ -1,10 +1,16 @@
-/**
- * Converti le path temporaire d'une image en path défénitif
- * @param path_image "Path temporaire pointant sur le dossier image/temp"
- * @returns {string} "Path défénitive pointant sur le dossier image"
- */
-function getRelativePath( path_image ) {
-    return path_image.split('localhost:3000/')[1];
+const fs = require('fs');
+const path = require('path')
+
+module.exports = {
+    moveFromTemp: (img, folder = '') => {
+        fs.rename(fs.realpathSync(img), fs.realpathSync(img).replace('\\temp', defineFolder(folder)), (err) => { if (err) throw err; });
+    },
+
+    deleteImg: (img) => {
+        fs.unlink(path.resolve(__dirname, './..' + img), (err) => { if (err) throw err; })
+    }
 }
 
-module.exports = { getRelativePath };
+function defineFolder(folder) {
+    return folder !== '' ? '\\' + folder : '';
+}

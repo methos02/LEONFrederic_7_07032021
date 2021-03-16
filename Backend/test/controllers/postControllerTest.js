@@ -1,7 +1,10 @@
 const chai = require('chai');
 const chaiHttp= require('chai-http');
+const fs = require('fs');
+const path = require('path');
 const app = require('../../app');
 const Post = require('../../models').Post;
+const typePost = require('../../helpers/postType');
 
 const assert = chai.assert;
 chai.use(chaiHttp);
@@ -9,59 +12,136 @@ let postTestId, admin_token, doe_token;
 
 describe('GET posts', () => {
     before((done) => {
-        chai.request(app).post("/api/auth/login").send({email: "leonfrederic@gmx.fr", password: "123123"}).end((err, res) => {
-            admin_token = res.body.token;
-        });
+        chai.request(app).post("/api/auth/login")
+            .send({email: "leonfrederic@gmx.fr", password: "123123"})
+            .end((err, res) => {
+                admin_token = res.body.token;
+            })
+        ;
 
-        chai.request(app).post("/api/auth/login").send({email: "johndoe@gmx.fr", password: "123123"}).end((err, res) => {
-            doe_token = res.body.token;
-            done();
-        });
+        chai.request(app).post("/api/auth/login")
+            .send({email: "johndoe@gmx.fr", password: "123123"})
+            .end((err, res) => {
+                doe_token = res.body.token;
+                done();
+            })
+        ;
 
     });
 
     it('get all posts', (done) => {
-        chai.request(app).get("/api/posts").set('Authorization', 'Bearer ' + admin_token).send({UserId: 1}).end((err, res) => {
-            assert.equal(res.status, 200);
-            assert.typeOf(res.body, 'array');
+        chai.request(app).get("/api/posts")
+            .set('Authorization', 'Bearer ' + admin_token)
+            .send({UserId: 1})
+            .end((err, res) => {
+                assert.equal(res.status, 200);
+                assert.typeOf(res.body, 'array');
 
-            Post.count().then(count => {
-                assert.equal(res.body.length, count);
-                done();
-            }).catch(done);
-        });
+                Post.count().then(count => {
+                    assert.equal(res.body.length, count);
+                    done();
+                }).catch(done);
+            })
+        ;
+    });
+
+    it('get all article', (done) => {
+        chai.request(app).get("/api/posts/articles")
+            .set('Authorization', 'Bearer ' + admin_token)
+            .send({UserId: 1})
+            .end((err, res) => {
+                assert.equal(res.status, 200);
+                assert.typeOf(res.body, 'array');
+
+                Post.count({where: {type: 1}}).then(count => {
+                    assert.equal(res.body.length, count);
+                    done();
+                }).catch(done);
+            })
+        ;
     });
 
     it('get specific post', (done) => {
-        chai.request(app).get("/api/posts/1").set('Authorization', 'Bearer ' + admin_token).send({UserId: 1}).end((err, res) => {
-            assert.equal(res.status, 200);
+        chai.request(app).get("/api/posts/1")
+            .set('Authorization', 'Bearer ' + admin_token)
+            .send({UserId: 1})
+            .end((err, res) => {
+                assert.equal(res.status, 200);
 
-            Post.findByPk(1).then(post => {
-                assert.equal(res.body.title, post.title);
-                done();
-            }).catch(done);
-        });
+                Post.findByPk(1).then(post => {
+                    assert.equal(res.body.title, post.title);
+                    done();
+                }).catch(done);
+            })
+        ;
     });
 
-    describe('UPDATE test', () => {
-        it('create post', (done) => {
+    describe('STORE post test', () => {
+        it('create article post', (done) => {
             const create_post = {
                 UserId: 1,
                 title : 'Nouveau post',
-                content: 'Nouveau contenu'
+                content: 'Nouveau contenu',
+                type: typePost.ARTICLE.id
             };
 
-            chai.request(app).post("/api/posts").set('Authorization', 'Bearer ' + admin_token).send(create_post).end((err, res) => {
-                assert.equal(res.status, 201);
-                assert.equal(res.body.message, 'Post enregistré !');
+            chai.request(app).post("/api/posts")
+                .set('Authorization', 'Bearer ' + admin_token)
+                .send(create_post)
+                .end((err, res) => {
+                    assert.equal(res.status, 201);
+                    assert.equal(res.body.message, 'Post enregistré !');
 
-                Post.findByPk(res.body.post.id).then(post => {
-                    postTestId = post.id;
-                    assert.equal(post.content, create_post.content);
-                    assert.equal(post.title, create_post.title);
-                    done();
-                }).catch(done);
-            });
+                    Post.findByPk(res.body.post.id).then(post => {
+                        postTestId = post.id;
+                        assert.equal(create_post.content, post.content);
+                        assert.equal(create_post.title, post.title);
+                        done();
+                    }).catch(done);
+                })
+            ;
+        });
+
+        it('create image post', (done) => {
+            const post_data = { UserId: 1, type: typePost.IMAGE.id }
+            chai.request(app).post("/api/posts")
+                .set('Authorization', 'Bearer ' + admin_token)
+                .field('post', JSON.stringify(post_data))
+                .attach('image', fs.readFileSync('./test/images/image_test.jpg'), 'image_test.jpg')
+                .end((err, res) => {
+                    assert.equal(res.status, 201);
+                    assert.equal(res.body.message, 'Post enregistré !');
+
+                    Post.findByPk(res.body.post.id).then(post => {
+                        assert.equal(null, post.title);
+                        assert.equal(null, post.content);
+                        assert.equal(post_data.UserId, post.UserId);
+                        // assert.isTrue(fs.existsSync(path.resolve(__dirname, './../..' + post.image)));
+                        done();
+                    }).catch(done);
+                })
+            ;
+        });
+
+        it('create image post to much info', (done) => {
+            const post_data = { UserId: 1, type: typePost.IMAGE.id, title: 'test', content:'contenu test' }
+            chai.request(app).post("/api/posts")
+                .set('Authorization', 'Bearer ' + admin_token)
+                .field('post', JSON.stringify(post_data))
+                .attach('image', fs.readFileSync('./test/images/image_test.jpg'), 'image_test.jpg')
+                .end((err, res) => {
+                    assert.equal(res.status, 201);
+                    assert.equal(res.body.message, 'Post enregistré !');
+
+                    Post.findByPk(res.body.post.id).then(post => {
+                        assert.equal(null, null);
+                        assert.equal(null, null);
+                        assert.equal(post_data.UserId, post.UserId);
+                        // assert.isTrue(fs.existsSync(path.resolve(__dirname, '../' + post.image)));
+                        done();
+                    }).catch(done);
+                })
+            ;
         });
 
         it('update specific post', (done) => {

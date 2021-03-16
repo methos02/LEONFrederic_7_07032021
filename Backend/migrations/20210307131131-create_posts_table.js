@@ -9,15 +9,21 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true
       },
+      type: {
+        type : Sequelize.INTEGER,
+        allowNull: false
+      },
       title: {
         type : Sequelize.STRING(256),
-        allowNull: true,
         defaultValue: null
       },
       content: {
         type : Sequelize.TEXT,
-        required: true,
-        allowNull: false
+        defaultValue: null
+      },
+      image: {
+        type : Sequelize.STRING(256),
+        defaultValue: null
       },
       like: {
         type: Sequelize.INTEGER,

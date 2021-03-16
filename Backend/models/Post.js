@@ -6,15 +6,21 @@ module.exports = (Sequelize, DataTypes) => {
             autoIncrement: true,
             primaryKey: true
         },
+        type: {
+            type : DataTypes.INTEGER,
+            allowNull: false
+        },
         title: {
             type : DataTypes.STRING(256),
-            allowNull: true,
-            default: null
+            allowNull: true
         },
         content: {
             type : DataTypes.TEXT,
-            required: true,
-            allowNull: false
+            allowNull: true
+        },
+        image: {
+            type : DataTypes.STRING(256),
+            allowNull: true,
         },
         like: {
             type: DataTypes.INTEGER,
@@ -23,6 +29,10 @@ module.exports = (Sequelize, DataTypes) => {
         dislike: {
             type: DataTypes.INTEGER,
             default: 0
+        },
+        UserId: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         }
     }, {})
 

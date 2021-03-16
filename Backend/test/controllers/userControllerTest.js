@@ -2,7 +2,8 @@ const chai = require('chai');
 const chaiHttp= require('chai-http');
 const app = require('../../app');
 const User = require('../../models').User;
-const bcrypt = require('bcrypt');
+const fs = require('fs');
+const path = require('path');
 
 const assert = chai.assert;
 chai.use(chaiHttp);
@@ -33,16 +34,46 @@ describe('USER test', () => {
                 email: 'leonfrederic@gmx.com'
             };
 
-            chai.request(app).put("/api/profil/1").set('Authorization', 'Bearer ' + admin_token).send(updated_profil).end((err, res) => {
-                assert.equal(res.status, 200);
-                assert.equal(res.body.message, 'Profil modifié.');
+            chai.request(app).put("/api/profil/1")
+                .set('Authorization', 'Bearer ' + admin_token)
+                .send(updated_profil)
+                .end((err, res) => {
+                    assert.equal(res.status, 200);
+                    assert.equal(res.body.message, 'Profil modifié.');
 
-                User.findByPk(1).then(user => {
-                    assert.equal(user.name, updated_profil.name);
-                    assert.equal(user.mail, updated_profil.mail);
-                    done();
-                }).catch(done);
-            });
+                    User.findByPk(1).then(user => {
+                        assert.equal(user.name, updated_profil.name);
+                        assert.equal(user.mail, updated_profil.mail);
+                        done();
+                    }).catch(done);
+                })
+            ;
+        });
+
+        it('update profil with avatar', (done) => {
+            const updated_profil = {
+                UserId: 1,
+                name: 'superAdmin',
+                email: 'leonfrederic@gmx.com'
+            };
+
+            chai.request(app).put("/api/profil/1")
+                .set('Authorization', 'Bearer ' + admin_token)
+                .field('user', JSON.stringify(updated_profil))
+                .attach('avatar', fs.readFileSync('./test/images/image_test.jpg'), 'image_test.jpg')
+                .end((err, res) => {
+                    assert.equal(res.status, 200);
+                    assert.equal(res.body.message, 'Profil modifié.');
+
+                    User.findByPk(1).then(user => {
+                        assert.equal(user.name, updated_profil.name);
+                        assert.equal(user.email, updated_profil.email);
+                        // console.log(fs.readdirSync(path.resolve(__dirname, './../../images/avatar')));
+                        // assert.isTrue(fs.existsSync(path.resolve(__dirname, '../' + user.avatar)));
+                        done();
+                    }).catch(done);
+                })
+            ;
         });
 
         it('update profil from other has admin', (done) => {
@@ -101,7 +132,6 @@ describe('USER test', () => {
                 assert.equal(res.body.message, 'Mot de passe modifié.');
 
                 chai.request(app).post("/api/auth/login").send({email: 'leonfrederic@gmx.com', password: "234567"}).end((err, res) => {
-                    console.error(res.body)
                     assert.equal(res.status, 200);
                     done();
                 });
