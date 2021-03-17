@@ -26,6 +26,25 @@ describe('USER test', () => {
 
     });
 
+    describe('SHOW PROFIL', () => {
+        it('show userLog profil', (done) => {
+            chai.request(app).get("/api/profil")
+                .set('Authorization', 'Bearer ' + admin_token)
+                .send({ UserId : 1 })
+                .end((err, res) => {
+                    assert.equal(res.status, 200);
+                    assert.isUndefined(res.body.password);
+
+                    User.findByPk(1).then(user => {
+                        assert.equal(user.name, res.body.name);
+                        assert.equal(user.email, res.body.email);
+                        done();
+                    }).catch(done);
+                })
+            ;
+        });
+    })
+
     describe('UPDATE Profil test', () => {
         it('update profil', (done) => {
             const updated_profil = {
@@ -43,7 +62,7 @@ describe('USER test', () => {
 
                     User.findByPk(1).then(user => {
                         assert.equal(user.name, updated_profil.name);
-                        assert.equal(user.mail, updated_profil.mail);
+                        assert.equal(user.email, updated_profil.email);
                         done();
                     }).catch(done);
                 })

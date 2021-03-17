@@ -19,9 +19,31 @@ module.exports = {
         defaultValue: 0
       },
       UserId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id'
+        }
       },
       PostId: {
+        type: Sequelize.INTEGER
+      },
+      AnswerId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'comments',
+          key: 'id'
+        }
+      },
+      ParentId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'comments',
+          key: 'id'
+        }
+      },
+      RefId: {
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -32,7 +54,7 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('now'),
       }
-    });
+    }).then(() => queryInterface.addIndex('comments', ['PostId', 'RefId', 'id'], { name : 'ind_comment'}))
   },
 
   down: async (queryInterface) => {

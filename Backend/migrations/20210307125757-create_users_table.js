@@ -11,11 +11,13 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING(256),
+        unique: true,
         required: true,
         allowNull: false
       },
       name: {
         type: Sequelize.STRING(256),
+        unique: true,
         required: true,
         allowNull: false
       },

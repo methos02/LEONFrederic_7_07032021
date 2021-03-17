@@ -2,6 +2,10 @@ const User = require('../models').User;
 const bcrypt = require('bcrypt');
 const { moveFromTemp, deleteImg } = require('../helpers/imageHelper');
 
+exports.show = (req, res) => {
+    return res.status(200).json(req.store.userLog);
+}
+
 /**
  * Met à jour le profil d'utilisateur action reservé à l'utilisateur
  */

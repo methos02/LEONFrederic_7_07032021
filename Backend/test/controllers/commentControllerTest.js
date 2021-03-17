@@ -39,6 +39,25 @@ describe('GET Comments', () => {
         });
     });
 
+    it('create comment unexisting post', (done) => {
+        const create_comment = {
+            PostId: 255,
+            UserId: 1,
+            content: 'Nouveau contenu'
+        };
+
+        chai.request(app).post("/api/comments")
+            .set('Authorization', 'Bearer ' + admin_token)
+            .send(create_comment)
+            .end((err, res) => {
+                assert.equal(res.status, 404);
+                assert.equal(res.body.error, 'Post introuvable!');
+                done()
+            })
+        ;
+    });
+
+
     describe('UPDATE test', () => {
         it('update specific comment', (done) => {
             const updated_comment = {

@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
  * affiche la liste de tout les utilisateurs, uniquement pour l'admin
  */
 exports.users = (req, res) => {
-    User.findAll()
+    User.findAll({ attributes : ['id', 'name', 'email', 'avatar', 'avatarPath']})
         .then(users => res.status(200).json(users))
         .catch(error => res.status(400).json({ error }));
 };

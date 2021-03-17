@@ -1,7 +1,8 @@
 // const imageH = require('../helpers/imageHelper');
 // const fs = require('fs');
 const Post = require('../models').Post;
-const User = require('../models').User;
+const userJoin = require('../helpers/join/userJoin');
+const commentJoin = require('../helpers/join/commentJoin');
 const Like = require('../models').Like;
 const Comment = require('../models').Comment;
 const { moveFromTemp, deleteImg } = require('../helpers/imageHelper');
@@ -11,23 +12,9 @@ const postType = require('../helpers/postType');
  * Retourne toutes les posts du site
  */
 exports.index = async (req, res) => {
-    const userJoin = {
-        model: User,
-        attributes: ['id', 'name', 'avatar'],
-    }
-
-    Post.findAll({ include: [userJoin, Comment]})
+    Post.findAll({ include: [userJoin, commentJoin]})
         .then(posts => res.status(200).json(posts))
         .catch(error => res.status(400).json({ error }));
-};
-
-/**
- * Retourne un post précise en fonction de l'id présent dans la requète
- */
-exports.show = (req, res) => {
-    Post.findByPk( req.params.id , { include: [User, Comment]})
-        .then(post => res.status(200).json(post))
-        .catch(error => res.status(404).json({ error }));
 };
 
 /**
@@ -37,11 +24,19 @@ exports.type = (req, res) => {
     const type = Object.keys(postType).filter(function(key) { return postType[key]['slug'] === req.params.type; })
     if(type.length === 0) { return res.status(404).json({ error: 'Type introuvable' }); }
 
-    Post.findAll( { where: {type: postType[type]['id']}, include: [User, Comment]})
+    Post.findAll( { where: {type: postType[type]['id']}, include: [userJoin, commentJoin]})
         .then(post => res.status(200).json(post))
         .catch(error => res.status(404).json({ error }));
 };
 
+/**
+ * Retourne un post précise en fonction de l'id présent dans la requète
+ */
+exports.show = (req, res) => {
+    Post.findByPk( req.params.id , { include: [userJoin, commentJoin]})
+        .then(post => res.status(200).json(post))
+        .catch(error => res.status(404).json({ error }));
+};
 
 /**
  * Enregistre un post en bdd

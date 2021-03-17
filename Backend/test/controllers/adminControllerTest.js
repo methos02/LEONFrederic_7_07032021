@@ -25,6 +25,7 @@ describe('ADMIN test', () => {
             chai.request(app).get("/api/admin/users").set('Authorization', 'Bearer ' + admin_token).send({UserId: 1}).end((err, res) => {
                 assert.equal(res.status, 200);
                 assert.typeOf(res.body, 'array');
+                assert.isUndefined(res.body[0].password);
 
                 User.count().then(count => {
                     assert.equal(res.body.length, count);

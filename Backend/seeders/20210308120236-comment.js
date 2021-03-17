@@ -10,6 +10,7 @@ module.exports = {
             content: 'Second commentaire',
             UserId: 2,
             PostId: 1,
+            AnswerId: 1
         }], {});
     },
 

@@ -34,7 +34,7 @@ function defineDataFromReq(req, model) {
     if(req.file) {
         return {
             ...JSON.parse(req.body[model]),
-            [ req.file.fieldname ] : `/images/${model}/${req.file.filename}`
+            [ req.file.fieldname ] : req.file.filename
         }
     }
 

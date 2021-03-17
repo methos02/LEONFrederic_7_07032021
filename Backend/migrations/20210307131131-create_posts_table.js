@@ -36,7 +36,11 @@ module.exports = {
         defaultValue: 0
       },
       UserId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id'
+        }
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -46,7 +50,7 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('now'),
       }
-    })
+    }).then(() => queryInterface.addIndex('posts', ['type'], { name : 'ind_type'}))
   },
 
   down: async (queryInterface) => {

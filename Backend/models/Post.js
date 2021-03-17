@@ -1,3 +1,5 @@
+const { postPath } = require('../helpers/imageHelper')
+
 module.exports = (Sequelize, DataTypes) => {
     const Post = Sequelize.define('Post', {
         id: {
@@ -22,6 +24,12 @@ module.exports = (Sequelize, DataTypes) => {
             type : DataTypes.STRING(256),
             allowNull: true,
         },
+        imagePath: {
+            type: DataTypes.VIRTUAL,
+            get() {
+                return this.image !== null ? postPath + this.image : null;
+            },
+        },
         like: {
             type: DataTypes.INTEGER,
             default: 0
@@ -34,7 +42,7 @@ module.exports = (Sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false
         }
-    }, {})
+    });
 
     Post.associate = function (models) {
         Post.belongsTo(models.User);

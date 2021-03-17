@@ -10,6 +10,7 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/multer_config');
 const userJoi = require('../schema/UserJoi');
 
+router.get('/', auth, userCtrl.show);
 router.put('/:id', multer.single('avatar'),validateData(userJoi.profil_update, 'user'), auth, userCtrl.update);
 router.put('/:id/password', validateData(userJoi.password_update), auth, userCtrl.password);
 router.delete('/:id', auth, userCtrl.delete);

@@ -1,7 +1,6 @@
 const chai = require('chai');
 const chaiHttp= require('chai-http');
 const fs = require('fs');
-const path = require('path');
 const app = require('../../app');
 const Post = require('../../models').Post;
 const typePost = require('../../helpers/postType');
@@ -36,6 +35,8 @@ describe('GET posts', () => {
             .end((err, res) => {
                 assert.equal(res.status, 200);
                 assert.typeOf(res.body, 'array');
+                assert.notEqual(res.body[0].User, undefined);
+                assert.isUndefined(res.body[0].password);
 
                 Post.count().then(count => {
                     assert.equal(res.body.length, count);
@@ -52,6 +53,8 @@ describe('GET posts', () => {
             .end((err, res) => {
                 assert.equal(res.status, 200);
                 assert.typeOf(res.body, 'array');
+                assert.notEqual(res.body[0].User, undefined);
+                assert.isUndefined(res.body[0].password);
 
                 Post.count({where: {type: 1}}).then(count => {
                     assert.equal(res.body.length, count);
@@ -67,6 +70,8 @@ describe('GET posts', () => {
             .send({UserId: 1})
             .end((err, res) => {
                 assert.equal(res.status, 200);
+                assert.notEqual(res.body.User, undefined);
+                assert.isUndefined(res.body.User.password);
 
                 Post.findByPk(1).then(post => {
                     assert.equal(res.body.title, post.title);

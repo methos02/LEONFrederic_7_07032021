@@ -15,9 +15,9 @@ const postJoi = require('../schema/PostJoi');
 
 router.get('/', auth, postCtrl.index);
 router.get('/:type([a-z]+)', auth, postCtrl.type);
-router.post('/', multer.single('image'), validateData(postJoi, 'post'), auth, postCtrl.store);
+router.post('/', multer.single('image'), validateData(postJoi.create, 'post'), auth, postCtrl.store);
 router.get('/:id([0-9]+)', auth, postCtrl.show);
-router.put('/:id', multer.single('image'), validateData(postJoi,'post'), auth, isAllowed(Post), postCtrl.update);
+router.put('/:id', multer.single('image'), validateData(postJoi.update,'post'), auth, isAllowed(Post), postCtrl.update);
 router.delete('/:id', auth, isAllowed(Post), postCtrl.delete);
 router.post('/:id/like', auth, postCtrl.like);
 
