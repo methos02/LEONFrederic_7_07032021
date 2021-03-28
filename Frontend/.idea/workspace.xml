@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d83d9e75-49ad-4bbd-b93e-f82d09844f85" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../Backend/helpers/dateHelper.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Backend/schema/BanJoi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Backend/schema/LikeJoi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.browserslistrc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.eslintrc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/babel.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/favicon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/App.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/logo.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/plugins/vuetify.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/service/api.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/sequelizeError.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/About.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/Home.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/Login.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/Post.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/profil.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/controllers/adminController.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/controllers/adminController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/controllers/authController.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/controllers/authController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/controllers/postController.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/controllers/postController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/middleware/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/middleware/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/migrations/20210307125757-create_users_table.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/migrations/20210307125757-create_users_table.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/models/Post.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/models/Post.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/models/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/models/User.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/routes/adminRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/routes/adminRoutes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/routes/authRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/routes/authRoutes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/routes/postRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/routes/postRoutes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/schema/AuthJoi.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/schema/AuthJoi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/schema/PostJoi.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/schema/PostJoi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/seeders/20210307165625-post.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/seeders/20210307165625-post.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/test/controllers/postControllerTest.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/test/controllers/postControllerTest.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/test/tests.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/test/tests.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1ptHJgvV1q3Gzwo2T9tvmeAgU0c" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../Voyagez-vous" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.standard" value="" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Sites\OpenClassRoom\P07_LEON_Frédéric\LEONFrederic_7_07032021\Frontend\src\views" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d83d9e75-49ad-4bbd-b93e-f82d09844f85" name="Default Changelist" comment="" />
+      <created>1615995400265</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1615995400265</updated>
+      <workItem from="1615995404603" duration="3322000" />
+      <workItem from="1616405673909" duration="42012000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
