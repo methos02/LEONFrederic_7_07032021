@@ -28,15 +28,16 @@ module.exports = function validate(joiSchema, model) {
  * Récupère les datas de la requête en fonction de la présence ou nom d'un file
  * @param req "nom du model dans la requête"
  * @param model "nom du model dans la requête"
- * @returns datas
  */
 function defineDataFromReq(req, model) {
     if(req.file) {
         return {
-            ...JSON.parse(req.body[model]),
+            ...(typeof req.body[model] === 'object' ? req.body[model] : JSON.parse(req.body[model])),
             [ req.file.fieldname ] : req.file.filename
         }
     }
+
+    if(req.body[model] !== undefined) {return { ...req.body[model] }}
 
     return { ...req.body }
 }

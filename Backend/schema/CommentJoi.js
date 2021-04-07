@@ -5,6 +5,7 @@ const joi = require('joi');
 const base = {
     UserId: joi.number().required(),
     content: joi.string().min(3).required(),
+    ParentId: joi.number()
 };
 
 module.exports =  {

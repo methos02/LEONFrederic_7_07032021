@@ -1,24 +1,67 @@
 <template>
   <v-container>
-    <v-card v-for="post in posts" :key="post.id" class="mb-2 ">
-      <router-link :to="{ name: 'Post', params: { id : post.id } }">
-        <img v-if="post.imagePath" :src="post.imagePath" alt="illustration du post" />
-        <v-card-title v-if="post.title">{{ post.title }}</v-card-title>
-        <v-card-text v-if="post.content">{{ post.content }}</v-card-text>
-      </router-link>
-    </v-card>
+    <div v-for="post in posts" :key="post.id">
+      <v-card class="pa-5 mb-2 post">
+        <div class="text-center">
+          <img v-if="post.imagePath" :src="post.imagePath" alt="illustration du post" />
+        </div>
+        <router-link :to="{ name: 'Post', params: { id : post.id } }">
+          <v-card-title v-if="post.title">{{ post.title }}</v-card-title>
+        </router-link>
+        <v-card-text v-if="post.content">{{ post.content | abbreviate }}</v-card-text>
+        <v-card-actions>
+          <v-btn v-if="!post.showComment" @click="toggleComments(post.id)"> Afficher les commentaires </v-btn>
+          <v-btn v-else @click="toggleComments(post.id)"> Cacher les commentaires </v-btn>
+        </v-card-actions>
+        <likes :post="post"></likes>
+      </v-card>
+      <div v-show="post.showComment">
+        <comments :post_id="post.id"></comments>
+      </div>
+    </div>
   </v-container>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import comments from '@/components/Comments'
+import likes from "@/components/Likes";
+
 export default {
   name: 'Home',
+  components: { likes, comments },
   mounted() {
-      this.$store.dispatch('loadPosts');
+    this.$store.dispatch('posts/loadPosts');
   },
   computed: {
-    ...mapState(['posts'])
+    ...mapState({
+      current_user: 'current_user',
+      posts: state => state.posts.posts,
+    })
+  },
+  filters: {
+    abbreviate(text) {
+      if(text){
+        text = text.slice(0, 500);
+
+        while(text.slice(-1) !== ' ') {
+          text = text.slice(0, -1);
+        }
+
+        return text + '...';
+      }
+    }
+  },
+  methods: {
+    toggleComments(post_id) {
+      this.$store.dispatch('posts/toggleComments', post_id);
+    },
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.post {
+  img { width: 60% }
+}
+</style>

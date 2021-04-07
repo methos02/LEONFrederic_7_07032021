@@ -1,6 +1,6 @@
 const User = require('../models').User;
 const bcrypt = require('bcrypt');
-const { moveFromTemp, deleteImg } = require('../helpers/imageHelper');
+const { moveFromTemp, deleteImg, avatarPath } = require('../helpers/imageHelper');
 
 exports.show = (req, res) => {
     return res.status(200).json(req.store.userLog);
@@ -20,12 +20,12 @@ exports.update = async (req, res) => {
     }
 
     if (req.file) {
-        if(req.store.userLog.avatar !== null) { deleteImg(req.store.userLog.avatar)}
+        if(req.store.userLog.avatar !== null) { deleteImg(avatarPath + req.store.userLog.avatar)}
         moveFromTemp(req.file.path, 'avatar')
     }
 
     User.update({ ...req.store.valideData }, { where: { id: req.params.id }})
-        .then(() => res.status(200).json({ message: 'Profil modifié.'}))
+        .then(() => res.status(200).json({ message: 'Profil modifié.', data : {...req.store.valideData, avatar: avatarPath + req.store.valideData.avatar}}))
         .catch(error => res.status(400).json({ error }));
 }
 
@@ -34,7 +34,12 @@ exports.update = async (req, res) => {
  */
 exports.password = async (req, res) => {
     if(req.store.userLog.id !== parseInt(req.params.id)) {
-        return res.status(404).json({error: 'Utilisateur introuvable.'});
+        return res.status(404).json({error: 'Utilisateur incompatible.'});
+    }
+
+    const valid = await bcrypt.compare(req.body.old, req.store.userLog.password).catch(error => res.status(500).json({ error }));
+    if (!valid) {
+        return res.status(401).json({ error: 'Ancien mot de passe invalide.' });
     }
 
     const hash = await bcrypt.hash(req.body.password, 10).catch(error => res.status(500).json({ error }));

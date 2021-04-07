@@ -1,70 +1,118 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Api from '@/service/api';
+import adminModule from  './adminStore';
+import commentsModule from  './commentsStore';
+import postsModule from  './postsStore';
+import snackbarModule from './snackbarStore';
 
 Vue.use(Vuex);
 Vue.config.devtools = true
 
 export default new Vuex.Store({
+  modules: {
+    comments: commentsModule,
+    posts: postsModule,
+    snackbar: snackbarModule,
+    admin: adminModule
+  },
   state: {
     current_user: {},
-    posts: {}
+    users: []
   },
   mutations: {
+    SET_USERS(state, users) {
+      state.users = users;
+    },
+    BAN_USER(state, data) {
+      state.users.forEach(user => {
+        if(user.id === data.user_id) {
+          user.banUntil = data.date_ban;
+          user.nbBan = user.nbBan++;
+        }
+      })
+    },
     SET_CURRENT_USER(state, user) {
       state.current_user = user;
+    },
+    UPDATE_CURRENT_USER_PROFIL(state, user) {
+      console.log(user);
+      state.current_user.name = user.name;
+      state.current_user.email = user.email;
+
+      if(user.avatar !== undefined) {
+        state.current_user.avatarPath = user.avatar;
+      }
+    },
+    SET_CURRENT_USER_LIKE(state, data) {
+      if(data.like === 0) {
+        return state.current_user.likes = state.current_user.likes.filter(like => like.PostId !== data.post_id);
+      }
+
+      if(state.current_user.likes.find(like => like.PostId === data.post_id) === undefined) {
+        return state.current_user.likes.push({PostId : data.post_id, like : data.like});
+      }
+
+      state.current_user.likes.forEach(like => {
+        if(like.PostId === data.post_id) {
+          like.like = data.like;
+        }
+      });
     },
     DELETE_CURRENT_USER(state) {
       state.current_user = {}
     },
-    SET_POSTS(state, posts) {
-      state.posts = posts;
-    },
-    SET_POST(state, post) {
-      state.posts.push(post);
-    },
-    SET_POST_LIKE(state, data) {
-      state.posts.forEach(post => {
-        if(post.id === data.id) {
-          post.like = data.likes.like;
-          post.dislike = data.likes.dislike;
-        }
-      });
-    }
   },
   getters: {
     getCurrentUser: state => { return state.current_user}
   },
   actions: {
-    async userLogin({ commit }, loginData) {
+    async loadUsers({ commit }) {
+      const res = await Api().get('/admin/users').catch(err => err.response);
+      if(res.status === 200) {
+        commit('SET_USERS', res.data);
+      }
+    },
+    async banUser({ commit }, user_id) {
+      const res = await Api().put('/admin/users/' + user_id + '/ban', {UserId: user_id, message: 'utilisateur banni.'}).catch(err => err.response);
+      if(res.status === 200) {
+        commit('BAN_USER', {user_id: user_id, date_ban : res.data.date_ban})
+      }
+    },
+    async userLogin({commit}, loginData) {
       const res = await Api().post('/auth/login', loginData).catch((err) => err.response);
 
-      if(res !== undefined) {
+      if(res.status === 200) {
         commit('SET_CURRENT_USER', res.data.user);
-        window.localStorage.current_user = res.data.user;
+        localStorage.setItem('token', res.data.user.token);
       }
 
       return res;
     },
+    async updateProfil({commit, state}, formData) {
+      const res = await Api().put('/profil/' + state.current_user.id , formData).catch(err => err.response);
+
+      if(res.status === 200) {
+        commit('UPDATE_CURRENT_USER_PROFIL', res.data.data);
+      }
+
+      return res;
+    },
+    async updatePassword({state}, passData) {
+      return await Api().put('/profil/' + state.current_user.id + '/password', passData).catch(err => err.response);
+    },
     logout({ commit }) {
       commit('DELETE_CURRENT_USER');
-      delete window.localStorage.current_user;
+      localStorage.removeItem('token');
     },
-    async loadPosts({ commit }) {
-      const res = await Api().get('/posts', { data: { UserId: this.state.current_user.id } });
-      commit('SET_POSTS', res.data);
-    },
-    async loadPost({ commit }, id) {
-      if(!this.state.posts.find(post => post.id === id)) {
-        const res = await Api().get('/posts/' + id );
-        commit('SET_POST', res.data);
+    async getCurrentUser({ commit }) {
+      const res = await Api().get('/auth/current_user').catch(() => false);
+
+      if(res.status === 200) {
+        commit('SET_CURRENT_USER', res.data);
       }
-    },
-    async likePost({ commit }, data) {
-      const res = await Api().post('/posts/' + data.id + '/like', { like : data.like});
-      commit('SET_POST_LIKE', {id: data.id, likes: res.data.likes})
+
+      return res;
     }
   },
-  modules: {
-  }
 })

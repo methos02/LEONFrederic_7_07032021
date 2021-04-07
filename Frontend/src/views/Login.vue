@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import dispachError from '/src/utils/sequelizeError';
+import dispachError from '/src/utils/sequelizeError';
 
 export default {
   data () {
@@ -29,6 +29,7 @@ export default {
 
       if (resp.status === 400) { return this.errors = dispachError(resp.data);}
       if (resp.status === 401) { return this.generalError = resp.data.error; }
+
       await this.$router.push('/');
     }
   }

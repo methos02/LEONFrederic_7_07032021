@@ -25,7 +25,6 @@ describe('GET posts', () => {
                 done();
             })
         ;
-
     });
 
     it('get all posts', (done) => {

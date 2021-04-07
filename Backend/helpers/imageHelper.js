@@ -10,6 +10,7 @@ module.exports = {
     },
     avatarPath: '/images/avatar/',
     postPath: '/images/post/',
+    defaultAvatar: 'default_avatar.jpg'
 }
 
 function defineFolder(folder) {

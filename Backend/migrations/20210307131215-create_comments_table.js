@@ -30,6 +30,7 @@ module.exports = {
       },
       AnswerId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         references: {
           model: 'comments',
           key: 'id'
@@ -40,7 +41,7 @@ module.exports = {
         allowNull: true,
         references: {
           model: 'comments',
-          key: 'id'
+          key: 'id',
         }
       },
       RefId: {

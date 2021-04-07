@@ -16,11 +16,13 @@ describe('Tests', () => {
 })
 
 function resetDir(dir) {
+    const keepFiles = ['.gitignore', 'post_3.webp', 'default_avatar.jpg'];
+
     fs.readdir(dir, (err, files) => {
         if (err) throw err;
 
         for (const file of files) {
-            if(file.indexOf('gitignore') === -1) {
+            if(keepFiles.indexOf(file) === -1 ) {
                 fs.unlink(path.join(dir, file), err => { if (err) throw err; });
             }
         }

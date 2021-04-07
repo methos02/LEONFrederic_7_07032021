@@ -46,6 +46,14 @@ module.exports = {
       banUntil: {
         type: Sequelize.DATE,
         allowNull: true,
+      },
+      nbBan: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
+      messageBan: {
+        type: Sequelize.TEXT,
+        allowNull: true,
       }
     })
   },

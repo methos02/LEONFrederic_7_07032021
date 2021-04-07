@@ -27,7 +27,7 @@ module.exports = (Sequelize, DataTypes) => {
         imagePath: {
             type: DataTypes.VIRTUAL,
             get() {
-                return this.image !== null ? postPath + this.image : null;
+                return this.image !== null ? process.env.BASE_URL + postPath + this.image : null;
             },
         },
         like: {

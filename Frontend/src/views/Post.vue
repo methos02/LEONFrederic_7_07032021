@@ -1,37 +1,34 @@
 <template>
-  <v-container>
+  <v-container v-if="post">
     <h1 v-if="post.title">{{ post.title }}</h1>
     <div v-html="post.content" v-if="post.content"></div>
     <img v-if="post.imagePath" :src="post.imagePath" alt="illustration du post" />
-    <div class="d-flex justify-end">
-      <v-btn id="div-like" @click="like">
-        <v-icon color="blue darken-2" >
-          mdi-thumb-up
-        </v-icon>
-        <span> {{ post.like }}</span>
-      </v-btn>
-      <v-btn id="div-dislike" @click="dislike">
-        <v-icon color="red darken-2" >
-          mdi-thumb-down
-        </v-icon>
-        <span> {{ post.dislike }}</span>
-      </v-btn>
-    </div>
+    <likes :post="post"></likes>
+    <comments :comments="post.commentsSort" :post_id="post.id"></comments>
   </v-container>
 </template>
 
 <script>
+import { mapState } from "vuex";
+import comments from "@/components/Comments";
+import likes from "@/components/Likes";
+
 export default {
   name: 'Post',
+  components: { comments, likes },
   mounted() {
-      this.$store.dispatch('loadPost', this.$route.params.id);
-  },
-  methods: {
-    like() { this.$store.dispatch('likePost', {id: this.$route.params.id, like : 1}); },
-    dislike() { this.$store.dispatch('likePost', {id: this.$route.params.id, like : -1}); }
+    if(this.posts.find(post => post.id === parseInt(this.$route.params.id)) === undefined) {
+      this.$store.dispatch('posts/loadPost', parseInt(this.$route.params.id));
+    }
   },
   computed: {
-    post() { return this.$store.state.posts.find(post => post.id === this.$route.params.id); }
+    ...mapState({
+      current_user: 'current_user',
+      posts: state => state.posts.posts,
+    }),
+    post() {
+      return this.posts.find(post => post.id === parseInt(this.$route.params.id) )
+    },
   }
 }
 </script>

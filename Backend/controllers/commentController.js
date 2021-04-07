@@ -2,10 +2,19 @@ const Comment = require('../models').Comment;
 const Post = require('../models').Post;
 
 /**
+ * récupère la liste de tout les commentaires en bdd - admin
+ */
+exports.index = async (req, res) => {
+    Comment.findAll()
+        .then(comments => res.status(200).json(comments))
+        .catch(error => res.status(500).json({ error }));
+};
+
+/**
  * Enregistre un commentaire en bdd
  */
 exports.store = async (req, res) => {
-    const post = await Post.findByPk( req.store.valideData.PostId).catch(error => res.status(500).json({ error }));
+    const post = await Post.findByPk( req.store.valideData.PostId ).catch(error => res.status(500).json({ error }));
     if(post === null) { return res.status(404).json({ error: 'Post introuvable!' }); }
 
     Comment.create( req.store.valideData )
@@ -27,6 +36,6 @@ exports.update = (req, res) => {
  */
 exports.delete = (req, res) => {
     Comment.destroy({ where: { id: req.params.id } })
-         .then(() => res.status(200).json({ message: 'Commentaire supprimé.'}))
-         .catch(error => res.status(400).json({ error }));
+        .then(() => res.status(200).json({ message: 'Commentaire supprimé.'}))
+        .catch(error => res.status(400).json({ error }));
 }

@@ -1,10 +1,7 @@
-// const imageH = require('../helpers/imageHelper');
-// const fs = require('fs');
 const Post = require('../models').Post;
 const userJoin = require('../helpers/join/userJoin');
 const commentJoin = require('../helpers/join/commentJoin');
 const Like = require('../models').Like;
-const Comment = require('../models').Comment;
 const { moveFromTemp, deleteImg } = require('../helpers/imageHelper');
 const postType = require('../helpers/postType');
 
@@ -12,9 +9,11 @@ const postType = require('../helpers/postType');
  * Retourne toutes les posts du site
  */
 exports.index = async (req, res) => {
-    Post.findAll({ include: [userJoin, commentJoin]})
+    Post.findAll({ include: [userJoin, commentJoin], order: [['id', 'DESC']]})
         .then(posts => res.status(200).json(posts))
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => {
+            return res.status(400).json({error})
+        });
 };
 
 /**
@@ -44,7 +43,7 @@ exports.show = (req, res) => {
 exports.store = (req, res) => {
     if (req.file) { moveFromTemp(req.file.path, 'post') }
 
-    Post.create( req.store.valideData, { fields : defineCreateFields(req.store.valideData.type)} )
+    Post.create( {...req.store.valideData, UserId: req.store.userLog.id }, { fields : defineCreateFields(req.store.valideData.type)} )
         .then((post) => res.status(201).json({ message: 'Post enregistré !', post}))
         .catch(error => res.status(400).json({ message : 'Erreur de post :' + error }));
 };
@@ -53,7 +52,6 @@ exports.store = (req, res) => {
  * Met à jour un post en bdd
  */
 exports.update = (req, res) => {
-
     if (req.file) {
         if(req.store.Post.image !== null) { deleteImg(req.store.Post.image)}
         moveFromTemp(req.file.path, 'post')
@@ -82,19 +80,21 @@ exports.like = async (req, res) => {
     const post = await Post.findByPk(req.params.id).catch(error => res.status(500).json({ error }));
     if(post === null) { return res.status(404).json({ error: 'Post introuvable' }); }
 
-    const like = await Like.findOne({ where: { UserId : req.body.UserId, PostId: req.params.id}}).catch(error => res.status(500).json({ error }));
+    const like = await Like.findOne({ where: { UserId : req.store.userLog.id, PostId: req.params.id}}).catch(error => res.status(500).json({ error }));
+    const likes = calculLikeDislike(post, like, req.store.valideData.like);
+
     if(like === null) {
-        await Post.update(calculLikeDislike(post, like, req.body.like), { where: { id: req.params.id }});
-        Like.create({UserId: req.body.UserId, PostId: req.params.id, like: req.body.like })
-            .then(() => res.status(201).json({ message: 'Like enregistré !'}))
+        await Post.update(likes, { where: { id: req.params.id }});
+        Like.create({UserId: req.store.userLog.id, PostId: req.params.id, like: req.store.valideData.like })
+            .then(() => res.status(201).json({ message: 'Like enregistré !', likes}))
             .catch(error => res.status(400).json({ error }));
     }
 
-    if (like.like === req.body.like) { return res.status(401).json({ error: 'Vous avez déjà voté!' }); }
+    if (like.like === req.store.valideData.like) { return res.status(401).json({ error: 'Vous avez déjà voté!' }); }
 
-    await Post.update(calculLikeDislike(post, like, req.body.like), { where: { id: req.params.id }});
-    await Like.update({ like: req.body.like }, { where: { UserId: req.body.UserId, PostId: req.params.id }});
-    return res.status(200).json({ message: 'Like update !' });
+    await Post.update(likes, { where: { id: req.params.id }});
+    await Like.update({ like: req.store.valideData.like }, { where: { UserId: req.store.userLog.id, PostId: req.params.id }});
+    return res.status(200).json({ message: 'Like update !', likes });
 }
 
 function calculLikeDislike(post, like, vote) {
@@ -109,10 +109,10 @@ function calculLikeDislike(post, like, vote) {
 
 function defineCreateFields(type) {
     const fields = ['UserId', 'type', 'image'];
-    return type === postType.ARTICLE.id ? [...fields, 'title', 'content'] : fields;
+    return parseInt(type) === postType.ARTICLE.id ? [...fields, 'title', 'content'] : fields;
 }
 
 function defineUpdateFields(type) {
     const fields = ['image'];
-    return type === postType.ARTICLE.id ? [...fields, 'title', 'content'] : fields;
+    return parseInt(type) === postType.ARTICLE.id ? [...fields, 'title', 'content'] : fields;
 }

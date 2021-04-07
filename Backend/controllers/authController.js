@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models').User;
+const Like = require('../models').Like;
 
 /**
  * Enregistre un utilisateur en bdd
@@ -33,5 +34,15 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign( { userId: user.id }, process.env.APP_KEY, { expiresIn: '24h' });
-    res.status(200).json({ userId: user.id, token: token });
+
+    res.status(200).json({ user: {...await getUser(user), token : token}});
 };
+
+exports.currentUser = async (req, res) => {
+    res.status(200).json(await getUser(req.store.userLog));
+}
+
+async function getUser(user) {
+    const likes = await Like.findAll({ where: { userId : user.id}, attributes: ['PostId', 'like']})
+    return { id: user.id, name : user.name, avatarPath : user.avatarPath, email: user.email, isAdmin: user.isAdmin, likes : likes }
+}
