@@ -15,7 +15,6 @@ import Post from '../views/Post.vue'
 import store from '@/store'
 
 Vue.use(VueRouter)
-
 const routes = [
   {
     path: '/',

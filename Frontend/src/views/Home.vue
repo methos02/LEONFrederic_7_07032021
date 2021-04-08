@@ -26,6 +26,7 @@
 import { mapState } from 'vuex';
 import comments from '@/components/Comments'
 import likes from "@/components/Likes";
+import abbreviate from "@/utils/abbreviate";
 
 export default {
   name: 'Home',
@@ -41,15 +42,7 @@ export default {
   },
   filters: {
     abbreviate(text) {
-      if(text){
-        text = text.slice(0, 500);
-
-        while(text.slice(-1) !== ' ') {
-          text = text.slice(0, -1);
-        }
-
-        return text + '...';
-      }
+      return abbreviate(text);
     }
   },
   methods: {

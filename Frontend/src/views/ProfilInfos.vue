@@ -6,7 +6,7 @@
       <div class="row">
         <div class="col-4">
           <div class="v-avatar mb-4">
-            <img :src="avatar !== null ? avatar : current_user.avatarPath" class="preview" alt="image de profil">
+            <img :src="avatar.path !== null ? avatar.path : current_user.avatarPath" class="preview" alt="image de profil">
           </div>
           <input type="file" accept="image/*" @change="onFileChange" name="images">
         </div>
@@ -26,6 +26,7 @@
 </template>
 <script>
 import dispachError from '/src/utils/sequelizeError';
+import imagePreview from "@/utils/imagePreview";
 import {mapState} from "vuex";
 
 export default {
@@ -33,8 +34,7 @@ export default {
     return {
       errors: {},
       generalError : '',
-      file: null,
-      avatar: null,
+      avatar: {file: null, path : null},
     }
   },
   computed: {
@@ -52,8 +52,8 @@ export default {
       this.generalError = '';
 
       const fd = new FormData();
-      if(this.file != null) {
-        fd.append('avatar', this.file, this.file.name);
+      if(this.avatar.file != null) {
+        fd.append('avatar', this.avatar.file, this.avatar.file.name);
       }
 
       fd.append('user[name]', this.profil.name);
@@ -67,18 +67,7 @@ export default {
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre profil a été mis à jour.' })
     },
     onFileChange(e) {
-      this.file = e.target.files[0];
-
-      if(!this.file.type.match("image.*")) { return; }
-
-      const reader = new FileReader();
-      const me = this;
-
-      reader.onload = function (e) {
-        me.avatar = e.target.result;
-      }
-
-      reader.readAsDataURL(this.file);
+      this.avatar = imagePreview(e)
     },
   }
 }
