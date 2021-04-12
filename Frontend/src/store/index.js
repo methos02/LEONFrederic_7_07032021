@@ -89,6 +89,16 @@ export default new Vuex.Store({
 
       return res;
     },
+    async userRegister({commit}, loginData) {
+      const res = await Api().post('/auth/signup', loginData).catch((err) => err.response);
+
+      if(res.status === 201) {
+        commit('SET_CURRENT_USER', res.data.user);
+        localStorage.setItem('token', res.data.user.token);
+      }
+
+      return res;
+    },
     async updateProfil({commit, state}, formData) {
       const res = await Api().put('/profil/' + state.current_user.id , formData).catch(err => err.response);
 

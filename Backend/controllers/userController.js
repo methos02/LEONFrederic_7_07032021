@@ -22,10 +22,11 @@ exports.update = async (req, res) => {
     if (req.file) {
         if(req.store.userLog.avatar !== null) { deleteImg(avatarPath + req.store.userLog.avatar)}
         moveFromTemp(req.file.path, 'avatar')
+        req.store.valideData.avatar = avatarPath + req.store.valideData.avatar;
     }
 
     User.update({ ...req.store.valideData }, { where: { id: req.params.id }})
-        .then(() => res.status(200).json({ message: 'Profil modifié.', data : {...req.store.valideData, avatar: avatarPath + req.store.valideData.avatar}}))
+        .then(() => res.status(200).json({ message: 'Profil modifié.', data : req.store.valideData }))
         .catch(error => res.status(400).json({ error }));
 }
 

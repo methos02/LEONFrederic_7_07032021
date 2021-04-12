@@ -27,10 +27,10 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item link :to="{name: 'Image'}">
+            <v-list-item link :to="{name: 'AddImage'}">
               <v-list-item-title>Images</v-list-item-title>
             </v-list-item>
-            <v-list-item link :to="{name: 'Article'}">
+            <v-list-item link :to="{name: 'AddArticle'}">
               <v-list-item-title>Articles</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -55,6 +55,7 @@
         </v-menu>
       </div>
       <div v-else>
+        <v-btn  :to="{name: 'Register'}" text > Enregistrement </v-btn>
         <v-btn  :to="{name: 'Login'}" text > Login </v-btn>
       </div>
     </v-app-bar>

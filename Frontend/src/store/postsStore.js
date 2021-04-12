@@ -13,6 +13,17 @@ export default {
         SET_POST(state, post) {
             state.posts.push(post);
         },
+        UPDATE_POST(state, updatePost) {
+            state.posts.forEach(post => {
+                if(post.id === updatePost.id) {
+                    post.title = updatePost.title;
+                    post.content = updatePost.content;
+                }
+            });
+        },
+        CREATE_POST(state, post) {
+            state.posts.push(post);
+        },
         SET_POST_LIKE(state, data) {
             state.posts.forEach(post => {
                 if(post.id === data.post_id) {
@@ -44,9 +55,9 @@ export default {
             if(res.status === 200) {
                 commit('SET_POST', res.data);
             }
+            return res;
         },
         async createPost({commit}, formData) {
-            console.log(formData);
             const res = await Api().post('/posts', formData );
             if(res.status === 200) {
                 commit('CREATE_POST', res.data.data);
@@ -54,9 +65,16 @@ export default {
 
             return res;
         },
+        async updatePost({commit}, data) {
+            const res = await Api().put('/posts/' + data.id, {title : data.title, content: data.content}).catch((err) => err.response);
+            if(res.status === 200) {
+                commit('UPDATE_POST', data);
+            }
+
+            return res;
+        },
         async likePost({ commit }, data) {
             const res = await Api().post('/posts/' + data.post_id + '/like', {like : data.like}).catch(err => console.log(err));
-
             if(res.status === 200 || res.status === 201) {
                 commit('SET_POST_LIKE', {post_id: data.post_id, likes: res.data.likes})
                 commit('SET_CURRENT_USER_LIKE', {post_id: data.post_id, like : data.like}, { root: true })

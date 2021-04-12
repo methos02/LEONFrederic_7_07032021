@@ -13,7 +13,13 @@
           <v-btn v-if="!post.showComment" @click="toggleComments(post.id)"> Afficher les commentaires </v-btn>
           <v-btn v-else @click="toggleComments(post.id)"> Cacher les commentaires </v-btn>
         </v-card-actions>
-        <likes :post="post"></likes>
+        <div class="row justify-space-between card-actions">
+          <span>
+            <router-link :to="{ name: post.type === 1 ? 'UpdateArticle' : 'UpdateImage', params: { id : post.id } }"> <v-icon> mdi-pencil </v-icon> </router-link>
+            <router-link :to="{ name: 'DeletePost', params: { id : post.id } }"> <v-icon> mdi-delete </v-icon> </router-link>
+          </span>
+          <likes :post="post"></likes>
+        </div>
       </v-card>
       <div v-show="post.showComment">
         <comments :post_id="post.id"></comments>

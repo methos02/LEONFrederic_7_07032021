@@ -1,4 +1,5 @@
 'use strict';
+const {defaultAvatar} = require("../helpers/imageHelper");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -28,7 +29,8 @@ module.exports = {
       },
       avatar: {
         type: Sequelize.STRING(256),
-        allowNull: true
+        allowNull: false,
+        defaultValue: defaultAvatar
       },
       isAdmin: {
         type: Sequelize.BOOLEAN,

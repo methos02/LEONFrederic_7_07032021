@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const {defaultAvatar, avatarPath} = require("../helpers/imageHelper");
 const User = require('../models').User;
 const Like = require('../models').Like;
 
@@ -7,15 +8,18 @@ const Like = require('../models').Like;
  * Enregistre un utilisateur en bdd
  */
 exports.signup = async (req, res) => {
-    const user = await User.findOne({ where:{ email: req.store.valideData.email } }).catch(error => res.status(500).json({ error }));
+    let user = await User.findOne({ where:{ email: req.store.valideData.email } }).catch(error => res.status(500).json({ error }));
     if(user !== null) { return res.status(400).json({ error: 'Email déjà utilisé.' }); }
 
     const hash = await bcrypt.hash(req.body.password, 10).catch(error => res.status(500).json({ error }));
 
-    User.create({ ...req.store.valideData, password: hash})
-        .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-        .catch(error => res.status(400).json({ error }))
-    ;
+    user = await User.create({ ...req.store.valideData, password: hash}).catch(error => res.status(400).json({ error }));
+
+    const token = jwt.sign( { userId: user.id }, process.env.APP_KEY, { expiresIn: '24h' });
+    delete user.dataValues.password;
+
+    return res.status(201).json({ message: 'Utilisateur créé !', user : {...user.dataValues, token : token, avatarPath: process.env.BASE_URL + avatarPath + defaultAvatar, likes : []}})
+
 };
 
 /**

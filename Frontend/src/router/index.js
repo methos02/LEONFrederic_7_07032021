@@ -2,9 +2,14 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
 import AddPost from '../views/AddPost.vue'
 import AddPostArticle from '../views/AddPostArticle.vue'
 import AddPostImage from '../views/AddPostImage.vue'
+import UpdatePost from '../views/UpdatePost.vue'
+import UpdatePostArticle from '../views/UpdatePostArticle.vue'
+import UpdatePostImage from '../views/UpdatePostImage.vue'
+import DeletePost from '../views/DeletePost.vue'
 import Profil from '../views/Profil.vue'
 import ProfilInfos from '../views/ProfilInfos.vue'
 import ProfilSecurity from '../views/ProfilSecurity.vue'
@@ -20,10 +25,38 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-  }, {
+  },
+  {
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
+  },{
+    path: '/update',
+    name: 'Update',
+    component: UpdatePost,
+    params: true,
+    children: [
+      {
+        path: 'article/:id',
+        name: 'UpdateArticle',
+        component: UpdatePostArticle
+      },
+      {
+        path: 'image/:id',
+        name: 'UpdateImage',
+        component: UpdatePostImage
+      }
+    ]
+  },{
+    path: '/delete/:id',
+    name: 'DeletePost',
+    component: DeletePost,
+    params: true,
   },{
     path: '/profil',
     name: 'Profil',
@@ -47,12 +80,12 @@ const routes = [
     children: [
       {
         path: 'article',
-        name: 'Article',
+        name: 'AddArticle',
         component: AddPostArticle
       },
       {
         path: 'image',
-        name: 'Image',
+        name: 'AddImage',
         component: AddPostImage
       }
     ]
@@ -99,8 +132,8 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if(to.name === "Login" && localStorage.getItem('token') !== null) { return next('/');}
-  if(to.name === "Login" || localStorage.getItem('token') !== null) { return next(); }
+  if(["Login", "Register"].indexOf(to.name) !== -1 && localStorage.getItem('token') !== null) { return next('/');}
+  if(["Login", "Register"].indexOf(to.name) !== -1 || localStorage.getItem('token') !== null) { return next(); }
 
   return next('/login');
 })
