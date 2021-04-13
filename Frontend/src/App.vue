@@ -74,7 +74,7 @@ import { mapState } from "vuex";
 
 export default {
   name: 'App',
-  async mounted() {
+  async beforeCreate() {
     if(localStorage.getItem('token') !== null) {
       const resp = await this.$store.dispatch('getCurrentUser');
 

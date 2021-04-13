@@ -25,10 +25,12 @@ export default new Vuex.Store({
       state.users = users;
     },
     BAN_USER(state, data) {
+
       state.users.forEach(user => {
         if(user.id === data.user_id) {
-          user.banUntil = data.date_ban;
-          user.nbBan = user.nbBan++;
+          user.banUntil =  data.banUntil
+          user.formatBanUntil = data.formatBanUntil;
+          ++user.nbBan;
         }
       })
     },
@@ -36,12 +38,12 @@ export default new Vuex.Store({
       state.current_user = user;
     },
     UPDATE_CURRENT_USER_PROFIL(state, user) {
-      console.log(user);
       state.current_user.name = user.name;
       state.current_user.email = user.email;
 
       if(user.avatar !== undefined) {
-        state.current_user.avatarPath = user.avatar;
+        state.current_user.avatar = user.avatar;
+        state.current_user.avatarPath = user.avatarPath;
       }
     },
     SET_CURRENT_USER_LIKE(state, data) {
@@ -76,8 +78,9 @@ export default new Vuex.Store({
     async banUser({ commit }, user_id) {
       const res = await Api().put('/admin/users/' + user_id + '/ban', {UserId: user_id, message: 'utilisateur banni.'}).catch(err => err.response);
       if(res.status === 200) {
-        commit('BAN_USER', {user_id: user_id, date_ban : res.data.date_ban})
+        commit('BAN_USER', {user_id: user_id, banUntil : res.data.banUntil, formatBanUntil : res.data.formatBanUntil})
       }
+      return res;
     },
     async userLogin({commit}, loginData) {
       const res = await Api().post('/auth/login', loginData).catch((err) => err.response);

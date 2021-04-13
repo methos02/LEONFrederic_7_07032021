@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     async onSubmit(post) {
-      const res = await this.$store.dispatch('posts/updatePost', post);
+      const res = await this.$store.dispatch('posts/updateArticle', post);
       if (res.status === 400) { return this.errors = dispachError(res.data);}
       if (res.status === 401) { return this.errors.global = res.data.error; }
 

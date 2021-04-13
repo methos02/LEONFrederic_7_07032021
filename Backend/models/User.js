@@ -1,5 +1,6 @@
 'use strict';
-const { avatarPath, defaultAvatar } = require('../helpers/imageHelper')
+const {formatDate} = require("../helpers/dateHelper");
+const { avatarPath } = require('../helpers/imageHelper')
 
 module.exports = (Sequelize, DataTypes) => {
     const User = Sequelize.define('User', {
@@ -31,7 +32,7 @@ module.exports = (Sequelize, DataTypes) => {
         avatarPath: {
             type: DataTypes.VIRTUAL,
             get() {
-                return process.env.BASE_URL + avatarPath + (this.avatar !== null ? this.avatar : defaultAvatar);
+                return process.env.BASE_URL + avatarPath + this.avatar;
             },
         },
         isAdmin : {
@@ -41,6 +42,17 @@ module.exports = (Sequelize, DataTypes) => {
         banUntil: {
             type: DataTypes.DATE,
             allowNull: true,
+        },
+        formatBanUntil: {
+            type: DataTypes.VIRTUAL,
+            get() {
+                if(this.banUntil !== null) {
+                    const date = new Date(this.banUntil);
+                    return formatDate(date);
+                }
+
+                return null;
+            },
         },
         nbBan: {
             type: DataTypes.INTEGER,

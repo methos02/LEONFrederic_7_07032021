@@ -4,6 +4,7 @@ const commentJoin = require('../helpers/join/commentJoin');
 const Like = require('../models').Like;
 const { moveFromTemp, deleteImg } = require('../helpers/imageHelper');
 const postType = require('../helpers/postType');
+const {postPath} = require("../helpers/imageHelper");
 
 /**
  * Retourne toutes les posts du site
@@ -53,7 +54,7 @@ exports.store = (req, res) => {
  */
 exports.update = (req, res) => {
     if (req.file) {
-        if(req.store.Post.image !== null) { deleteImg(req.store.Post.image)}
+        if(req.store.Post.image !== null) { deleteImg(postPath + req.store.Post.image)}
         moveFromTemp(req.file.path, 'post')
     }
 
@@ -66,7 +67,7 @@ exports.update = (req, res) => {
  * Supprime un post en fonction de l'id présent dans la requête
  */
 exports.delete = (req, res) => {
-    if(req.store.Post.image !== null) { deleteImg(req.store.Post.image)}
+    if(req.store.Post.image !== null) { deleteImg(postPath + req.store.Post.image)}
 
     Post.destroy({ where: { id: req.params.id } })
         .then(() => res.status(200).json({ message: 'Post supprimé !'}))

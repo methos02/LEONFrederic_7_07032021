@@ -6,10 +6,7 @@ import Register from '../views/Register.vue'
 import AddPost from '../views/AddPost.vue'
 import AddPostArticle from '../views/AddPostArticle.vue'
 import AddPostImage from '../views/AddPostImage.vue'
-import UpdatePost from '../views/UpdatePost.vue'
 import UpdatePostArticle from '../views/UpdatePostArticle.vue'
-import UpdatePostImage from '../views/UpdatePostImage.vue'
-import DeletePost from '../views/DeletePost.vue'
 import Profil from '../views/Profil.vue'
 import ProfilInfos from '../views/ProfilInfos.vue'
 import ProfilSecurity from '../views/ProfilSecurity.vue'
@@ -36,26 +33,9 @@ const routes = [
     name: 'Register',
     component: Register
   },{
-    path: '/update',
-    name: 'Update',
-    component: UpdatePost,
-    params: true,
-    children: [
-      {
-        path: 'article/:id',
-        name: 'UpdateArticle',
-        component: UpdatePostArticle
-      },
-      {
-        path: 'image/:id',
-        name: 'UpdateImage',
-        component: UpdatePostImage
-      }
-    ]
-  },{
-    path: '/delete/:id',
-    name: 'DeletePost',
-    component: DeletePost,
+    path: '/article/:id',
+    name: 'UpdateArticle',
+    component: UpdatePostArticle,
     params: true,
   },{
     path: '/profil',
@@ -115,14 +95,6 @@ const routes = [
     component: Post,
     params: true,
   }
-  // , {
-  //   path: '/about',
-  //   name: 'About',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // },
 ]
 
 const router = new VueRouter({

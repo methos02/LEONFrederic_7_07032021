@@ -21,6 +21,9 @@ export default {
                 }
             });
         },
+        DELETE_POST(state, post_id) {
+          state.posts = state.posts.filter(post => post.id !== post_id);
+        },
         CREATE_POST(state, post) {
             state.posts.push(post);
         },
@@ -65,7 +68,7 @@ export default {
 
             return res;
         },
-        async updatePost({commit}, data) {
+        async updateArticle({commit}, data) {
             const res = await Api().put('/posts/' + data.id, {title : data.title, content: data.content}).catch((err) => err.response);
             if(res.status === 200) {
                 commit('UPDATE_POST', data);
@@ -73,8 +76,25 @@ export default {
 
             return res;
         },
+        async updateImage({commit}, post) {
+            const res = await Api().put('/posts/' + post.id, { content: post.content}).catch((err) => err.response);
+            if(res.status === 200) {
+                commit('UPDATE_POST', post);
+            }
+
+            return res;
+        },
+        async deletePost({commit}, post_id) {
+            const res = await Api().delete('/posts/' + post_id).catch((err) => err.response);
+
+            if(res.status === 200) {
+                commit('DELETE_POST', post_id);
+            }
+
+            return res;
+        },
         async likePost({ commit }, data) {
-            const res = await Api().post('/posts/' + data.post_id + '/like', {like : data.like}).catch(err => console.log(err));
+            const res = await Api().post('/posts/' + data.post_id + '/like', {like : data.like}).catch((err) => err.response);
             if(res.status === 200 || res.status === 201) {
                 commit('SET_POST_LIKE', {post_id: data.post_id, likes: res.data.likes})
                 commit('SET_CURRENT_USER_LIKE', {post_id: data.post_id, like : data.like}, { root: true })

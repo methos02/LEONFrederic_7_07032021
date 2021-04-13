@@ -1,6 +1,6 @@
 const User = require('../models').User;
 const bcrypt = require('bcrypt');
-const { moveFromTemp, deleteImg, avatarPath } = require('../helpers/imageHelper');
+const { moveFromTemp, deleteImg, avatarPath, defaultAvatar } = require('../helpers/imageHelper');
 
 exports.show = (req, res) => {
     return res.status(200).json(req.store.userLog);
@@ -20,9 +20,9 @@ exports.update = async (req, res) => {
     }
 
     if (req.file) {
-        if(req.store.userLog.avatar !== null) { deleteImg(avatarPath + req.store.userLog.avatar)}
+        if(req.store.userLog.avatar !== defaultAvatar) { deleteImg(avatarPath + req.store.userLog.avatar)}
         moveFromTemp(req.file.path, 'avatar')
-        req.store.valideData.avatar = avatarPath + req.store.valideData.avatar;
+        req.store.valideData.avatarPath = process.env.BASE_URL + avatarPath + req.store.valideData.avatar;
     }
 
     User.update({ ...req.store.valideData }, { where: { id: req.params.id }})
@@ -57,7 +57,7 @@ exports.delete = (req, res) => {
         return res.status(404).json({error: 'Utilisateur introuvable.'})
     }
 
-    if(req.store.userLog.avatar !== null) { deleteImg(req.store.userLog.avatar)}
+    if(req.store.userLog.avatar !== defaultAvatar) { deleteImg(req.store.userLog.avatar)}
 
     User.destroy({ where: { id: req.params.id } })
         .then(() => res.status(200).json({ message: 'Votre profil a été supprimé.'}))

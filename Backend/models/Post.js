@@ -1,4 +1,5 @@
 const { postPath } = require('../helpers/imageHelper')
+const { formatDate } = require('../helpers/dateHelper')
 
 module.exports = (Sequelize, DataTypes) => {
     const Post = Sequelize.define('Post', {
@@ -41,6 +42,13 @@ module.exports = (Sequelize, DataTypes) => {
         UserId: {
             type: DataTypes.INTEGER,
             allowNull: false
+        },
+        formatCreatedAt: {
+            type: DataTypes.VIRTUAL,
+            get() {
+                const date = new Date(this.createdAt);
+                return formatDate(date);
+            },
         }
     });
 

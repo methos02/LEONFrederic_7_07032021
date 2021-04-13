@@ -1,8 +1,13 @@
 <template>
   <v-container>
-    <v-card v-for="comment in comments" :key="comment.id" class="mb-2 ">
-      <v-card-text >{{ comment.content }}</v-card-text>
-      <v-btn color="red" @click="deleteComment(comment.id)"> Supprimer </v-btn>
+    <h1 class="mb-5"> Commentaires</h1>
+    <v-card v-for="comment in comments" :key="comment.id" class="mb-5">
+      <v-card-text  class="row">
+        <span class="flex col">
+          {{ comment.content }}
+        </span>
+        <v-btn color="red" @click="deleteComment(comment.id)"> Supprimer </v-btn>
+      </v-card-text>
     </v-card>
   </v-container>
 </template>
