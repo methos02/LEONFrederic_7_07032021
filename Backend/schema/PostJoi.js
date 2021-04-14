@@ -6,8 +6,8 @@ const postType = require('../helpers/postType')
 
 const base = {
     title: joi.string().when('type', {is: postType.ARTICLE.id, then: joi.required()}),
-    content: joi.string().when('type', {is: postType.ARTICLE.id, then: joi.required()}),
-    image: joi.string().when('type', {is: postType.IMAGE.id, then: joi.required()}),
+    content: joi.string().when('type', {is: postType.ARTICLE.id.toString(), then: joi.required()}),
+    image: joi.string().when('type', {is: postType.IMAGE.id.toString(), then: joi.required()}),
 }
 
 module.exports = {

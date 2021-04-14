@@ -53,6 +53,15 @@ export default {
                 commit('comments/SET_COMMENTS', comments, { root: true })
             }
         },
+        async getByType({ commit }, type) {
+            const res = await Api().get('/posts/' + type);
+            const comments = res.data.map(post => { return { post_id: post.id, comments: post.Comments }});
+
+            if(res.status === 200) {
+                commit('SET_POSTS', res.data);
+                commit('comments/SET_COMMENTS', comments, { root: true })
+            }
+        },
         async loadPost({ commit }, post_id) {
             const res = await Api().get('/posts/' + post_id );
             if(res.status === 200) {

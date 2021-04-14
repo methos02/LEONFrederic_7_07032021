@@ -1,5 +1,6 @@
 <template>
-  <v-container class="pt-0">
+  <v-container class="pt-0 div-container">
+    <sidebar></sidebar>
     <div v-for="post in posts" :key="post.id"  class="mt-10">
       <post_article v-if="post.type === 1" :post="post" ></post_article>
       <post_image  v-if="post.type === 2" :post="post" ></post_image>
@@ -15,10 +16,11 @@ import { mapState } from 'vuex';
 import comments from '@/components/Comments'
 import post_article from "@/components/PostArticle";
 import post_image from "@/components/PostImage";
+import sidebar from "@/components/Sidebar";
 
 export default {
   name: 'Home',
-  components: {post_image, post_article, comments,  },
+  components: {post_image, post_article, comments, sidebar },
   mounted() {
     this.$store.dispatch('posts/loadPosts');
   },
@@ -30,3 +32,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.div-container {
+  position: relative;
+}
+</style>

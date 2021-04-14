@@ -1,11 +1,14 @@
 <template>
   <v-container class="login">
-    <form>
-      {{ generalError }}
-      <v-text-field v-model="userInfo.email" label="Email" :error-messages="errors.email"/>
-      <v-text-field v-model="userInfo.password" label="Password" :error-messages="errors.password"/>
-      <v-btn @click="userLogin"> Login </v-btn>
-    </form>
+    <v-card class="pa-5">
+      <h1>Connexion</h1>
+      <form>
+        {{ generalError }}
+        <v-text-field v-model="userInfo.email" label="Email" :error-messages="errors.email"/>
+        <v-text-field v-model="userInfo.password" label="Password" :error-messages="errors.password"/>
+        <v-btn @click="userLogin"> Login </v-btn>
+      </form>
+    </v-card>
   </v-container>
 </template>
 

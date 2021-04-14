@@ -41,8 +41,11 @@ export default {
     async addPost() {
       const fd = new FormData();
       fd.append('post[type]', 2);
-      fd.append('post[content]', this.description);
       fd.append('image', this.image.file, this.image.file.name);
+
+      if(this.description !== '') {
+        fd.append('post[content]', this.description);
+      }
 
       const resp = await this.$store.dispatch('posts/createPost', fd);
 

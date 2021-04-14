@@ -1,9 +1,11 @@
 <template>
   <v-container v-if="post">
-    <h1 v-if="post.title">{{ post.title }}</h1>
-    <div v-html="post.content" v-if="post.content"></div>
-    <img v-if="post.imagePath" :src="post.imagePath" alt="illustration du post" />
-    <likes :post="post"></likes>
+    <v-card class="pa-3">
+      <h1 v-if="post.title">{{ post.title }}</h1>
+      <div v-html="post.content" v-if="post.content"></div>
+      <img v-if="post.imagePath" :src="post.imagePath" alt="illustration du post" />
+      <likes :post="post"></likes>
+    </v-card>
     <comments :comments="post.commentsSort" :post_id="post.id"></comments>
   </v-container>
 </template>
