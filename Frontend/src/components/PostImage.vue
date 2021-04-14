@@ -1,40 +1,41 @@
 <template>
-  <v-card class="pa-5 mb-2 post">
-    <div class="row justify-space-between align-start">
-      <div class="row col image-meta">
-        <v-avatar>
-          <img :src="post.User.avatarPath" class="preview" alt="image de profil">
+  <v-card class="card-post mx-auto">
+    <div class="d-flex justify-space-between pa-3 div-meta-image">
+      <div class="d-flex image-meta">
+        <v-avatar class="image-meta-avatar white mr-3">
+          <img :src="post.User.avatarPath" alt="image de profil">
         </v-avatar>
         <div class="image-meta-infos">
           <div class="image-meta-author">{{ post.User.name }}</div>
           <div class="image-meta-create">{{ post.formatCreatedAt }}</div>
         </div>
       </div>
-      <div class="row col justify-end card-actions mt-0">
-        <v-btn @click="editContent(post.id)"><v-icon> mdi-pencil </v-icon></v-btn>
-        <v-btn @click="deletePost(post.id)">
-          <v-icon> mdi-delete </v-icon>
-        </v-btn>
+      <div class="d-flex card-actions">
+        <v-btn @click="editContent(post.id)" class="mr-3 green white--text" v-if="isEdit === ''"><v-icon> mdi-pencil </v-icon></v-btn>
+        <v-btn @click="closeEditImage" class="mr-3" v-if="isEdit === post.id"><v-icon> mdi-close </v-icon></v-btn>
+        <v-btn @click="deletePost(post.id)" class="red white--text"> <v-icon> mdi-delete </v-icon> </v-btn>
       </div>
     </div>
-    <v-card-text>
-      <div v-if="isEdit === post.id">
-        {{ errors.global }}
-        <v-textarea v-model="post.content" :id="'editArticle' + post.id" :error-messages="errors.content"></v-textarea>
-        <div class="row justify-end"> <v-btn class="col-2" @click="updateImage(post)">Mettre à jour</v-btn> </div>
-      </div>
-      <div v-else>
-        {{ post.content }}
-      </div>
-    </v-card-text>
-    <div class="text-center">
-      <img v-if="post.imagePath" :src="post.imagePath" alt="illustration du post" class="post-image"/>
+    <div class="post-image-body">
+      <v-card-text class="div-image-description white pt-1">
+        <div v-if="isEdit === post.id">
+          {{ errors.global }}
+          <v-textarea v-model="post.content" :id="'editArticle' + post.id" :error-messages="errors.content" rows="1" auto-grow hide-details></v-textarea>
+          <div class="d-flex justify-end mt-3"> <v-btn @click="updateImage(post)">Mettre à jour</v-btn> </div>
+        </div>
+        <div v-else>
+          {{ post.content }}
+        </div>
+      </v-card-text>
     </div>
-    <v-card-actions>
-      <v-btn v-if="!post.showComment" @click="toggleComments(post.id)"> Afficher les commentaires </v-btn>
-      <v-btn v-else @click="toggleComments(post.id)"> Cacher les commentaires </v-btn>
-    </v-card-actions>
-    <likes :post="post"></likes>
+    <img v-if="post.imagePath" :src="post.imagePath" alt="illustration du post" class="preview pa-2">
+    <div class="d-flex justify-space-between align-center">
+      <v-card-actions>
+        <v-btn v-if="!post.showComment" @click="toggleComments(post.id)"> Afficher les commentaires </v-btn>
+        <v-btn v-else @click="toggleComments(post.id)"> Cacher les commentaires </v-btn>
+      </v-card-actions>
+      <likes :post="post"></likes>
+    </div>
   </v-card>
 </template>
 
@@ -60,6 +61,9 @@ export default {
       this.isEdit = post_id;
       setTimeout(() => document.getElementById('editArticle' + this.post.id).focus(), 1);
     },
+    closeEditImage() {
+      this.isEdit = '';
+    },
     async updateImage(post) {
       const res = await this.$store.dispatch('posts/updateImage', post);
 
@@ -80,7 +84,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.post-image {
-  img { width: 60% }
+.card-post {
+ .div-meta-image {
+    position: relative;
+    z-index: 2;
+  }
+  .post-image-body { position: relative; }
 }
 </style>

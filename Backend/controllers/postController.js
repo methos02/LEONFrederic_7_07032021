@@ -109,8 +109,8 @@ function calculLikeDislike(post, like, vote) {
 }
 
 function defineCreateFields(type) {
-    const fields = ['UserId', 'type', 'image'];
-    return parseInt(type) === postType.ARTICLE.id ? [...fields, 'title', 'content'] : fields;
+    const fields = ['UserId', 'type', 'image', 'content'];
+    return parseInt(type) === postType.ARTICLE.id ? [...fields, 'title'] : fields;
 }
 
 function defineUpdateFields(type) {

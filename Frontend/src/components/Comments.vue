@@ -1,10 +1,12 @@
 <template>
   <v-container>
-    <v-card class="mb-2 pa-2">
-      <v-textarea v-model="commentsTemp"></v-textarea>
-      <v-btn @click="addComment(post_id)"> Envoyer </v-btn>
+    <v-card class="mb-2 pa-2 card-size">
+      <v-textarea v-model="commentsTemp" auto-grow rows="1" hide-details></v-textarea>
+      <div class="d-flex justify-end mt-2">
+        <v-btn @click="addComment(post_id)"> Envoyer </v-btn>
+      </div>
     </v-card>
-    <div v-for="comment in orderComments(post_id)" :key="comment.id" >
+    <div v-for="comment in orderComments(post_id)" :key="comment.id" class="card-size">
       <v-card class="mb-2 ">
         <v-card-text> {{ comment.content }}</v-card-text>
         <v-card-actions>
@@ -13,12 +15,14 @@
           <v-btn v-if="!comment.showTextarea" text @click="toggleTextarea(post_id,comment.id)"> Répondre </v-btn>
         </v-card-actions>
       </v-card>
-      <v-card class="mb-2 pa-2" v-show="comment.showTextarea">
+      <v-card class="mb-2 pa-2 card-size" v-show="comment.showTextarea">
         <v-btn text @click="toggleTextarea(post_id,comment.id)"> x </v-btn>
-        <v-textarea v-model="answersTemp[comment.id]"></v-textarea>
-        <v-btn @click="addAnswer(post_id, comment.id)"> Envoyer </v-btn>
+        <v-textarea v-model="answersTemp[comment.id]" auto-grow rows="1" hide-details></v-textarea>
+        <div class="d-flex justify-end mt-2">
+          <v-btn @click="addAnswer(post_id, comment.id)"> Envoyer </v-btn>
+        </div>
       </v-card>
-      <div v-show="comment.showAnswers">
+      <div v-show="comment.showAnswers" class="card-size">
         <v-container v-for="answer in comment.answers" :key="answer.id">
           <v-card-text class="grey lighten-4"> {{ answer.content }} </v-card-text>
         </v-container>

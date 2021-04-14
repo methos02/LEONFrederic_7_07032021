@@ -17,7 +17,6 @@
           />
         </router-link>
       </div>
-
       <v-spacer></v-spacer>
       <div v-if="current_user.name !== undefined">
         <v-menu transition="slide-y-transition" offset-y>
@@ -59,7 +58,7 @@
         <v-btn  :to="{name: 'Login'}" text > Login </v-btn>
       </div>
     </v-app-bar>
-    <v-main>
+    <v-main class="grey">
       <router-view/>
     </v-main>
     <v-snackbar v-model="snackbar.show" :timeout="-1" color="success">
@@ -101,3 +100,6 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+@import "assets/css/app.scss";
+</style>

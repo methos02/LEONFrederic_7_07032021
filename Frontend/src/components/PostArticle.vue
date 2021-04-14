@@ -1,19 +1,18 @@
 <template>
-  <v-card class="pa-5 mb-2 post">
-    <div class="row justify-space-between align-start">
-      <div class="row col image-meta">
-        <v-avatar>
-          <img :src="post.User.avatarPath" class="preview" alt="image de profil">
+  <v-card class="card-post mb-2 mx-auto">
+    <div class="d-flex justify-space-between pa-3 div-meta-image">
+      <div class="d-flex image-meta">
+        <v-avatar class="image-meta-avatar white mr-3">
+          <img :src="post.User.avatarPath" alt="image de profil">
         </v-avatar>
         <div class="image-meta-infos">
           <div class="image-meta-author">{{ post.User.name }}</div>
           <div class="image-meta-create">{{ post.formatCreatedAt }}</div>
         </div>
       </div>
-      <div class="row col justify-end card-actions mt-0">
-          <v-btn :to="{ name: 'UpdateArticle', params: { id : post.id } }"> <v-icon> mdi-pencil </v-icon> </v-btn>
-          <v-btn @click="deletePost(post.id)"> <v-icon> mdi-delete </v-icon> </v-btn>
-      </div>
+      <div class="d-flex card-actions">
+        <v-btn :to="{ name: 'UpdateArticle', params: { id : post.id } }" class="mr-3 green white--text"><v-icon> mdi-pencil </v-icon> </v-btn>
+        <v-btn @click="deletePost(post.id)" class="red white--text"><v-icon> mdi-delete </v-icon> </v-btn></div>
     </div>
     <div class="text-center">
       <img v-if="post.imagePath" :src="post.imagePath" alt="illustration du post" />
@@ -22,11 +21,13 @@
       <v-card-title v-if="post.title">{{ post.title }}</v-card-title>
     </router-link>
     <v-card-text v-if="post.content">{{ post.content | abbreviate }}</v-card-text>
-    <v-card-actions>
-      <v-btn v-if="!post.showComment" @click="toggleComments(post.id)"> Afficher les commentaires </v-btn>
-      <v-btn v-else @click="toggleComments(post.id)"> Cacher les commentaires </v-btn>
-    </v-card-actions>
-    <likes :post="post"></likes>
+    <div class="d-flex justify-space-between align-center">
+      <v-card-actions>
+        <v-btn v-if="!post.showComment" @click="toggleComments(post.id)"> Afficher les commentaires </v-btn>
+        <v-btn v-else @click="toggleComments(post.id)"> Cacher les commentaires </v-btn>
+      </v-card-actions>
+      <likes :post="post"></likes>
+    </div>
   </v-card>
 </template>
 
@@ -56,7 +57,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

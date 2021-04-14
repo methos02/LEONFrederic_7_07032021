@@ -1,12 +1,12 @@
 <template>
   <div class="d-flex justify-end">
-    <v-btn id="div-like" @click="like(post.id)">
+    <v-btn id="div-like" @click="like(post.id)" class="mr-2">
       <v-icon :class="{'blue--text' : userLike.like === 1, 'grey--text' : userLike.like === 0 || userLike.like === -1 }" color="darken-2">
         mdi-thumb-up
       </v-icon>
       <span> {{ post.like }}</span>
     </v-btn>
-    <v-btn id="div-dislike" @click="dislike(post.id)">
+    <v-btn id="div-dislike" @click="dislike(post.id)" class="mr-2">
       <v-icon :class="{'red--text' : userLike.like === -1, 'grey--text' : userLike.like === 0 || userLike.like === 1}" color="darken-2">
         mdi-thumb-down
       </v-icon>

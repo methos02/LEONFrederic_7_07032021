@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <div v-for="post in posts" :key="post.id">
+  <v-container class="pt-0">
+    <div v-for="post in posts" :key="post.id"  class="mt-10">
       <post_article v-if="post.type === 1" :post="post" ></post_article>
       <post_image  v-if="post.type === 2" :post="post" ></post_image>
       <div v-show="post.showComment">
