@@ -3,6 +3,7 @@ const userJoin = require('../helpers/join/userJoin');
 const commentJoin = require('../helpers/join/commentJoin');
 const Like = require('../models').Like;
 const { moveFromTemp, deleteImg } = require('../helpers/imageHelper');
+const { formatResponse, getPage, constante } = require('../helpers/paginateHelper');
 const postType = require('../helpers/postType');
 const {postPath} = require("../helpers/imageHelper");
 
@@ -10,23 +11,34 @@ const {postPath} = require("../helpers/imageHelper");
  * Retourne toutes les posts du site
  */
 exports.index = async (req, res) => {
-    Post.findAll({ include: [userJoin, commentJoin], order: [['id', 'DESC']]})
-        .then(posts => res.status(200).json(posts))
-        .catch(error => {
-            return res.status(400).json({error})
-        });
+    const page = getPage(req.query);
+    const posts = await Post.findAndCountAll({
+        limit: constante.PAGINATE_LIMITE,
+        offset: constante.PAGINATE_LIMITE * page,
+        include: [userJoin, commentJoin],
+        order: [['id', 'DESC']]
+    }).catch(error => { return res.status(500).json({error}) });
+
+    return res.status(200).json(formatResponse(posts, page));
 };
 
 /**
  * Retourne un post précise en fonction de l'id présent dans la requète
  */
-exports.type = (req, res) => {
+exports.type = async (req, res) => {
     const type = Object.keys(postType).filter(function(key) { return postType[key]['slug'] === req.params.type; })
     if(type.length === 0) { return res.status(404).json({ error: 'Type introuvable' }); }
 
-    Post.findAll( { where: {type: postType[type]['id']}, include: [userJoin, commentJoin]})
-        .then(post => res.status(200).json(post))
-        .catch(error => res.status(404).json({ error }));
+    const page = getPage(req.query);
+    const posts = await Post.findAndCountAll({
+        limit: constante.PAGINATE_LIMITE,
+        offset: constante.PAGINATE_LIMITE * page,
+        where: {type: postType[type]['id']},
+        include: [userJoin, commentJoin],
+        order: [['id', 'DESC']]
+    }).catch(error => res.status(500).json({ error }));
+
+    return res.status(200).json(formatResponse(posts, page));
 };
 
 /**

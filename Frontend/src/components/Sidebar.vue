@@ -1,6 +1,6 @@
 <template>
 <v-card id="div-sidebar" class="div-sidebar pa-3 grey lighten-2">
-  <v-btn class="grey darken-2 d-block mb-2" title="Tous" @click="getAll">
+  <v-btn class="grey darken-2 d-block mb-2" title="Tous" @click="getByType('all')">
     <v-icon color="white"> mdi-folder-multiple </v-icon>
   </v-btn>
   <v-btn class="grey darken-2 d-block mb-2" title="Images" @click="getByType('images')">
@@ -17,11 +17,9 @@ export default {
   name: "sidebar",
   methods: {
     getByType( type ) {
-      this.$store.dispatch('posts/getByType', type);
+      this.$store.dispatch('posts/loadPosts', type !== 'all' ? { type } : undefined);
+      this.$emit('type', type !== 'all' ? { type } : '');
     },
-    getAll() {
-      this.$store.dispatch('posts/loadPosts');
-    }
   }
 }
 </script>

@@ -5,6 +5,7 @@ import adminModule from  './adminStore';
 import commentsModule from  './commentsStore';
 import postsModule from  './postsStore';
 import snackbarModule from './snackbarStore';
+import paginateModule from './paginateStore';
 
 Vue.use(Vuex);
 Vue.config.devtools = true
@@ -14,7 +15,8 @@ export default new Vuex.Store({
     comments: commentsModule,
     posts: postsModule,
     snackbar: snackbarModule,
-    admin: adminModule
+    admin: adminModule,
+    paginate: paginateModule
   },
   state: {
     current_user: {},

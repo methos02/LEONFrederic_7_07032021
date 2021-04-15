@@ -1,5 +1,6 @@
 import Api from "@/service/api";
 import Vue from "vue";
+import currentPage from "@/utils/paginateHelper";
 
 export default {
     namespaced: true,
@@ -44,22 +45,15 @@ export default {
         },
     },
     actions: {
-        async loadPosts({ commit }) {
-            const res = await Api().get('/posts');
-            const comments = res.data.map(post => { return { post_id: post.id, comments: post.Comments }});
+        async loadPosts({ commit }, options) {
+            const type = options !== undefined && options.type !== undefined ? '/' + options.type : '';
+            const res = await Api().get('/posts' + type + currentPage(options !== undefined ? options.page : undefined));
+            const comments = res.data.rows.map(post => { return { post_id: post.id, comments: post.Comments }});
 
             if(res.status === 200) {
-                commit('SET_POSTS', res.data);
+                commit('SET_POSTS', res.data.rows);
                 commit('comments/SET_COMMENTS', comments, { root: true })
-            }
-        },
-        async getByType({ commit }, type) {
-            const res = await Api().get('/posts/' + type);
-            const comments = res.data.map(post => { return { post_id: post.id, comments: post.Comments }});
-
-            if(res.status === 200) {
-                commit('SET_POSTS', res.data);
-                commit('comments/SET_COMMENTS', comments, { root: true })
+                commit('paginate/SET_PAGINATE', {model: 'posts', params: res.data.paginate}, { root: true })
             }
         },
         async loadPost({ commit }, post_id) {

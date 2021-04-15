@@ -4,7 +4,7 @@
       <form class="my-3 pa-4">
         {{ errors.general }}
         <div class="row">
-          <div class="col align-center">
+          <div class="col align-center" v-if="post">
             <v-text-field v-model="post.title" label="Titre" :error-messages="errors.title" />
             <v-textarea v-model="post.content" auto-grow label="Contenu" :error-messages="errors.content" />
           </div>
@@ -14,7 +14,6 @@
         </div>
       </form>
     </v-card>
-
   </v-container>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <form class="my-3">
+  <form class="my-3" v-if="post">
     {{ errors.global }}
     <div class="row">
       <div class="col align-center">
