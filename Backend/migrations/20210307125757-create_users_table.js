@@ -34,8 +34,7 @@ module.exports = {
       },
       isAdmin: {
         type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: 0
+        allowNull: true,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -55,6 +54,10 @@ module.exports = {
       },
       messageBan: {
         type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      supp: {
+        type: Sequelize.BOOLEAN,
         allowNull: true,
       }
     })

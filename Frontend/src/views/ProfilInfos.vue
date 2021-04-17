@@ -19,9 +19,20 @@
       </div>
       <div class="row justify-center">
         <v-btn class="mx-3" @click="updateProfil"> Mettre à jour </v-btn>
-        <v-btn class="white--text red mx-3" @click="updateProfil"> Supprimer le profil </v-btn>
+        <v-btn class="white--text red mx-3" @click="openConfirm"> Supprimer le profil </v-btn>
       </div>
     </form>
+    <v-dialog v-model="dialog" width="600px">
+      <v-card>
+        <v-card-title> Êtes-vous sûr de vouloir supprimer votre compte ? </v-card-title>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn color="success" text  @click="deleteProfil"> Oui </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="red" text @click="dialog = false"> Non </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 <script>
@@ -35,6 +46,7 @@ export default {
       errors: {},
       generalError : '',
       avatar: {file: null, path : null},
+      dialog: false
     }
   },
   computed: {
@@ -47,6 +59,9 @@ export default {
     }
   },
   methods: {
+    openConfirm() {
+      this.dialog = true;
+    },
     async updateProfil () {
       this.errors = {};
       this.generalError = '';
@@ -65,6 +80,16 @@ export default {
       if (resp.status === 401) { return this.generalError = resp.data.error; }
 
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre profil a été mis à jour.' })
+    },
+    async deleteProfil() {
+      const res = await this.$store.dispatch('deleteProfil', this.current_user.id);
+
+      if (res.status === 200) {
+        await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre profil a été supprimé.' });
+        this.dialog = false;
+        this.data = {};
+        await this.$router.push('/login');
+      }
     },
     onFileChange(e) {
       this.avatar = imagePreview(e)

@@ -113,6 +113,16 @@ export default new Vuex.Store({
 
       return res;
     },
+    async deleteProfil({commit}, user_id) {
+      const res = await Api().delete('/profil/' + user_id).catch(err => err.response);
+
+      if(res.status === 200) {
+        commit('DELETE_CURRENT_USER');
+        localStorage.removeItem('token');
+      }
+
+      return res;
+    },
     async updatePassword({state}, passData) {
       return await Api().put('/profil/' + state.current_user.id + '/password', passData).catch(err => err.response);
     },

@@ -61,6 +61,10 @@ module.exports = (Sequelize, DataTypes) => {
         messageBan: {
             type: DataTypes.TEXT,
             allowNull: true,
+        },
+        supp : {
+            type: DataTypes.INTEGER,
+            default: 0
         }
     });
 

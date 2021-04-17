@@ -12,7 +12,7 @@
       </div>
       <div class="d-flex card-actions">
         <v-btn :to="{ name: 'UpdateArticle', params: { id : post.id } }" class="mr-3 green white--text"><v-icon> mdi-pencil </v-icon> </v-btn>
-        <v-btn @click="deletePost(post.id)" class="red white--text"><v-icon> mdi-delete </v-icon> </v-btn></div>
+        <v-btn @click="deleteConfirm(post.id)" class="red white--text"><v-icon> mdi-delete </v-icon> </v-btn></div>
     </div>
     <div class="text-center">
       <img v-if="post.imagePath" :src="post.imagePath" alt="illustration du post" />
@@ -45,6 +45,9 @@ export default {
     }
   },
   methods: {
+    deleteConfirm(post_id) {
+      this.$emit('delete', { post_id : post_id, type : 'article'});
+    },
     toggleComments(post_id) {
       this.$store.dispatch('posts/toggleComments', post_id);
     },

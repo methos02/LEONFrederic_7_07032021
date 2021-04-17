@@ -59,7 +59,7 @@ exports.delete = (req, res) => {
 
     if(req.store.userLog.avatar !== defaultAvatar) { deleteImg(req.store.userLog.avatar)}
 
-    User.destroy({ where: { id: req.params.id } })
+    User.update({ supp: 1 },{ where: { id: req.params.id } })
         .then(() => res.status(200).json({ message: 'Votre profil a été supprimé.'}))
         .catch(error => res.status(400).json({ error }));
 }

@@ -13,7 +13,7 @@
       <div class="d-flex card-actions">
         <v-btn @click="editContent(post.id)" class="mr-3 green white--text" v-if="isEdit === ''"><v-icon> mdi-pencil </v-icon></v-btn>
         <v-btn @click="closeEditImage" class="mr-3" v-if="isEdit === post.id"><v-icon> mdi-close </v-icon></v-btn>
-        <v-btn @click="deletePost(post.id)" class="red white--text"> <v-icon> mdi-delete </v-icon> </v-btn>
+        <v-btn @click="deleteConfirm(post.id)" class="red white--text"> <v-icon> mdi-delete </v-icon> </v-btn>
       </div>
     </div>
     <div class="post-image-body">
@@ -64,6 +64,9 @@ export default {
     closeEditImage() {
       this.isEdit = '';
     },
+    deleteConfirm(post_id) {
+      this.$emit('delete', { post_id : post_id, type : 'image'});
+    },
     async updateImage(post) {
       const res = await this.$store.dispatch('posts/updateImage', post);
 
@@ -72,12 +75,6 @@ export default {
 
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre entête a été modifié.' });
       this.isEdit = '';
-    },
-    async deletePost(post_id) {
-      const res = await this.$store.dispatch('posts/deletePost', post_id);
-      if (res.status === 200) {
-        await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre image a été supprimée.' })
-      }
     }
   }
 }
