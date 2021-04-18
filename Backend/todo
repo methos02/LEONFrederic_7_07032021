@@ -1,12 +1,11 @@
 - Appliquer le ban
 - Améliorré le design des commentaires
-- Suppression du compte
+- Application de la suppression de compte
 - Pagination page admin user et admin comment
-- Confirmation pour les action sensible
 - Responsivité
 - banniere pour les articles
 
 - améliorrer l'ergonomie image
-- resize
+- resize photo de profil
 - nom des type dans la barre latérale
 - ajouter triangle dropdown

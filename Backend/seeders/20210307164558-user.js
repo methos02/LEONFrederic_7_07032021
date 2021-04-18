@@ -1,24 +1,35 @@
 'use strict';
 const bcrypt = require('bcrypt');
+const { NB_USERS } = require('../config/seederConfig');
 
 module.exports = {
     up: async (queryInterface) => {
-        const hash = await bcrypt.hash('123123', 10).catch(error => res.status(500).json({ error }));
+        const hash = await bcrypt.hash('123123', 10).catch(error => console.log(error));
 
-        await queryInterface.bulkInsert('users', [{
-            email: 'leonfrederic@gmx.fr',
-            name: 'LEON Frédéric',
-            password: hash,
-            isAdmin: 1,
-        },{
-            email: 'johndoe@gmx.fr',
-            name: 'DOE John',
-            password: hash,
-            isAdmin: 0,
-        }], {});
+        const users = [
+            ...Array(NB_USERS)].map((value, index) => {
+                if(index === 0) {
+                    return {
+                        email: 'leonfrederic@gmx.fr',
+                        name: 'LEON Frédéric',
+                        password: hash,
+                        isAdmin: 1,
+                    }
+                }
+
+                return {
+                    email: `user${ index }@gmx.fr`,
+                    name: 'User ' + index,
+                    password: hash,
+                    isAdmin: 0,
+                }
+            }
+        );
+
+        await queryInterface.bulkInsert('users', users, {});
     },
 
-    down: async (queryInterface) => {
+    down: (queryInterface) => {
         return queryInterface.bulkDelete('users', null, {});
     }
 };
