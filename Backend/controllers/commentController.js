@@ -2,15 +2,6 @@ const Comment = require('../models').Comment;
 const Post = require('../models').Post;
 
 /**
- * récupère la liste de tout les commentaires en bdd - admin
- */
-exports.index = async (req, res) => {
-    Comment.findAll()
-        .then(comments => res.status(200).json(comments))
-        .catch(error => res.status(500).json({ error }));
-};
-
-/**
  * Enregistre un commentaire en bdd
  */
 exports.store = async (req, res) => {

@@ -1,26 +1,16 @@
 <template>
   <v-container>
-    <v-card>
-      <form class="my-3 pa-4">
-        {{ errors.general }}
-        <div class="row">
-          <div class="col align-center" v-if="post">
-            <v-text-field v-model="post.title" label="Titre" :error-messages="errors.title" />
-            <v-textarea v-model="post.content" auto-grow label="Contenu" :error-messages="errors.content" />
-          </div>
-        </div>
-        <div class="text-center">
-          <v-btn class="mx-3" @click="addPost"> Ajouter </v-btn>
-        </div>
-      </form>
-    </v-card>
+      <FormArticle :post="post" :errors="errors" @post="addPost"></FormArticle>
   </v-container>
 </template>
 
 <script>
 import dispachError from "@/utils/sequelizeError";
+import FormArticle from "@/components/FormArticle";
+
 export default {
   name: 'AddPostArticle',
+  components: { FormArticle },
   data () {
     return {
       errors: {},
@@ -28,10 +18,10 @@ export default {
     }
   },
   methods: {
-    async addPost() {
+    async addPost(post) {
       const fd = new FormData();
-      fd.append('post[title]', this.post.title);
-      fd.append('post[content]', this.post.content);
+      fd.append('post[title]', post.title);
+      fd.append('post[content]', post.content);
       fd.append('post[type]', 1);
 
       const resp = await this.$store.dispatch('posts/createPost', fd);

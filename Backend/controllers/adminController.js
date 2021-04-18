@@ -35,8 +35,14 @@ exports.ban = (req, res) => {
 /**
  * affiche la liste de tout les commentaires, uniquement pour l'admin
  */
-exports.comments = (req, res) => {
-    Comment.findAll()
-        .then(users => res.status(200).json(users))
-        .catch(error => res.status(400).json({ error }));
+exports.comments = async (req, res) => {
+    const page = getPage(req.query);
+
+    const comments = await Comment.findAndCountAll({
+        limit: constante.PAGINATE_LIMITE,
+        offset: constante.PAGINATE_LIMITE * page,
+        order: [['id', 'DESC']]
+    }).catch(error => res.status(500).json({ error }));
+    console.log(formatResponse(comments, page));
+    return res.status(200).json(formatResponse(comments, page));
 };

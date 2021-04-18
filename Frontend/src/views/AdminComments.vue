@@ -9,6 +9,7 @@
         <v-btn color="red" @click="openConfirm(comment.id)"> Supprimer </v-btn>
       </v-card-text>
     </v-card>
+    <paginate model="comments" @currentPageChange="onCurrentPageChange"/>
     <v-dialog v-model="dialog" width="600px">
       <v-card>
         <v-card-title> Êtes vous sûr de vouloir supprimer ce commentaire ? </v-card-title>
@@ -25,8 +26,11 @@
 
 <script>
 import { mapState } from 'vuex';
+import paginate from '@/components/Paginate';
+
 export default {
-  name: 'Home',
+  name: 'AdminComments',
+  components: { paginate },
   mounted() {
     this.$store.dispatch('admin/loadComments');
   },
@@ -40,6 +44,9 @@ export default {
     ...mapState({comments: state => state.admin.comments,})
   },
   methods: {
+    onCurrentPageChange(page) {
+      this.$store.dispatch('admin/loadComments', page );
+    },
     openConfirm(comment_id) {
       this.comment_id = comment_id
       this.dialog = true;

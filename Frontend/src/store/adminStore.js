@@ -1,4 +1,5 @@
 import Api from "@/service/api";
+import currentPage from "@/utils/paginateHelper";
 
 export default {
     namespaced: true,
@@ -14,10 +15,11 @@ export default {
         }
     },
     actions: {
-        async loadComments({ commit }) {
-            const res = await Api().get('/comments');
+        async loadComments({ commit }, page) {
+            const res = await Api().get('admin/comments' + currentPage(page !== undefined ? page : undefined));
             if(res.status === 200) {
-                commit('SET_COMMENTS', res.data);
+                commit('SET_COMMENTS', res.data.rows);
+                commit('paginate/SET_PAGINATE', {model: 'comments', params: res.data.paginate}, { root: true });
             }
         },
         async removeComment({ commit }, comment_id) {

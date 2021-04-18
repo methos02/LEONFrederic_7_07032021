@@ -1,12 +1,12 @@
 'use strict';
 const typePost = require('../helpers/postType');
 const faker = require('faker');
-const { NB_ARTICLE, NB_IMAGE, NB_USERS } = require('../config/seederConfig');
-const { getRandomInt } = require('../helpers/mathHelper')
+const { NB_ARTICLES, NB_IMAGES, NB_USERS } = require('../config/seederConfig');
+const { getRandomInt } = require('../helpers/mathHelper');
 
 module.exports = {
     up: async (queryInterface) => {
-        const articles = [...Array(NB_ARTICLE)].map(() => ({
+        const articles = [...Array(NB_ARTICLES)].map(() => ({
                 title: faker.lorem.words(10),
                 content: faker.lorem.paragraphs(8),
                 UserId: getRandomInt(1, NB_USERS),
@@ -14,7 +14,7 @@ module.exports = {
             }
         ));
 
-        const images = [...Array(NB_IMAGE)].map(() => ({
+        const images = [...Array(NB_IMAGES)].map(() => ({
                 content: faker.lorem.words(10),
                 image: 'post_3.webp',
                 UserId: getRandomInt(1, NB_USERS),

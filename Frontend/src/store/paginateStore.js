@@ -2,7 +2,8 @@ export default {
     namespaced: true,
     state : {
         posts: {},
-        users: {}
+        users: {},
+        comments: {},
     },
     mutations : {
         SET_PAGINATE(state, paginate) {

@@ -30,6 +30,7 @@ import { compareDate } from '../utils/date';
 import paginate from '@/components/Paginate';
 
 export default {
+  name: 'AdminUsers',
   components: { paginate },
   mounted() {
     this.$store.dispatch('loadUsers');
