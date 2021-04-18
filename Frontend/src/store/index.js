@@ -6,6 +6,7 @@ import commentsModule from  './commentsStore';
 import postsModule from  './postsStore';
 import snackbarModule from './snackbarStore';
 import paginateModule from './paginateStore';
+import currentPage from "@/utils/paginateHelper";
 
 Vue.use(Vuex);
 Vue.config.devtools = true
@@ -27,7 +28,6 @@ export default new Vuex.Store({
       state.users = users;
     },
     BAN_USER(state, data) {
-
       state.users.forEach(user => {
         if(user.id === data.user_id) {
           user.banUntil =  data.banUntil
@@ -71,16 +71,17 @@ export default new Vuex.Store({
     getCurrentUser: state => { return state.current_user}
   },
   actions: {
-    async loadUsers({ commit }) {
-      const res = await Api().get('/admin/users').catch(err => err.response);
+    async loadUsers({ commit }, page) {
+      const res = await Api().get('/admin/users' + currentPage(page !== undefined ? page : undefined)).catch(err => err.response);
       if(res.status === 200) {
-        commit('SET_USERS', res.data);
+        commit('SET_USERS', res.data.rows);
+        commit('paginate/SET_PAGINATE', {model: 'users', params: res.data.paginate});
       }
     },
-    async banUser({ commit }, user_id) {
-      const res = await Api().put('/admin/users/' + user_id + '/ban', {UserId: user_id, message: 'utilisateur banni.'}).catch(err => err.response);
+    async banUser({ commit }, data) {
+      const res = await Api().put('/admin/users/' + data.user_id + '/ban', {UserId: data.user_id, message: data.message }).catch(err => err.response);
       if(res.status === 200) {
-        commit('BAN_USER', {user_id: user_id, banUntil : res.data.banUntil, formatBanUntil : res.data.formatBanUntil})
+        commit('BAN_USER', {user_id: data.user_id, banUntil : res.data.banUntil, formatBanUntil : res.data.formatBanUntil})
       }
       return res;
     },

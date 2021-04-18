@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {defaultAvatar, avatarPath} = require("../helpers/imageHelper");
+const { formatDateHour } = require('../helpers/dateHelper')
 const User = require('../models').User;
 const Like = require('../models').Like;
 
@@ -37,8 +38,17 @@ exports.login = async (req, res) => {
         return res.status(401).json({ error: 'Utilisateur ou mot de passe incorrect!' });
     }
 
-    const token = jwt.sign( { userId: user.id }, process.env.APP_KEY, { expiresIn: '24h' });
+    const dateBan = new Date(user.banUntil);
+    const now = new Date();
+    if(dateBan > now) {
+        return res.status(401).json({ error: `Votre a été banni jusqu'au ${ formatDateHour(dateBan)}.`, message:  user.messageBan });
+    }
 
+    if(dateBan <= now) {
+        User.update({banUntil: null, messageBan: null }, {where: { id: user.id}}).catch(error => res.status(500).json({ error }));
+    }
+
+    const token = jwt.sign( { userId: user.id }, process.env.APP_KEY, { expiresIn: '24h' });
     res.status(200).json({ user: {...await getUser(user), token : token}});
 };
 

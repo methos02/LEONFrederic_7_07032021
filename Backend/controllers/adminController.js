@@ -1,4 +1,5 @@
 const {addWeek, formatDate} = require("../helpers/dateHelper");
+const { formatResponse, getPage, constante } = require('../helpers/paginateHelper');
 const User = require('../models').User;
 const Comment = require('../models').Comment;
 const sequelize = require('sequelize');
@@ -6,10 +7,18 @@ const sequelize = require('sequelize');
 /**
  * affiche la liste de tout les utilisateurs, uniquement pour l'admin
  */
-exports.users = (req, res) => {
-    User.findAll({ attributes : ['id', 'name', 'email', 'avatar', 'avatarPath', 'nbBan', 'banUntil', 'formatBanUntil']})
-        .then(users => res.status(200).json(users))
-        .catch(error => res.status(400).json({ error }));
+exports.users = async (req, res) => {
+    const page = getPage(req.query);
+
+    const users = await User.findAndCountAll({
+        attributes : ['id', 'name', 'email', 'avatar', 'avatarPath', 'nbBan', 'banUntil', 'formatBanUntil'],
+        limit: constante.PAGINATE_LIMITE,
+        offset: constante.PAGINATE_LIMITE * page,
+        where: { banUntil : null, isAdmin: 0 },
+        order: [['id', 'DESC']]
+    }).catch(error => res.status(500).json({ error }));
+
+    return res.status(200).json(formatResponse(users, page));
 };
 
 /**

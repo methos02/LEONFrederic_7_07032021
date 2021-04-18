@@ -8,48 +8,48 @@
           <span v-if="user.nbBan !== 0"> - nombre de ban {{ user.nbBan}} </span>
           <span v-if="compareDate(user.banUntil)">- date de ban {{ user.formatBanUntil }}</span>
         </span>
-        <v-btn color="red" @click="openConfirm(user.id)"> Bannir </v-btn>
+        <v-btn color="red" @click="user_id = user.id"> Bannir </v-btn>
       </v-card-text>
+      <div v-if="user_id === user.id" class="px-4 pb-4">
+        <v-textarea v-model="message[user.id]" class="pt-0" auto-grow rows="1" placeholder="Raisons" hide-details></v-textarea>
+        <div class="row justify-center text-center pt-3">
+          <v-col>
+            <v-btn @click="bannirUser" class="mx-1" color="success" > Confirmer </v-btn>
+            <v-btn @click="dialog = false" class="mx-1" color="red" > Annuler </v-btn>
+          </v-col>
+        </div>
+      </div>
     </v-card>
-    <v-dialog v-model="dialog" width="600px">
-      <v-card>
-        <v-card-title> Êtes-vous sûr de vouloir bannir cet utilisateur ? </v-card-title>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-btn color="success" text  @click="bannirUser"> Oui </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="red" text @click="dialog = false"> Non </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <paginate model="users" @currentPageChange="onCurrentPageChange"/>
   </v-container>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import { compareDate } from '../utils/date';
+import paginate from '@/components/Paginate';
 
 export default {
+  components: { paginate },
   mounted() {
     this.$store.dispatch('loadUsers');
   },
   data() {
     return {
       dialog: false,
-      user_id: ''
+      user_id: '',
+      message: {},
     }
   },
   computed: {
     ...mapState(['users'])
   },
   methods: {
-    openConfirm(user_id) {
-      this.user_id = user_id
-      this.dialog = true;
+    onCurrentPageChange(page) {
+      this.$store.dispatch('loadUsers', page );
     },
     bannirUser() {
-      this.$store.dispatch('banUser', this.user_id);
-      this.dialog = false;
+      this.$store.dispatch('banUser', {user_id : this.user_id, message : this.message[this.user_id]});
       this.user_id = '';
     },
     compareDate(date_1) {
