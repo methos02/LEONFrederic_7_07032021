@@ -12,10 +12,12 @@ const {postPath} = require("../helpers/imageHelper");
  */
 exports.index = async (req, res) => {
     const page = getPage(req.query);
+
     const posts = await Post.findAndCountAll({
         limit: constante.PAGINATE_LIMITE,
         offset: constante.PAGINATE_LIMITE * page,
         include: [userJoin, commentJoin],
+        distinct: true,
         order: [['id', 'DESC']]
     }).catch(error => { return res.status(500).json({error}) });
 

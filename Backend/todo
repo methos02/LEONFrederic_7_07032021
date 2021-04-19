@@ -1,8 +1,6 @@
 - Améliorré le design des commentaires
+- Créer un component confirmDialogue
 - Application de la suppression de compte
 - Responsivité
-- banniere pour les articles
-
-- améliorrer l'ergonomie image
-- resize photo de profil
-- nom des type dans la barre latérale
+- autoriser la suppression qu'a l'auteur d'un post
+- reset le cropper apres modification du profif

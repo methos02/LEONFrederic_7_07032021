@@ -43,6 +43,6 @@ exports.comments = async (req, res) => {
         offset: constante.PAGINATE_LIMITE * page,
         order: [['id', 'DESC']]
     }).catch(error => res.status(500).json({ error }));
-    console.log(formatResponse(comments, page));
+
     return res.status(200).json(formatResponse(comments, page));
 };

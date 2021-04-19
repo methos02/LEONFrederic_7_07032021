@@ -26,15 +26,15 @@
         <div class="text-center div-btn-upload-image" v-show="image.file !== null">
           <h2> Déplacer </h2>
           <v-btn-toggle>
-            <v-btn @click="cropperLeft"><v-icon>mdi-chevron-left</v-icon></v-btn>
-            <v-btn type="button" class="btn btn-secondary" @click="cropperRight"><v-icon>mdi-chevron-right</v-icon></v-btn>
-            <v-btn type="button" class="btn btn-secondary" @click="cropperUp"><v-icon>mdi-chevron-up</v-icon></v-btn>
-            <v-btn type="button" class="btn btn-secondary" @click="cropperDown"><v-icon>mdi-chevron-down</v-icon></v-btn>
+            <v-btn @click="cropper.move(-10, 0)"><v-icon>mdi-chevron-left</v-icon></v-btn>
+            <v-btn type="button" class="btn btn-secondary" @click="cropper.move(10, 0)"><v-icon>mdi-chevron-right</v-icon></v-btn>
+            <v-btn type="button" class="btn btn-secondary" @click="cropper.move(0, -10)"><v-icon>mdi-chevron-up</v-icon></v-btn>
+            <v-btn type="button" class="btn btn-secondary" @click="cropper.move(0, 10)"><v-icon>mdi-chevron-down</v-icon></v-btn>
           </v-btn-toggle>
           <h2> Zoomer </h2>
           <v-btn-toggle>
-            <v-btn type="button" class="btn btn-secondary" @click="zoomUp"><v-icon>mdi-magnify-plus</v-icon></v-btn>
-            <v-btn type="button" class="btn btn-secondary" @click="zoomDown"><v-icon>mdi-magnify-minus</v-icon></v-btn>
+            <v-btn type="button" class="btn btn-secondary" @click="cropper.zoom(0.1)"><v-icon>mdi-magnify-plus</v-icon></v-btn>
+            <v-btn type="button" class="btn btn-secondary" @click="cropper.zoom(-0.1)"><v-icon>mdi-magnify-minus</v-icon></v-btn>
           </v-btn-toggle>
           <div>
             <v-btn class="mx-3 success" @click="addPost"> Ajouter </v-btn>
@@ -75,12 +75,6 @@ export default {
     });
   },
   methods: {
-    cropperLeft() { this.cropper.move(-10, 0); },
-    cropperRight() { this.cropper.move(10, 0); },
-    cropperUp() { this.cropper.move(0, -10); },
-    cropperDown() { this.cropper.move(0, 10); },
-    zoomUp() { this.cropper.zoom(0.1); },
-    zoomDown() { this.cropper.zoom(-0.1); },
     addPost() {
       this.cropper.getCroppedCanvas().toBlob(async (blob) => {
         const fd = new FormData();
@@ -108,8 +102,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "node_modules/cropperjs/src/css/cropper";
-
 .card-post {
   .div-btn-select-image, .div-btn-upload-image {
     position: absolute;

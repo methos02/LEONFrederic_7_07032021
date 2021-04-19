@@ -1,6 +1,7 @@
 <template>
   <v-container>
-    <FormArticle :post="post" :errors="errors" @post="onSubmit"></FormArticle>
+    <h1>Editer un article </h1>
+    <FormArticle v-if="post" :post="post" :errors="errors" @post="onSubmit"></FormArticle>
   </v-container>
 </template>
 
@@ -17,7 +18,7 @@ export default {
       errors: {}
     }
   },
-  async beforeCreate() {
+  async mounted() {
     await this.$store.dispatch('posts/loadPost', parseInt(this.$route.params.id));
   },
   computed : {
@@ -30,8 +31,9 @@ export default {
     }
   },
   methods: {
-    async onSubmit(post) {
-      const res = await this.$store.dispatch('posts/updateArticle', post);
+    async onSubmit(formData) {
+      const res = await this.$store.dispatch('posts/updateArticle', {id: this.post.id, formData});
+
       if (res.status === 400) { return this.errors = dispachError(res.data);}
       if (res.status === 401) { return this.errors.global = res.data.error; }
 

@@ -72,7 +72,7 @@ export default {
             return res;
         },
         async updateArticle({commit}, data) {
-            const res = await Api().put('/posts/' + data.id, {title : data.title, content: data.content}).catch((err) => err.response);
+            const res = await Api().put('/posts/' + data.id, data.formData).catch((err) => err.response);
             if(res.status === 200) {
                 commit('UPDATE_POST', data);
             }

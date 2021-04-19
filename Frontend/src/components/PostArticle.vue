@@ -15,7 +15,7 @@
         <v-btn @click="deleteConfirm(post.id)" class="red white--text"><v-icon> mdi-delete </v-icon> </v-btn></div>
     </div>
     <div class="text-center">
-      <img v-if="post.imagePath" :src="post.imagePath" alt="illustration du post" />
+      <img v-if="post.imagePath" :src="post.imagePath" class="article-header" alt="illustration du post" />
     </div>
     <router-link :to="{ name: 'Post', params: { id : post.id } }">
       <v-card-title v-if="post.title">{{ post.title }}</v-card-title>
@@ -60,3 +60,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.article-header {
+  width: 100%;
+}
+</style>

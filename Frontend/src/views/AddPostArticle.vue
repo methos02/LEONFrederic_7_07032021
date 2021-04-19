@@ -1,6 +1,7 @@
 <template>
   <v-container>
-      <FormArticle :post="post" :errors="errors" @post="addPost"></FormArticle>
+    <h1>Ajouter un article </h1>
+    <FormArticle :post="post" :errors="errors" @post="addPost"></FormArticle>
   </v-container>
 </template>
 
@@ -18,13 +19,8 @@ export default {
     }
   },
   methods: {
-    async addPost(post) {
-      const fd = new FormData();
-      fd.append('post[title]', post.title);
-      fd.append('post[content]', post.content);
-      fd.append('post[type]', 1);
-
-      const resp = await this.$store.dispatch('posts/createPost', fd);
+    async addPost(formData) {
+      const resp = await this.$store.dispatch('posts/createPost', formData);
 
       if (resp.status === 400) { return this.errors = dispachError(resp.data);}
       if (resp.status === 401) { return this.errors.general = resp.data.error; }

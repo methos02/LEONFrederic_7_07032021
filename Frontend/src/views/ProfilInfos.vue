@@ -1,14 +1,30 @@
 <template>
   <v-container class="profil">
     <form class="my-3">
-      <h3> Modification du profile </h3>
-      {{ generalError }}
+      <h1 class="mb5"> Modification du profile </h1>
+      {{ errors.general }}
       <div class="row">
         <div class="col-4">
-          <div class="v-avatar mb-4">
-            <img :src="avatar.path !== null ? avatar.path : current_user.avatarPath" class="preview" alt="image de profil">
+          <div class="text-center">
+            <div class="v-avatar mb-4">
+              <img v-show="avatar.path === undefined" :src="current_user.avatarPath" class="preview" alt="image de profil">
+              <img v-show="avatar.path" ref="avatar"  :src="avatar.path" class="preview" alt="image de profil">
+            </div>
           </div>
-          <input type="file" accept="image/*" @change="onFileChange" name="images">
+          <input ref="avatar_input" type="file" accept="image/*" @change="onFileChange" name="avatar" v-show="false">
+          <v-btn-toggle class="profil-copper-controle" v-show="avatar.path">
+            <v-btn @click="cropper.move(-10, 0)"><v-icon>mdi-chevron-left</v-icon></v-btn>
+            <v-btn type="button" class="btn btn-secondary" @click="cropper.move(10, 0)"><v-icon>mdi-chevron-right</v-icon></v-btn>
+            <v-btn type="button" class="btn btn-secondary" @click="cropper.move(0, -10)"><v-icon>mdi-chevron-up</v-icon></v-btn>
+            <v-btn type="button" class="btn btn-secondary" @click="cropper.move(0, 10)"><v-icon>mdi-chevron-down</v-icon></v-btn>
+          </v-btn-toggle>
+          <v-btn-toggle class="profil-copper-controle" v-show="avatar.path">
+            <v-btn type="button" class="btn btn-secondary" @click="cropper.zoom(0.1)"><v-icon>mdi-magnify-plus</v-icon></v-btn>
+            <v-btn type="button" class="btn btn-secondary" @click="cropper.zoom(-0.1)"><v-icon>mdi-magnify-minus</v-icon></v-btn>
+          </v-btn-toggle>
+          <div class="text-center">
+            <v-btn @click="$refs.avatar_input.click()">Changer d'image</v-btn>
+          </div>
         </div>
         <div class="row col-8 align-center">
           <div class="col">
@@ -39,23 +55,34 @@
 import dispachError from '/src/utils/sequelizeError';
 import imagePreview from "@/utils/imagePreview";
 import {mapState} from "vuex";
+import Cropper from "cropperjs";
 
 export default {
   data () {
     return {
       errors: {},
-      generalError : '',
-      avatar: {file: null, path : null},
-      dialog: false
+      avatar: {},
+      dialog: false,
+      cropper: {}
     }
+  },
+  mounted() {
+    this.cropper = new Cropper(this.$refs.avatar, {
+      dragMode : 'move',
+      cropBoxMovable: false,
+      cropBoxResizable: false,
+      minContainerWidth: 200,
+      minCropBoxHeight: 200,
+      minCropBoxWidth: 200,
+      guides: false,
+      viewMode: 3,
+      aspectRatio: 1
+    });
   },
   computed: {
     ...mapState(['current_user']),
     profil() {
-      return {
-        name: this.current_user.name,
-        email: this.current_user.email
-      }
+      return {...this.current_user }
     }
   },
   methods: {
@@ -64,22 +91,25 @@ export default {
     },
     async updateProfil () {
       this.errors = {};
-      this.generalError = '';
 
       const fd = new FormData();
-      if(this.avatar.file != null) {
-        fd.append('avatar', this.avatar.file, this.avatar.file.name);
-      }
-
+      let res = '';
       fd.append('user[name]', this.profil.name);
       fd.append('user[email]', this.profil.email);
 
-      const resp = await this.$store.dispatch('updateProfil', fd);
+      if(this.avatar.file != null) {
+        this.cropper.getCroppedCanvas().toBlob(async (blob) => {
+          fd.append('avatar', blob, this.avatar.file.name);
+          res = await this.$store.dispatch('updateProfil', fd);
+        });
+      } else {
+        res = await this.$store.dispatch('updateProfil', fd);
+      }
 
-      if (resp.status === 400) { return this.errors = dispachError(resp.data);}
-      if (resp.status === 401) { return this.generalError = resp.data.error; }
+      if (res.status === 400) { return this.errors = dispachError(res.data);}
+      if (res.status === 401) { return this.errors.general = res.data.error; }
 
-      await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre profil a été mis à jour.' })
+      await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre profil a été mis à jour.' });
     },
     async deleteProfil() {
       const res = await this.$store.dispatch('deleteProfil', this.current_user.id);
@@ -93,6 +123,7 @@ export default {
     },
     onFileChange(e) {
       this.avatar = imagePreview(e)
+      document.addEventListener('image-load', () => { this.cropper.replace(this.avatar.path); });
     },
   }
 }
@@ -103,5 +134,11 @@ export default {
   width: 200px;
 
   img { object-fit: cover }
+}
+
+.profil-copper-controle {
+  display: block;
+  text-align: center;
+  margin: 15px 0;
 }
 </style>
