@@ -1,4 +1,4 @@
-const Sequelize = require("sequelize");
+const { formatDate } = require('../helpers/dateHelper')
 
 module.exports = (Sequelize, DataTypes) => {
     const Comment = Sequelize.define('Comment', {
@@ -34,6 +34,13 @@ module.exports = (Sequelize, DataTypes) => {
         },
         createdAt: {
             type: DataTypes.DATE
+        },
+        formatCreatedAt: {
+            type: DataTypes.VIRTUAL,
+            get() {
+                const date = new Date(this.createdAt);
+                return formatDate(date);
+            },
         },
         updatedAt: {
             type: DataTypes.DATE

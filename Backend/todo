@@ -1,4 +1,5 @@
-- Améliorré le design des commentaires
 - Application de la suppression de compte
 - Responsivité
-- autoriser la suppression qu'a l'auteur d'un post ou à l'admin
+- corrige le bug des dropdown
+- corriger test dans le Backend
+- améliorré le design de la page de connexion et d'inscription

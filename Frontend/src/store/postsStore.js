@@ -36,10 +36,17 @@ export default {
                 }
             });
         },
-        TOGGLE_COMMENTS(state, post_id) {
+        TOGGLE_COMMENTS(state, data) {
             state.posts.forEach(post => {
-                if(post.id === post_id) {
-                    Vue.set(post, 'showComment', !post.showComment);
+                if(post.id === data.post_id) {
+                    Vue.set(post, 'showComment', data.state !== undefined ? data.state : !post.showComment);
+                }
+            });
+        },
+        TOGGLE_TEXTAREA(state, data) {
+            state.posts.forEach(post => {
+                if(post.id === data.post_id) {
+                    Vue.set(post, 'showTextarea', data.state !== undefined ? data.state : !post.showTextarea );
                 }
             });
         },
@@ -105,6 +112,9 @@ export default {
         },
         toggleComments({ commit }, post_id) {
             commit('TOGGLE_COMMENTS', post_id);
+        },
+        toggleTextarea({ commit }, data) {
+            commit('TOGGLE_TEXTAREA', data);
         },
     }
 }

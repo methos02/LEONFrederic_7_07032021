@@ -1,5 +1,7 @@
 const Comment = require('../models').Comment;
 const Post = require('../models').Post;
+const User = require('../models').User;
+const userJoin = require('../helpers/join/userJoin');
 
 /**
  * Enregistre un commentaire en bdd
@@ -9,7 +11,11 @@ exports.store = async (req, res) => {
     if(post === null) { return res.status(404).json({ error: 'Post introuvable!' }); }
 
     Comment.create( req.store.valideData )
-        .then((comment) => res.status(201).json({ message: 'Commentaire posté.', comment: comment}))
+        .then(async (comment) => {
+            const user = await User.findByPk(comment.UserId).catch(error => res.status(500).json({ error }));
+            comment.dataValues.User = {id: user.id, name: user.name, avatar: user.avatar, avatarPath: user.avatarPath};
+            res.status(201).json({ message: 'Commentaire posté.', comment: comment});
+        })
         .catch(error => res.status(400).json({ message : 'Erreur de commentaire :' + error }));
 };
 

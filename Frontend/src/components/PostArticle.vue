@@ -10,7 +10,7 @@
           <div class="image-meta-create">{{ post.formatCreatedAt }}</div>
         </div>
       </div>
-      <div class="d-flex card-actions">
+      <div class="d-flex card-actions" v-if="has_action">
         <v-btn :to="{ name: 'UpdateArticle', params: { id : post.id } }" class="mr-3 green white--text"><v-icon> mdi-pencil </v-icon> </v-btn>
         <v-btn @click="deleteConfirm(post.id)" class="red white--text"><v-icon> mdi-delete </v-icon> </v-btn></div>
     </div>
@@ -21,11 +21,13 @@
       <v-card-title v-if="post.title">{{ post.title }}</v-card-title>
     </router-link>
     <v-card-text v-if="post.content">{{ post.content | abbreviate }}</v-card-text>
-    <div class="d-flex justify-space-between align-center">
-      <v-card-actions>
-        <v-btn v-if="!post.showComment" @click="toggleComments(post.id)"> Afficher les commentaires </v-btn>
-        <v-btn v-else @click="toggleComments(post.id)"> Cacher les commentaires </v-btn>
-      </v-card-actions>
+    <div class="d-flex justify-space-between align-center px-3 pb-3">
+      <v-btn @click="toggleTextarea(post.id, true)"> Répondre </v-btn>
+      <div v-if="post.Comments.length !== 0">
+        <v-btn v-if="!post.showComment" @click="toggleComments(post.id)" text> Afficher les commentaires </v-btn>
+        <v-btn v-else @click="toggleComments(post.id)" text> Cacher les commentaires </v-btn>
+      </div>
+      <v-spacer v-else></v-spacer>
       <likes :post="post"></likes>
     </div>
   </v-card>
@@ -37,7 +39,7 @@ import likes from "@/components/Likes";
 
 export default {
   name: "PostArticle",
-  props: ['post'],
+  props: ['post', 'has_action'],
   components: { likes },
   filters: {
     abbreviate(text) {
@@ -49,7 +51,10 @@ export default {
       this.$emit('delete', { post_id : post_id, type : 'article' });
     },
     toggleComments(post_id) {
-      this.$store.dispatch('posts/toggleComments', post_id);
+      this.$store.dispatch('posts/toggleComments', {post_id});
+    },
+    toggleTextarea(post_id, state) {
+      this.$store.dispatch('posts/toggleTextarea', {post_id, state});
     },
     async deletePost(post_id) {
       const res = await this.$store.dispatch('posts/deletePost', post_id);

@@ -22,6 +22,7 @@ export default {
         TOGGLE_ANSWERS(state, data) {
             state[data.post_id].comments.forEach( comment => {
                 if(comment.id === data.comment_id) {
+                    console.log(comment.showAnswers);
                     Vue.set(comment, 'showAnswers', !comment.showAnswers);
                 }
             })
@@ -29,7 +30,7 @@ export default {
         TOGGLE_TEXTAREA(state, data) {
             state[data.post_id].comments.forEach( comment => {
                 if(comment.id === data.comment_id) {
-                    Vue.set(comment, 'showTextarea', !comment.showTextarea);
+                    Vue.set(comment, 'showTextarea', data.state !== undefined ? data.state : !comment.showTextarea);
                 }
             })
         },

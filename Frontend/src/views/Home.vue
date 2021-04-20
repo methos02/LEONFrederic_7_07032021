@@ -2,11 +2,9 @@
   <v-container class="pt-0 div-container">
     <sidebar @type="onTypeChange"/>
     <div v-for="post in posts" :key="post.id"  class="mt-10">
-      <post_article v-if="post.type === 1" :post="post" @delete="openConfirm"></post_article>
-      <post_image  v-if="post.type === 2" :post="post" @delete="openConfirm"></post_image>
-      <div v-show="post.showComment">
-        <comments :post_id="post.id" />
-      </div>
+      <post_article v-if="post.type === 1" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.isAdmin === 1" />
+      <post_image  v-if="post.type === 2" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.isAdmin === 1" />
+      <comments :post="post" />
     </div>
     <paginate model="posts" @currentPageChange="onCurrentPageChange"/>
     <confirm-action @confirm="deletePost"> Êtes vous sûr de vouloir supprimer votre {{ data.type }} </confirm-action>
