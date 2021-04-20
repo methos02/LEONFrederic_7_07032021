@@ -35,34 +35,24 @@
       </div>
       <div class="row justify-center">
         <v-btn class="mx-3" @click="updateProfil"> Mettre à jour </v-btn>
-        <v-btn class="white--text red mx-3" @click="openConfirm"> Supprimer le profil </v-btn>
+        <v-btn class="white--text red mx-3" @click="$emit('openConfirm', true)"> Supprimer le profil </v-btn>
       </div>
     </form>
-    <v-dialog v-model="dialog" width="600px">
-      <v-card>
-        <v-card-title> Êtes-vous sûr de vouloir supprimer votre compte ? </v-card-title>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-btn color="success" text  @click="deleteProfil"> Oui </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="red" text @click="dialog = false"> Non </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <confirm-action @confirm="deleteProfil"> Êtes-vous sûr de vouloir supprimer votre compte ? </confirm-action>
   </v-container>
 </template>
 <script>
 import dispachError from '/src/utils/sequelizeError';
-import imagePreview from "@/utils/imagePreview";
+import {addImgToFormData, imagePreview} from "@/utils/imageHelper";
 import {mapState} from "vuex";
 import Cropper from "cropperjs";
+import confirmAction from "../components/confirmAction";
 
 export default {
   data () {
     return {
       errors: {},
       avatar: {},
-      dialog: false,
       cropper: {}
     }
   },
@@ -79,6 +69,7 @@ export default {
       aspectRatio: 1
     });
   },
+  components: { confirmAction },
   computed: {
     ...mapState(['current_user']),
     profil() {
@@ -86,30 +77,23 @@ export default {
     }
   },
   methods: {
-    openConfirm() {
-      this.dialog = true;
-    },
     async updateProfil () {
       this.errors = {};
+      let fd = new FormData();
 
-      const fd = new FormData();
-      let res = '';
       fd.append('user[name]', this.profil.name);
       fd.append('user[email]', this.profil.email);
+      fd = await addImgToFormData(this.cropper, this.avatar.file, fd, 'avatar');
 
-      if(this.avatar.file != null) {
-        this.cropper.getCroppedCanvas().toBlob(async (blob) => {
-          fd.append('avatar', blob, this.avatar.file.name);
-          res = await this.$store.dispatch('updateProfil', fd);
-        });
-      } else {
-        res = await this.$store.dispatch('updateProfil', fd);
-      }
+      const res = await this.$store.dispatch('updateProfil', fd);
 
       if (res.status === 400) { return this.errors = dispachError(res.data);}
       if (res.status === 401) { return this.errors.general = res.data.error; }
 
-      await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre profil a été mis à jour.' });
+      if( res.status === 200) {
+        await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre profil a été mis à jour.' });
+        this.avatar = {};
+      }
     },
     async deleteProfil() {
       const res = await this.$store.dispatch('deleteProfil', this.current_user.id);

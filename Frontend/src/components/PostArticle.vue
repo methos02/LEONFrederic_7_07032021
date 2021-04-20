@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     deleteConfirm(post_id) {
-      this.$emit('delete', { post_id : post_id, type : 'article'});
+      this.$emit('delete', { post_id : post_id, type : 'article' });
     },
     toggleComments(post_id) {
       this.$store.dispatch('posts/toggleComments', post_id);

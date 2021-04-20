@@ -36,7 +36,7 @@
   </form>
 </template>
 <script>
-import imagePreview from "@/utils/imagePreview";
+import {imagePreview, addImgToFormData} from "@/utils/imageHelper";
 import Cropper from "cropperjs";
 
 export default {
@@ -64,23 +64,15 @@ export default {
     }
   },
   methods: {
-    postUpdate() {
-      const fd = new FormData();
+    async postUpdate() {
+      let fd = new FormData();
+
       fd.append('post[title]', this.datas.title);
       fd.append('post[content]', this.datas.content);
+      fd = await addImgToFormData(this.cropper, this.image.file, fd, 'image');
+      if(this.post.id === undefined)  {  fd.append('post[type]', 1); }
 
-      if(this.post.id === undefined)  {
-        fd.append('post[type]', 1);
-      }
-
-      if(this.image.file !== undefined) {
-        this.cropper.getCroppedCanvas().toBlob(async (blob) => {
-          fd.append('image', blob, this.image.file.name);
-          this.$emit('post', fd);
-        });
-      } else {
-        this.$emit('post', fd);
-      }
+      this.$emit('post', fd);
     },
     onFileChange(e) {
       this.image = imagePreview(e);

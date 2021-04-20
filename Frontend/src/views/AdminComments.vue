@@ -6,39 +6,27 @@
         <span class="flex col">
           {{ comment.content }}
         </span>
-        <v-btn color="red" @click="openConfirm(comment.id)"> Supprimer </v-btn>
+        <v-btn color="red" @click="$emit('openConfirm', true); comment_id = comment.id;"> Supprimer </v-btn>
       </v-card-text>
     </v-card>
     <paginate model="comments" @currentPageChange="onCurrentPageChange"/>
-    <v-dialog v-model="dialog" width="600px">
-      <v-card>
-        <v-card-title> Êtes vous sûr de vouloir supprimer ce commentaire ? </v-card-title>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-btn color="success" text  @click="deleteComment"> Oui </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="red" text @click="dialog = false"> Non </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <confirm-action @confirm="deleteComment"> Êtes vous sûr de vouloir supprimer ce commentaire ? </confirm-action>
   </v-container>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import paginate from '@/components/Paginate';
+import confirmAction from "../components/confirmAction";
 
 export default {
   name: 'AdminComments',
-  components: { paginate },
+  components: { paginate, confirmAction },
   mounted() {
     this.$store.dispatch('admin/loadComments');
   },
   data() {
-    return {
-      dialog: false,
-      comment_id: ''
-    }
+    return { comment_id: '' }
   },
   computed: {
     ...mapState({comments: state => state.admin.comments,})
@@ -46,10 +34,6 @@ export default {
   methods: {
     onCurrentPageChange(page) {
       this.$store.dispatch('admin/loadComments', page );
-    },
-    openConfirm(comment_id) {
-      this.comment_id = comment_id
-      this.dialog = true;
     },
     async deleteComment() {
       const res = await this.$store.dispatch('admin/removeComment', this.comment_id)

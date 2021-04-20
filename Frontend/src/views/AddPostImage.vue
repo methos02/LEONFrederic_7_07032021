@@ -48,7 +48,7 @@
 <script>
 
 import dispachError from "@/utils/sequelizeError";
-import imagePreview from "@/utils/imagePreview";
+import { imagePreview } from "@/utils/imageHelper";
 import Cropper from "cropperjs";
 
 export default {

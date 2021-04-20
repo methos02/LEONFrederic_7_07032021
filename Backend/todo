@@ -1,6 +1,4 @@
 - Améliorré le design des commentaires
-- Créer un component confirmDialogue
 - Application de la suppression de compte
 - Responsivité
-- autoriser la suppression qu'a l'auteur d'un post
-- reset le cropper apres modification du profif
+- autoriser la suppression qu'a l'auteur d'un post ou à l'admin
