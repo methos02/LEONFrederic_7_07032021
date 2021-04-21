@@ -8,6 +8,7 @@
       <v-card class="flex d-flex align-center">
         <div class="py-4 px-8 flex">
           <v-card-text class="pa-0 pb-2">
+            <span class="font-weight-light text-body-2"> {{ comment.ParentId === null ? 'Commentaire' : 'Réponse' }} - </span>
             <span class="font-weight-bold text-body-1">{{ comment.User.name }}</span>
             <span class="font-weight-light text-body-2"> - Posté le {{ comment.formatCreatedAt }}</span>
           </v-card-text>

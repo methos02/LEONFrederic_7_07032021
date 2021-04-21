@@ -1,20 +1,10 @@
 <template>
   <v-app>
-    <v-app-bar
-        app
-        color="primary"
-        dark
-    >
+    <v-app-bar app color="primary" dark >
       <div class="d-flex align-center">
         <router-link :to="{name: 'Home'}">
-          <v-img
-              alt="Vuetify Logo"
-              class="shrink mr-2"
-              contain
-              src="/images/icon-left-font-monochrome-white.png"
-              transition="scale-transition"
-              width="220"
-          />
+          <v-img alt="logo groupomania" class="shrink mr-2 hidden-xs-only" contain src="/images/groupomania-logo.png" transition="scale-transition" width="220"/>
+          <v-img alt="logo groupomania" class="shrink mr-2 d-sm-none" contain src="/images/groupomania-logo-icon.png" transition="scale-transition" width="30"/>
         </router-link>
       </div>
       <v-spacer></v-spacer>
@@ -23,7 +13,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn class="purple" color="primary mr-3" dark v-bind="attrs" v-on="on">
               <span> Ajouter </span>
-              <v-icon>{{ attrs['aria-expanded'] === 'true'? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+              <v-icon>{{ attrs['aria-expanded'] !== 'true'? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -39,7 +29,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn class="purple" color="primary" dark v-bind="attrs" v-on="on">
               <span>Menu</span>
-              <v-icon>{{ attrs['aria-expanded'] === 'true'? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+              <v-icon>{{ attrs['aria-expanded'] !== 'true'? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
             </v-btn>
           </template>
           <v-list>

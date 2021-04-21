@@ -2,8 +2,18 @@
   <v-container class="pt-0 div-container">
     <sidebar @type="onTypeChange"/>
     <div v-for="post in posts" :key="post.id"  class="mt-10">
-      <post_article v-if="post.type === 1" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.isAdmin === 1" />
-      <post_image  v-if="post.type === 2" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.isAdmin === 1" />
+      <v-card class="card-post mb-2 mx-auto">
+        <home_article v-if="post.type === 1" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.isAdmin === 1" />
+        <home_image  v-if="post.type === 2" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.isAdmin === 1" />
+        <div class="d-flex justify-space-between align-center px-3 pb-3 flex-wrap flex-md-nowrap">
+          <v-btn @click="toggleTextarea(post.id, true)"> Répondre </v-btn>
+          <div v-if="post.Comments.length !== 0" class="order-2 order-md-1">
+            <v-btn v-if="!post.showComment" @click="toggleComments(post.id)" text> Afficher les commentaires </v-btn>
+            <v-btn v-else @click="toggleComments(post.id)" text> Cacher les commentaires </v-btn>
+          </div>
+          <likes :post="post" class="order-1 order-md-2"></likes>
+        </div>
+      </v-card>
       <comments :post="post" />
     </div>
     <paginate model="posts" @currentPageChange="onCurrentPageChange"/>
@@ -14,15 +24,16 @@
 <script>
 import { mapState } from 'vuex';
 import comments from '@/components/Comments'
-import post_article from "@/components/PostArticle";
-import post_image from "@/components/PostImage";
+import home_article from "@/components/HomeArticle";
+import home_image from "@/components/HomeImage";
 import sidebar from "@/components/Sidebar";
 import paginate from "@/components/Paginate";
-import confirmAction from "../components/confirmAction";
+import confirmAction from "@/components/confirmAction";
+import likes from "@/components/Likes";
 
 export default {
   name: 'Home',
-  components: {post_image, post_article, comments, sidebar, paginate, confirmAction },
+  components: {home_image, home_article, comments, sidebar, paginate, confirmAction, likes },
   data() {
     return {
       type: '',
@@ -48,6 +59,12 @@ export default {
     },
     onTypeChange(type) {
       this.type = type;
+    },
+    toggleComments(post_id) {
+      this.$store.dispatch('posts/toggleComments', {post_id});
+    },
+    toggleTextarea(post_id, state) {
+      this.$store.dispatch('posts/toggleTextarea', {post_id, state});
     },
     async deletePost() {
       const res = await this.$store.dispatch('posts/deletePost', this.data.post_id);

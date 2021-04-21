@@ -1,5 +1,5 @@
 <template>
-  <v-card class="card-post mx-auto">
+  <div>
     <div class="d-flex justify-space-between pa-3 div-meta-image">
       <div class="d-flex image-meta">
         <v-avatar class="image-meta-avatar white mr-3">
@@ -11,9 +11,9 @@
         </div>
       </div>
       <div class="d-flex card-actions" v-if="has_action">
-        <v-btn @click="editContent(post.id)" class="mr-3 green white--text" v-if="isEdit === ''"><v-icon> mdi-pencil </v-icon></v-btn>
-        <v-btn @click="closeEditImage" class="mr-3" v-if="isEdit === post.id"><v-icon> mdi-close </v-icon></v-btn>
-        <v-btn @click="deleteConfirm(post.id)" class="red white--text"> <v-icon> mdi-delete </v-icon> </v-btn>
+        <v-btn @click="editContent(post.id)" class="mr-1 green white--text" v-if="isEdit === ''" fab small><v-icon> mdi-pencil </v-icon></v-btn>
+        <v-btn @click="isEdit = ''" class="mr-3" v-if="isEdit === post.id"><v-icon> mdi-close </v-icon></v-btn>
+        <v-btn @click="$emit('delete', { post_id : post.id, type : 'image'})" class="red white--text" fab small> <v-icon> mdi-delete </v-icon> </v-btn>
       </div>
     </div>
     <div class="post-image-body">
@@ -29,26 +29,16 @@
       </v-card-text>
     </div>
     <img v-if="post.imagePath" :src="post.imagePath" alt="illustration du post" class="preview pa-2">
-    <div class="d-flex justify-space-between align-center px-3 pb-3">
-      <v-btn @click="toggleTextarea(post.id, true)"> Répondre </v-btn>
-      <div v-if="post.Comments.length !== 0">
-        <v-btn v-if="!post.showComment" @click="toggleComments(post.id)" text> Afficher les commentaires </v-btn>
-        <v-btn v-else @click="toggleComments(post.id)" text> Cacher les commentaires </v-btn>
-      </div>
-      <v-spacer v-else></v-spacer>
-      <likes :post="post"></likes>
-    </div>
-  </v-card>
+  </div>
 </template>
 
 <script>
-import likes from "@/components/Likes";
 import dispachError from "@/utils/sequelizeError";
 
 export default {
   name: "PostImage",
   props: ['post', 'has_action'],
-  components: { likes },
+
   data () {
     return {
       isEdit : '',
@@ -56,21 +46,9 @@ export default {
     }
   },
   methods: {
-    toggleComments(post_id) {
-      this.$store.dispatch('posts/toggleComments', {post_id});
-    },
-    toggleTextarea(post_id, state) {
-      this.$store.dispatch('posts/toggleTextarea', {post_id, state});
-    },
     editContent(post_id) {
       this.isEdit = post_id;
       setTimeout(() => document.getElementById('editArticle' + this.post.id).focus(), 1);
-    },
-    closeEditImage() {
-      this.isEdit = '';
-    },
-    deleteConfirm(post_id) {
-      this.$emit('delete', { post_id : post_id, type : 'image'});
     },
     async updateImage(post) {
       const res = await this.$store.dispatch('posts/updateImage', post);
