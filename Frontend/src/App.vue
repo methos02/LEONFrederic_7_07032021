@@ -21,9 +21,9 @@
       <div v-if="current_user.name !== undefined">
         <v-menu transition="slide-y-transition" offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn class="purple" color="primary mr-3" dark v-bind="attrs" v-on="on" @click="openAdd">
+            <v-btn class="purple" color="primary mr-3" dark v-bind="attrs" v-on="on">
               <span> Ajouter </span>
-              <v-icon>{{ !isAddOpen ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+              <v-icon>{{ attrs['aria-expanded'] === 'true'? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -37,9 +37,9 @@
         </v-menu>
         <v-menu transition="slide-y-transition" offset-y bottom >
           <template v-slot:activator="{ on, attrs }">
-            <v-btn class="purple" color="primary" dark v-bind="attrs" v-on="on" @click="openMenu">
+            <v-btn class="purple" color="primary" dark v-bind="attrs" v-on="on">
               <span>Menu</span>
-              <v-icon>{{ !isMenuOpen ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+              <v-icon>{{ attrs['aria-expanded'] === 'true'? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -75,12 +75,6 @@ import { mapState } from "vuex";
 
 export default {
   name: 'App',
-  data() {
-    return {
-      isMenuOpen: false,
-      isAddOpen: false
-    }
-  },
   async beforeCreate() {
     if(localStorage.getItem('token') !== null) {
       const resp = await this.$store.dispatch('getCurrentUser');
@@ -98,14 +92,6 @@ export default {
     })
   },
   methods: {
-    openMenu() {
-      this.isMenuOpen = !this.isMenuOpen;
-      this.isAddOpen = false;
-    },
-    openAdd() {
-      this.isAddOpen = !this.isAddOpen;
-      this.isMenuOpen = false;
-    },
     logout() {
       this.$store.dispatch('logout');
       this.$router.push('/login');

@@ -3,6 +3,7 @@ const { formatResponse, getPage, constante } = require('../helpers/paginateHelpe
 const User = require('../models').User;
 const Comment = require('../models').Comment;
 const sequelize = require('sequelize');
+const userJoin = require('../helpers/join/userJoin');
 
 /**
  * affiche la liste de tout les utilisateurs, uniquement pour l'admin
@@ -41,6 +42,7 @@ exports.comments = async (req, res) => {
     const comments = await Comment.findAndCountAll({
         limit: constante.PAGINATE_LIMITE,
         offset: constante.PAGINATE_LIMITE * page,
+        include: [userJoin],
         order: [['id', 'DESC']]
     }).catch(error => res.status(500).json({ error }));
 

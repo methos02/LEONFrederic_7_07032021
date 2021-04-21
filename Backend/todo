@@ -1,5 +1,8 @@
-- Application de la suppression de compte
 - Responsivité
-- corrige le bug des dropdown
 - corriger test dans le Backend
 - améliorré le design de la page de connexion et d'inscription
+- distinction entre commentaire et reponse dans l'admin
+
+point a éclaircir:
+- les utilisateurs doivent pouvoir facilement repérer les dernières participations des employés
+- Application de la suppression de compte
