@@ -1,18 +1,22 @@
 <template>
   <div>
-    <div class="d-flex justify-space-between pa-3 div-meta-image">
+    <div class="d-flex justify-space-between pa-3 div-image-meta">
       <div class="d-flex image-meta">
-        <v-avatar class="image-meta-avatar white mr-3">
-          <img :src="post.User.avatarPath" alt="image de profil">
-        </v-avatar>
+        <router-link :to="'/user/' + post.User.slug">
+          <v-avatar class="image-meta-avatar white mr-3">
+            <img :src="post.User.avatarPath" alt="image de profil">
+          </v-avatar>
+        </router-link>
         <div class="image-meta-infos">
-          <div class="image-meta-author">{{ post.User.name }}</div>
+          <router-link :to="'/user/' + post.User.slug">
+            <div class="image-meta-author">{{ post.User.name }}</div>
+          </router-link>
           <div class="image-meta-create">{{ post.formatCreatedAt }}</div>
         </div>
       </div>
       <div class="d-flex card-actions" v-if="has_action">
-        <v-btn @click="editContent(post.id)" class="mr-1 green white--text" v-if="isEdit === ''" fab small><v-icon> mdi-pencil </v-icon></v-btn>
-        <v-btn @click="isEdit = ''" class="mr-3" v-if="isEdit === post.id"><v-icon> mdi-close </v-icon></v-btn>
+        <v-btn @click="editContent(post.id)" class="mr-1 green white--text btn-edit" v-if="isEdit === ''" fab small><v-icon> mdi-pencil </v-icon></v-btn>
+        <v-btn @click="isEdit = ''" class="mr-1 btn-edit" v-if="isEdit === post.id" fab small><v-icon> mdi-close </v-icon></v-btn>
         <v-btn @click="$emit('delete', { post_id : post.id, type : 'image'})" class="red white--text" fab small> <v-icon> mdi-delete </v-icon> </v-btn>
       </div>
     </div>

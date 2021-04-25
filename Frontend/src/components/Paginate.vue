@@ -7,7 +7,6 @@
     ></v-pagination>
   </div>
 </template>
-
 <script>
 export default {
   name: "Paginate",

@@ -1,9 +1,13 @@
 const User = require('../models').User;
+const postJoin = require('../helpers/join/postJoin');
+const userJoin = require('../helpers/join/userJoin');
 const bcrypt = require('bcrypt');
 const { moveFromTemp, deleteImg, avatarPath, defaultAvatar } = require('../helpers/imageHelper');
 
 exports.show = (req, res) => {
-    return res.status(200).json(req.store.userLog);
+    User.findOne({where: {slug: req.params.slug}, include: [ postJoin ] })
+        .then((user) => res.status(200).json({ user }))
+        .catch(error => res.status(500).json({ error }));
 }
 
 /**

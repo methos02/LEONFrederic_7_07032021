@@ -12,6 +12,7 @@ module.exports = {
                     return {
                         email: 'leonfrederic@gmx.fr',
                         name: 'LEON Frédéric',
+                        slug: 'leon-frederic',
                         password: hash,
                         isAdmin: 1,
                     }
@@ -20,6 +21,7 @@ module.exports = {
                 return {
                     email: `user${ index }@gmx.fr`,
                     name: 'User ' + index,
+                    slug: 'user-' + index,
                     password: hash,
                     isAdmin: 0,
                 }

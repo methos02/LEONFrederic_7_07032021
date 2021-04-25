@@ -31,7 +31,7 @@ export default {
   methods: {
     getByType( type ) {
       this.$store.dispatch('posts/loadPosts', type !== 'all' ? { type } : undefined);
-      this.$emit('type', type !== 'all' ? { type } : '');
+      this.$emit('type', type !== 'all' ? type : '');
     },
   }
 }

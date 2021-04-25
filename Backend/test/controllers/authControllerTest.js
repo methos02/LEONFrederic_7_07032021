@@ -42,7 +42,8 @@ describe('test auth controller', () => {
 
         chai.request(app).post("/api/auth/login").send(login_data).end((err, res) => {
             assert.equal(res.status, 200);
-            assert.exists(res.body.token);
+            assert.exists(res.body.user);
+            assert.hasAllKeys(res.body.user, ['id', 'name', 'avatarPath', 'email', 'isAdmin', 'likes', 'token']);
             done();
         });
     });

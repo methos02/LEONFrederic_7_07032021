@@ -6,6 +6,7 @@ import commentsModule from  './commentsStore';
 import postsModule from  './postsStore';
 import snackbarModule from './snackbarStore';
 import paginateModule from './paginateStore';
+import profilModule from './profilStore';
 import currentPage from "@/utils/paginateHelper";
 
 Vue.use(Vuex);
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     posts: postsModule,
     snackbar: snackbarModule,
     admin: adminModule,
-    paginate: paginateModule
+    paginate: paginateModule,
+    profil: profilModule
   },
   state: {
     current_user: {},

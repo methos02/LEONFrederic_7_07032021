@@ -18,9 +18,13 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING(256),
-        unique: true,
         required: true,
         allowNull: false
+      },
+      slug: {
+        type: Sequelize.STRING(256),
+        unique: true,
+        required: true,
       },
       password: {
         type: Sequelize.STRING(256),

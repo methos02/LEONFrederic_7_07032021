@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div class="container-comments">
     <v-card class="mb-2 pa-2 card-size relative" v-show="post.showTextarea">
       <v-btn class="btn-close grey--text white" @click="toggleTextarea(post.id)" icon text small outlined elevation="4"><v-icon> mdi-close-circle-outline </v-icon></v-btn>
       <v-textarea v-model="commentsTemp" label="Ecrivez un commentaire ..." auto-grow rows="1" hide-details></v-textarea>
@@ -45,7 +45,7 @@
           </v-card>
       </div>
     </div>
-  </v-container>
+  </div>
 </template>
 <script>
 import {mapGetters, mapState} from "vuex";

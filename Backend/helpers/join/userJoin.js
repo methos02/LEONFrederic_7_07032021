@@ -2,5 +2,5 @@ const User = require('../../models').User;
 
 module.exports = {
     model: User,
-    attributes: ['id', 'name', 'avatar', 'avatarPath'],
+    attributes: ['id', 'name', 'slug', 'avatar', 'avatarPath'],
 }

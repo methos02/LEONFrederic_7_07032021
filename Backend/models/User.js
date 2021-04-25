@@ -1,6 +1,7 @@
 'use strict';
 const {formatDate} = require("../helpers/dateHelper");
-const { avatarPath } = require('../helpers/imageHelper')
+const { avatarPath } = require('../helpers/imageHelper');
+const SequelizeSlugify = require('sequelize-slugify');
 
 module.exports = (Sequelize, DataTypes) => {
     const User = Sequelize.define('User', {
@@ -19,6 +20,10 @@ module.exports = (Sequelize, DataTypes) => {
             type: DataTypes.STRING(256),
             required: true,
             allowNull: false
+        },
+        slug: {
+            type: DataTypes.STRING(256),
+            unique: true
         },
         password: {
             type: DataTypes.STRING(256),
@@ -66,6 +71,11 @@ module.exports = (Sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             default: 0
         }
+    });
+
+    SequelizeSlugify.slugifyModel(User, {
+        source: ['name'],
+        overwrite: false,
     });
 
     User.associate = function (models) {

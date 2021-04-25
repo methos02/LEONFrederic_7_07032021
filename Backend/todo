@@ -1,7 +1,8 @@
-- Responsivité - Profil, AddArticle, AddPost, Admin, Login, Register
+- Responsivité - Home Comment, Profil, AddArticle, AddPost, Admin, Login, Register
 - corriger test dans le Backend
 - améliorré le design de la page de connexion et d'inscription
-
-point a éclaircir:
-- les utilisateurs doivent pouvoir facilement repérer les dernières participations des employés
+- reset input file quand on annule l'image (avatar, banner article)
+- afficher la barre de pagination que s'il y a deux pages.
+- profil utilisateur
 - Application de la suppression de compte
+- enregistré le type de post voulu dans les params

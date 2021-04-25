@@ -3,8 +3,35 @@
   margin: auto;
 }
 
+.div-post {
+  margin-top: 40px;
+
+  @media (max-width: 599px) {
+    margin-top: 10px;
+  }
+}
+
 .card-post {
   width: 600px;
+
+  .div-image-meta .card-actions{
+    @media (max-width: 599px) {
+      flex-direction: column;
+    }
+
+    .btn-edit {
+      @media (max-width: 599px) {
+        margin-bottom: 5px;
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  .image-meta {
+    @media (max-width: 599px) {
+      align-items: center;
+    }
+  }
 
   .image-meta-avatar {
     position: absolute;
@@ -14,9 +41,7 @@
     height: 100px !important;
 
     @media (max-width: 599px) {
-      position: absolute;
-      top: 5px;
-      left: 10px;
+      position: initial;
       width: 60px !important;
       height: 60px !important;
     }
@@ -25,6 +50,10 @@
   .image-meta-infos {
     position: relative;
     left: 70px;
+
+    @media (max-width: 599px) {
+      position: initial;
+    }
   }
 
   .div-image-description {
@@ -44,6 +73,11 @@
     @media (min-width: 600px) {
       height: 600px;
     }
+  }
+}
 
+.btn-show-comments {
+  @media (max-width: 599px) {
+    margin-top: 5px;
   }
 }

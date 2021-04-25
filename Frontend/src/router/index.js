@@ -14,6 +14,7 @@ import Admin from '../views/Admin.vue'
 import AdminComments from '../views/AdminComments.vue'
 import AdminUsers from '../views/AdminUsers.vue'
 import Post from '../views/Post.vue'
+import User from '../views/User.vue'
 import store from '@/store'
 
 Vue.use(VueRouter)
@@ -93,6 +94,11 @@ const routes = [
     path: '/post/:id',
     name: 'Post',
     component: Post,
+    params: true,
+  }, {
+    path: '/user/:slug',
+    name: 'User',
+    component: User,
     params: true,
   }
 ]
