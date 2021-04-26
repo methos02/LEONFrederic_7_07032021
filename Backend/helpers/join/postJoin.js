@@ -6,5 +6,5 @@ const userJoin = require('./userJoin');
 
 module.exports = {
     model: Post,
-    include: [{...commentJoin, model : Comment}, {...userJoin, model : User}]
+    include: [{...commentJoin, model : Comment }, {...userJoin, model : User}],
 }

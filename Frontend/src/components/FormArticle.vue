@@ -22,7 +22,7 @@
           <span v-if="datas.image || image.path">Modifiler l'image</span>
           <span v-else> Ajouter une image </span>
         </v-btn>
-        <v-btn class="mx-2" width="175" color="red" v-if="image.path !== undefined" @click="image.path = undefined"> Annuler </v-btn>
+        <v-btn class="mx-2" width="175" color="red" v-if="image.path !== undefined" @click="resetImage"> Annuler </v-btn>
       </div>
       <div class="px-5">
         <v-text-field v-model="datas.title" label="Titre" :error-messages="errors.title" />
@@ -73,6 +73,10 @@ export default {
       if(this.post.id === undefined)  {  fd.append('post[type]', 1); }
 
       this.$emit('post', fd);
+    },
+    resetImage() {
+      this.image.path = undefined;
+      this.$refs.file_image.value = null;
     },
     onFileChange(e) {
       this.image = imagePreview(e);

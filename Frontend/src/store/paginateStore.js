@@ -11,6 +11,9 @@ export default {
         },
         SET_CURRENT_PAGE(state, data) {
             state[data.model].current_page = data.current_page;
+        },
+        DELETE_PAGINATE_POSTS(state) {
+            state.posts = {};
         }
     },
     actions: {

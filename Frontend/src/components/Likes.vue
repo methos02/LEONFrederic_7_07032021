@@ -4,13 +4,13 @@
       <v-icon :class="{'blue--text' : userLike.like === 1, 'grey--text' : userLike.like === 0 || userLike.like === -1 }" color="darken-2">
         mdi-thumb-up
       </v-icon>
-      <span> {{ post.like }}</span>
+      <span> {{ post.likes }}</span>
     </v-btn>
     <v-btn id="div-dislike" @click="dislike(post.id)" class="mr-2">
       <v-icon :class="{'red--text' : userLike.like === -1, 'grey--text' : userLike.like === 0 || userLike.like === 1}" color="darken-2">
         mdi-thumb-down
       </v-icon>
-      <span> {{ post.dislike }}</span>
+      <span> {{ post.dislikes }}</span>
     </v-btn>
   </div>
 </template>

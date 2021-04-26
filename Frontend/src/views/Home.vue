@@ -1,7 +1,7 @@
 <template>
   <v-container class="pt-0 div-container">
-    <sidebar @type="onTypeChange"/>
-    <post v-for="post in posts" :post="post" :key="post.id" />
+    <sidebar />
+    <post v-for="post in posts" :post="post" :key="post.id" @openConfirm="openConfirm"/>
     <paginate model="posts" @currentPageChange="onCurrentPageChange"/>
     <confirm-action @confirm="deletePost"> Êtes vous sûr de vouloir supprimer votre {{ data.type }} </confirm-action>
   </v-container>
@@ -25,7 +25,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('posts/loadPosts');
+    this.$store.dispatch('posts/loadPosts', {type : this.$route.params.type});
   },
   computed: {
     ...mapState({
@@ -34,11 +34,12 @@ export default {
     })
   },
   methods: {
-    onCurrentPageChange(page) {
-      this.$store.dispatch('posts/loadPosts', this.type === '' ? { page } : { page, type: this.type });
+    openConfirm(data) {
+      this.$emit('openConfirm', true);
+      this.data = data;
     },
-    onTypeChange(type) {
-      this.type = type;
+    onCurrentPageChange(page) {
+      this.$store.dispatch('posts/loadPosts', { page, type: this.$route.params.type });
     },
     async deletePost() {
       const res = await this.$store.dispatch('posts/deletePost', this.data.post_id);
@@ -50,6 +51,11 @@ export default {
       }
     }
   },
+  watch:{
+    $route (){
+      this.$store.dispatch('posts/loadPosts', {type : this.$route.params.type});
+    }
+  }
 }
 </script>
 <style scoped>

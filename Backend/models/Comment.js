@@ -15,11 +15,7 @@ module.exports = (Sequelize, DataTypes) => {
         },
         UserId: {
             type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        AnswerId: {
-            type: DataTypes.INTEGER,
-            allowNull: true
+            allowNull: false,
         },
         ParentId: {
             type: DataTypes.INTEGER,
@@ -27,10 +23,6 @@ module.exports = (Sequelize, DataTypes) => {
         },
         RefId: {
             type: DataTypes.INTEGER
-        },
-        nb_answer: {
-            type: DataTypes.INTEGER,
-            default: 0
         },
         createdAt: {
             type: DataTypes.DATE
@@ -49,7 +41,6 @@ module.exports = (Sequelize, DataTypes) => {
 
     Comment.associate = function (models) {
         Comment.belongsTo(models.User);
-        Comment.belongsTo(models.Comment, { through: Comment, as: "Answer", foreignKey: "AnswerId" });
         Comment.belongsTo(models.Comment, { through: Comment, as: "Parent", foreignKey: "ParentId" });
     }
 

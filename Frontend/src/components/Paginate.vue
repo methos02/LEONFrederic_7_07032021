@@ -1,10 +1,6 @@
 <template>
-  <div class="text-center">
-    <v-pagination
-        v-model="current_page"
-        :length="last_page"
-        total-visible="7"
-    ></v-pagination>
+  <div class="text-center" v-if="last_page !== undefined && last_page !== 1">
+    <v-pagination v-model="current_page" :length="last_page" total-visible="7" ></v-pagination>
   </div>
 </template>
 <script>

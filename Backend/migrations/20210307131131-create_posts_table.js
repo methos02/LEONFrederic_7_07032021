@@ -25,18 +25,19 @@ module.exports = {
         type : Sequelize.STRING(256),
         defaultValue: null
       },
-      like: {
+      likes: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0
       },
-      dislike: {
+      dislikes: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0
       },
       UserId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         references: {
           model: 'users',
           key: 'id'
@@ -54,6 +55,7 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
+    await queryInterface.removeColumn( 'posts', 'UserId' );
     await queryInterface.dropTable('posts');
   }
 };

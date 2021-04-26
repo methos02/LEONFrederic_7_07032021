@@ -92,7 +92,8 @@ export default {
 
       if( res.status === 200) {
         await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre profil a été mis à jour.' });
-        this.avatar = {};
+        this.avatar = {}
+        this.$refs.avatar_input.value = null;
       }
     },
     async deleteProfil() {

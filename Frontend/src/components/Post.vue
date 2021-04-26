@@ -30,8 +30,7 @@ export default {
   props: ['post', 'has_action'],
   methods: {
     openConfirm(data) {
-      this.$emit('openConfirm', true);
-      this.data = data;
+      this.$emit('openConfirm', data);
     },
     toggleComments(post_id) {
       this.$store.dispatch('posts/toggleComments', {post_id});

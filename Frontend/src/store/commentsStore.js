@@ -79,7 +79,7 @@ export default {
                     comments[comment.id].answers = [];
                     return;
                 }
-
+                console.log(comments[comment.ParentId], comment.ParentId)
                 comments[comment.ParentId].answers.push(comment);
             });
 

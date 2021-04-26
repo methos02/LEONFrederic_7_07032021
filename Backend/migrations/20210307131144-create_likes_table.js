@@ -15,7 +15,7 @@ module.exports = {
       },
       UserId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        onDelete: 'CASCADE',
         references: {
           model: 'users',
           key: 'id'
@@ -23,7 +23,7 @@ module.exports = {
       },
       PostId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        onDelete: 'CASCADE',
         references: {
           model: 'posts',
           key: 'id'
@@ -40,5 +40,9 @@ module.exports = {
     }).then(() => queryInterface.addIndex('likes', ['UserId', 'PostId'], { name : 'ind_user_post'}));
   },
 
-  down: async (queryInterface) => { await queryInterface.dropTable('likes'); }
+  down: async (queryInterface) => {
+    await queryInterface.removeColumn( 'likes', 'UserId' );
+    await queryInterface.removeColumn( 'likes', 'PostId' );
+    await queryInterface.dropTable('likes');
+  }
 };

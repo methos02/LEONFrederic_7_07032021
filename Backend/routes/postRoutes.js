@@ -14,8 +14,7 @@ const Post = require('../models').Post;
 const postJoi = require('../schema/PostJoi');
 const likeJoi = require('../schema/LikeJoi');
 
-router.get('/', auth, postCtrl.index);
-router.get('/:type([a-z]+)', auth, postCtrl.type);
+router.get('/:type((articles|images)?)', auth, postCtrl.index);
 router.post('/', multer.single('image'), validateData(postJoi.create, 'post'), auth, postCtrl.store);
 router.get('/:id([0-9]+)', auth, postCtrl.show);
 router.put('/:id', multer.single('image'), validateData(postJoi.update,'post'), auth, isAllowed(Post), postCtrl.update);

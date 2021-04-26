@@ -12,33 +12,17 @@ const {postPath} = require("../helpers/imageHelper");
  */
 exports.index = async (req, res) => {
     const page = getPage(req.query);
+    const type = Object.keys(postType).filter(function(key) { return postType[key]['slug'] === req.params.type; });
+    const where = type.length !== 0 ? {type: postType[type]['id']} : {};
 
     const posts = await Post.findAndCountAll({
+        where: where,
         limit: constante.PAGINATE_LIMITE,
         offset: constante.PAGINATE_LIMITE * page,
         include: [userJoin, commentJoin],
         distinct: true,
         order: [['id', 'DESC']]
     }).catch(error => { return res.status(500).json({error}) });
-
-    return res.status(200).json(formatResponse(posts, page));
-};
-
-/**
- * Retourne un post précise en fonction de l'id présent dans la requète
- */
-exports.type = async (req, res) => {
-    const type = Object.keys(postType).filter(function(key) { return postType[key]['slug'] === req.params.type; })
-    if(type.length === 0) { return res.status(404).json({ error: 'Type introuvable' }); }
-
-    const page = getPage(req.query);
-    const posts = await Post.findAndCountAll({
-        limit: constante.PAGINATE_LIMITE,
-        offset: constante.PAGINATE_LIMITE * page,
-        where: {type: postType[type]['id']},
-        include: [userJoin, commentJoin],
-        order: [['id', 'DESC']]
-    }).catch(error => res.status(500).json({ error }));
 
     return res.status(200).json(formatResponse(posts, page));
 };
@@ -113,13 +97,13 @@ exports.like = async (req, res) => {
 }
 
 function calculLikeDislike(post, like, vote) {
-    if(like !== null && like.like === 1) { post.like--; }
-    if(like !== null && like.like === -1) { post.dislike--; }
+    if(like !== null && like.like === 1) { post.likes--; }
+    if(like !== null && like.like === -1) { post.dislikes--; }
 
-    if(vote === 1) { post.like++; }
-    if(vote === -1) { post.dislike++; }
+    if(vote === 1) { post.likes++; }
+    if(vote === -1) { post.dislikes++; }
 
-    return { like: post.like, dislike: post.dislike }
+    return { likes: post.like, dislikes: post.dislike }
 }
 
 function defineCreateFields(type) {

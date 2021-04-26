@@ -31,11 +31,11 @@ module.exports = (Sequelize, DataTypes) => {
                 return this.image !== null ? process.env.BASE_URL + postPath + this.image : null;
             },
         },
-        like: {
+        likes: {
             type: DataTypes.INTEGER,
             default: 0
         },
-        dislike: {
+        dislikes: {
             type: DataTypes.INTEGER,
             default: 0
         },

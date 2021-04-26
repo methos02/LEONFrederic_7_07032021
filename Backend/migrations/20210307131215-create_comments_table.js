@@ -14,25 +14,19 @@ module.exports = {
         required: true,
         allowNull: false
       },
-      nb_answer: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0
-      },
       UserId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         references: {
           model: 'users',
           key: 'id'
         }
       },
       PostId: {
-        type: Sequelize.INTEGER
-      },
-      AnswerId: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         references: {
-          model: 'comments',
+          model: 'posts',
           key: 'id'
         }
       },
@@ -59,6 +53,9 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
+    await queryInterface.removeColumn( 'comments', 'UserId' );
+    await queryInterface.removeColumn( 'comments', 'PostId' );
+    await queryInterface.removeColumn( 'comments', 'ParentId' );
     await queryInterface.dropTable('comments');
   }
 };

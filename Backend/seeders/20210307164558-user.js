@@ -10,6 +10,15 @@ module.exports = {
             ...Array(NB_USERS)].map((value, index) => {
                 if(index === 0) {
                     return {
+                        email: 'no-account@groupomania.fr',
+                        name: 'Compte Supprimé',
+                        slug: 'compte-supprimé',
+                        password: hash,
+                    }
+                }
+
+                if(index === 1) {
+                    return {
                         email: 'leonfrederic@gmx.fr',
                         name: 'LEON Frédéric',
                         slug: 'leon-frederic',

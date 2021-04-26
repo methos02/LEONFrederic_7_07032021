@@ -1,7 +1,7 @@
 'use strict';
 const typePost = require('../helpers/postType');
 const faker = require('faker');
-const { NB_ARTICLES, NB_IMAGES, NB_USERS } = require('../config/seederConfig');
+const { NB_ARTICLES, NB_IMAGES, NB_USERS, NB_MIN_USERS } = require('../config/seederConfig');
 const { getRandomInt } = require('../helpers/mathHelper');
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
         const articles = [...Array(NB_ARTICLES)].map(() => ({
                 title: faker.lorem.words(10),
                 content: faker.lorem.paragraphs(8),
-                UserId: getRandomInt(1, NB_USERS),
+                UserId: getRandomInt(NB_MIN_USERS, NB_USERS),
                 type: typePost.ARTICLE.id
             }
         ));
@@ -17,7 +17,7 @@ module.exports = {
         const images = [...Array(NB_IMAGES)].map(() => ({
                 content: faker.lorem.words(10),
                 image: 'post_3.webp',
-                UserId: getRandomInt(1, NB_USERS),
+                UserId: getRandomInt(NB_MIN_USERS, NB_USERS),
                 type: typePost.IMAGE.id
             }
         ));

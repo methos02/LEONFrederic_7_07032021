@@ -1,11 +1,19 @@
 const User = require('../models').User;
+const Post = require('../models').Post;
+const Like = require('../models').Like;
+const Comment = require('../models').Comment;
 const postJoin = require('../helpers/join/postJoin');
-const userJoin = require('../helpers/join/userJoin');
 const bcrypt = require('bcrypt');
+const sequelize = require('sequelize');
+const {Op} = require("sequelize");
 const { moveFromTemp, deleteImg, avatarPath, defaultAvatar } = require('../helpers/imageHelper');
 
 exports.show = (req, res) => {
-    User.findOne({where: {slug: req.params.slug}, include: [ postJoin ] })
+    User.findOne({
+        where: {slug: req.params.slug},
+        include: [ postJoin ],
+        order :[ [{model: Post}, 'id', 'DESC'] ]
+    })
         .then((user) => res.status(200).json({ user }))
         .catch(error => res.status(500).json({ error }));
 }
@@ -56,14 +64,32 @@ exports.password = async (req, res) => {
 /**
  * Suppression d'un profil utilisateur action reservé a l'utilisateur
  */
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
     if(req.store.userLog.id !== parseInt(req.params.id)) {
         return res.status(404).json({error: 'Utilisateur introuvable.'})
     }
 
     if(req.store.userLog.avatar !== defaultAvatar) { deleteImg(req.store.userLog.avatar)}
+    const result = await Comment.update({ UserId: 1 }, { where : { UserId: req.params.id, ParentId : {[Op.ne]: null} }}).catch(error => res.status(400).json({ error }));
 
-    User.update({ supp: 1 },{ where: { id: req.params.id } })
-        .then(() => res.status(200).json({ message: 'Votre profil a été supprimé.'}))
-        .catch(error => res.status(400).json({ error }));
+    const likes = await Like.findAll({where: {UserId : req.params.id}}).catch(error => res.status(400).json({ error }));
+    const postToUpdate = {like : [], dislike : []};
+
+    likes.map(( like) => {
+        if(like.like === 1) {
+            return postToUpdate.like.push(like.PostId);
+        }
+        return postToUpdate.dislike.push(like.PostId);
+    });
+    console.log(postToUpdate.like);
+
+    if(result) {
+        const updateLike = Post.update({ like: sequelize.literal('like - 1') }, {where: {id : postToUpdate.like}});
+        //const updateDislike = Post.update({ dislike: sequelize.literal('dislike - 1') }, {where: {id : postToUpdate.dislike}});
+        const deleteUser = User.destroy({ where: { id: req.params.id } });
+
+        Promise.all([updateLike, deleteUser])
+            .then(() => res.status(200).json({ message: 'Votre profil a été supprimé.'}))
+            .catch(error => res.status(400).json({ error }));
+    }
 }

@@ -20,10 +20,15 @@ import store from '@/store'
 Vue.use(VueRouter)
 const routes = [
   {
-    path: '/',
+    path: '/:type(images|articles)*',
     name: 'Home',
     component: Home,
-  },
+    params: true,
+    beforeEnter: (to, from, next) => {
+      store.dispatch('posts/deletePosts');
+      return next();
+    },
+},
   {
     path: '/login',
     name: 'Login',
@@ -100,6 +105,10 @@ const routes = [
     name: 'User',
     component: User,
     params: true,
+    beforeEnter: (to, from, next) => {
+      store.dispatch('posts/deletePosts');
+      return next();
+    },
   }
 ]
 

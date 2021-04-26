@@ -25,6 +25,9 @@ export default {
         DELETE_POST(state, post_id) {
           state.posts = state.posts.filter(post => post.id !== post_id);
         },
+        DELETE_POSTS(state) {
+            state.posts = [];
+        },
         CREATE_POST(state, post) {
             state.posts.push(post);
         },
@@ -53,18 +56,32 @@ export default {
     },
     actions: {
         async loadPosts({ commit }, options) {
-            const type = options !== undefined && options.type !== undefined ? '/' + options.type : '';
-            const res = await Api().get('/posts' + type + currentPage(options !== undefined ? options.page : undefined));
-            const comments = res.data.rows.map(post => { return { post_id: post.id, comments: post.Comments }});
+            const type = options.type !== undefined ? '/' + options.type : '';
+            const res = await Api().get('/posts' + type + currentPage(options.page !== undefined ? options.page : undefined));
 
             if(res.status === 200) {
+                const comments = res.data.rows.map(post => { return { post_id: post.id, comments: post.Comments }});
+
                 commit('SET_POSTS', res.data.rows);
                 commit('comments/SET_COMMENTS', comments, { root: true })
                 commit('paginate/SET_PAGINATE', {model: 'posts', params: res.data.paginate}, { root: true })
             }
         },
+        async loadUserPost({ commit }, slug) {
+            const res = await Api().get('/profil/' + slug);
+            if(res.status === 200) {
+                const comments = res.data.user.Posts.map(post => { return { post_id: post.id, comments: post.Comments }});
+
+                commit('SET_POSTS', res.data.user.Posts);
+                commit('comments/SET_COMMENTS', comments, { root: true });
+
+                delete res.data.user.Posts;
+                commit('SET_USER', res.data.user, { root: true });
+            }
+        },
         async loadPost({ commit }, post_id) {
             const res = await Api().get('/posts/' + post_id );
+
             if(res.status === 200) {
                 commit('SET_POST', res.data);
             }
@@ -102,6 +119,10 @@ export default {
             }
 
             return res;
+        },
+        deletePosts({ commit }) {
+          commit('DELETE_POSTS');
+          commit('paginate/DELETE_PAGINATE_POSTS', {}, { root: true });
         },
         async likePost({ commit }, data) {
             const res = await Api().post('/posts/' + data.post_id + '/like', {like : data.like}).catch((err) => err.response);
