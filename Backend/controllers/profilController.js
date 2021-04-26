@@ -2,20 +2,28 @@ const User = require('../models').User;
 const Post = require('../models').Post;
 const Like = require('../models').Like;
 const Comment = require('../models').Comment;
-const postJoin = require('../helpers/join/postJoin');
+const userJoin = require('../helpers/join/userJoin');
+const commentJoin = require('../helpers/join/commentJoin');
 const bcrypt = require('bcrypt');
 const sequelize = require('sequelize');
+const { formatResponse, getPage, constante } = require('../helpers/paginateHelper');
 const {Op} = require("sequelize");
 const { moveFromTemp, deleteImg, avatarPath, defaultAvatar } = require('../helpers/imageHelper');
 
-exports.show = (req, res) => {
-    User.findOne({
-        where: {slug: req.params.slug},
-        include: [ postJoin ],
-        order :[ [{model: Post}, 'id', 'DESC'] ]
-    })
-        .then((user) => res.status(200).json({ user }))
-        .catch(error => res.status(500).json({ error }));
+exports.show = async (req, res) => {
+    const page = getPage(req.query);
+    const user = await User.findOne({ where: {slug: req.params.slug} }).catch(error => res.status(500).json({ error }));
+
+    const posts = await Post.findAndCountAll({
+        where: {UserId : user.id},
+        limit: constante.PAGINATE_LIMITE,
+        offset: constante.PAGINATE_LIMITE * page,
+        include: [userJoin, commentJoin],
+        distinct: true,
+        order: [['id', 'DESC']]
+    }).catch(error => { return res.status(500).json({error}) });
+
+    return res.status(200).json({...formatResponse(posts, page), user});
 }
 
 /**

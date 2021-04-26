@@ -34,8 +34,8 @@ export default {
         SET_POST_LIKE(state, data) {
             state.posts.forEach(post => {
                 if(post.id === data.post_id) {
-                    post.like = data.likes.like;
-                    post.dislike = data.likes.dislike;
+                    post.likes = data.likes.likes;
+                    post.dislikes = data.likes.dislikes;
                 }
             });
         },
@@ -67,15 +67,13 @@ export default {
                 commit('paginate/SET_PAGINATE', {model: 'posts', params: res.data.paginate}, { root: true })
             }
         },
-        async loadUserPost({ commit }, slug) {
-            const res = await Api().get('/profil/' + slug);
+        async loadUserPost({ commit }, options) {
+            const res = await Api().get('/profil/' + options.slug + currentPage(options.page !== undefined ? options.page : undefined));
             if(res.status === 200) {
-                const comments = res.data.user.Posts.map(post => { return { post_id: post.id, comments: post.Comments }});
+                const comments = res.data.rows.map(post => { return { post_id: post.id, comments: post.Comments }});
 
-                commit('SET_POSTS', res.data.user.Posts);
+                commit('SET_POSTS', res.data.rows);
                 commit('comments/SET_COMMENTS', comments, { root: true });
-
-                delete res.data.user.Posts;
                 commit('SET_USER', res.data.user, { root: true });
             }
         },

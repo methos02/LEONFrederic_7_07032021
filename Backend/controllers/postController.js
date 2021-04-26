@@ -103,7 +103,7 @@ function calculLikeDislike(post, like, vote) {
     if(vote === 1) { post.likes++; }
     if(vote === -1) { post.dislikes++; }
 
-    return { likes: post.like, dislikes: post.dislike }
+    return { likes: post.likes, dislikes: post.dislikes }
 }
 
 function defineCreateFields(type) {

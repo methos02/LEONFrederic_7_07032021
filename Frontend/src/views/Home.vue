@@ -19,10 +19,7 @@ export default {
   name: 'Home',
   components: {post, sidebar, paginate, confirmAction },
   data() {
-    return {
-      type: '',
-      data: '',
-    }
+    return { data: ''}
   },
   mounted() {
     this.$store.dispatch('posts/loadPosts', {type : this.$route.params.type});
