@@ -45,12 +45,8 @@
           </v-list>
         </v-menu>
       </div>
-      <div v-else>
-        <v-btn  :to="{name: 'Register'}" text > Enregistrement </v-btn>
-        <v-btn  :to="{name: 'Login'}" text > Login </v-btn>
-      </div>
     </v-app-bar>
-    <v-main class="grey">
+    <v-main class="container-main">
       <router-view/>
     </v-main>
     <v-snackbar v-model="snackbar.show" :timeout="-1" color="success">
@@ -94,4 +90,8 @@ export default {
 </script>
 <style lang="scss">
 @import "assets/css/app.scss";
+.container-main {
+  background: url("/images/auth-background.jpg");
+  background-size: cover;
+}
 </style>

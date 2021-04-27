@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Login from '../views/Login.vue'
-import Register from '../views/Register.vue'
+import Auth from '../views/Auth.vue'
 import AddPost from '../views/AddPost.vue'
 import AddPostArticle from '../views/AddPostArticle.vue'
 import AddPostImage from '../views/AddPostImage.vue'
@@ -30,15 +29,12 @@ const routes = [
     },
 },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    path: '/:page(login|register)*',
+    name: 'Auth',
+    component: Auth,
+    params: true,
   },
   {
-    path: '/register',
-    name: 'Register',
-    component: Register
-  },{
     path: '/article/:id',
     name: 'UpdateArticle',
     component: UpdatePostArticle,
@@ -119,8 +115,8 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if(["Login", "Register"].indexOf(to.name) !== -1 && localStorage.getItem('token') !== null) { return next('/');}
-  if(["Login", "Register"].indexOf(to.name) !== -1 || localStorage.getItem('token') !== null) { return next(); }
+  if(["Auth"].indexOf(to.name) !== -1 && localStorage.getItem('token') !== null) { return next('/');}
+  if(["Auth"].indexOf(to.name) !== -1 || localStorage.getItem('token') !== null) { return next(); }
 
   return next('/login');
 })
