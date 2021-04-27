@@ -126,7 +126,7 @@ export default {
             const res = await Api().post('/posts/' + data.post_id + '/like', {like : data.like}).catch((err) => err.response);
             if(res.status === 200 || res.status === 201) {
                 commit('SET_POST_LIKE', {post_id: data.post_id, likes: res.data.likes})
-                commit('SET_CURRENT_USER_LIKE', {post_id: data.post_id, like : data.like}, { root: true })
+                commit('SET_CURRENT_USER_LIKE', {post_id: data.post_id, like : res.data.cancel === true ? 0 : data.like}, { root: true })
             }
         },
         toggleComments({ commit }, post_id) {

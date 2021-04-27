@@ -21,14 +21,10 @@ export default {
   props: ['post'],
   methods: {
     like(post_id) {
-      if(this.userLike.like !== 1) {
-        this.$store.dispatch('posts/likePost', {post_id: post_id, like : 1});
-      }
+      this.$store.dispatch('posts/likePost', {post_id: post_id, like : 1});
     },
     dislike(post_id) {
-      if(this.userLike.like !== -1) {
-        this.$store.dispatch('posts/likePost', {post_id: post_id, like : -1});
-      }
+      this.$store.dispatch('posts/likePost', {post_id: post_id, like : -1});
     }
   },
   computed: {

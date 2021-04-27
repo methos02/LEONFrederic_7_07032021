@@ -89,19 +89,17 @@ exports.like = async (req, res) => {
             .catch(error => res.status(400).json({ error }));
     }
 
-    if (like.like === req.store.valideData.like) { return res.status(401).json({ error: 'Vous avez déjà voté!' }); }
-
     await Post.update(likes, { where: { id: req.params.id }});
-    await Like.update({ like: req.store.valideData.like }, { where: { UserId: req.store.userLog.id, PostId: req.params.id }});
-    return res.status(200).json({ message: 'Like update !', likes });
+    await Like.update({ like: like.like === parseInt(req.store.valideData.like) ? 0 : req.store.valideData.like }, { where: { UserId: req.store.userLog.id, PostId: req.params.id }});
+    return res.status(200).json({ message: 'Like update !', likes, cancel :  like.like === req.store.valideData.like });
 }
 
 function calculLikeDislike(post, like, vote) {
     if(like !== null && like.like === 1) { post.likes--; }
     if(like !== null && like.like === -1) { post.dislikes--; }
 
-    if(vote === 1) { post.likes++; }
-    if(vote === -1) { post.dislikes++; }
+    if(vote === 1  && (like === null || like.like !== parseInt(vote))) { post.likes++; }
+    if(vote === -1 && (like === null || like.like !== parseInt(vote))) { post.dislikes++; }
 
     return { likes: post.likes, dislikes: post.dislikes }
 }

@@ -1,7 +1,7 @@
 const chai = require('chai');
 const chaiHttp= require('chai-http');
 const app = require('../../app');
-const User = require('../../models').User;
+const {formatDate, addWeek} = require("../../helpers/dateHelper");
 const Comment = require('../../models').Comment;
 
 const assert = chai.assert;
@@ -11,11 +11,11 @@ let admin_token, doe_token;
 describe('ADMIN test', () => {
     before((done) => {
         chai.request(app).post("/api/auth/login").send({email: "leonfrederic@gmx.fr", password: "123123"}).end((err, res) => {
-            admin_token = res.body.token;
+            admin_token = res.body.user.token;
         });
 
-        chai.request(app).post("/api/auth/login").send({email: "johndoe@gmx.fr", password: "123123"}).end((err, res) => {
-            doe_token = res.body.token;
+        chai.request(app).post("/api/auth/login").send({email: "user2@gmx.fr", password: "123123"}).end((err, res) => {
+            doe_token = res.body.user.token;
             done();
         });
     });
@@ -24,13 +24,10 @@ describe('ADMIN test', () => {
         it('get all users has admin', (done) => {
             chai.request(app).get("/api/admin/users").set('Authorization', 'Bearer ' + admin_token).send({UserId: 1}).end((err, res) => {
                 assert.equal(res.status, 200);
-                assert.typeOf(res.body, 'array');
-                assert.isUndefined(res.body[0].password);
-
-                User.count().then(count => {
-                    assert.equal(res.body.length, count);
-                    done();
-                }).catch(done);
+                assert.typeOf(res.body.rows, 'array');
+                assert.typeOf(res.body.paginate, 'object');
+                assert.isUndefined(res.body.rows[0].password);
+                done();
             });
         });
 
@@ -45,11 +42,9 @@ describe('ADMIN test', () => {
 
     describe('BAN user', () => {
         it('ban profil has admin', (done) => {
-            const date_ban = new Date();
-
-            chai.request(app).put("/api/admin/users/2/ban").set('Authorization', 'Bearer ' + admin_token).send({ UserId: 1}).end((err, res) => {
+            chai.request(app).put("/api/admin/users/10/ban").set('Authorization', 'Bearer ' + admin_token).send({ UserId: 1, message : 'Parceque.'}).end((err, res) => {
                 assert.equal(res.status, 200);
-                assert.equal(res.body.message, "Le profil est banni jusqu'au " + date_ban.getDate() + ".");
+                assert.equal(res.body.formatBanUntil, formatDate( addWeek(new Date())));
                 done();
             });
         });
@@ -67,12 +62,9 @@ describe('ADMIN test', () => {
         it('get all comment has admin', (done) => {
             chai.request(app).get("/api/admin/comments").set('Authorization', 'Bearer ' + admin_token).send({UserId: 1}).end((err, res) => {
                 assert.equal(res.status, 200);
-                assert.typeOf(res.body, 'array');
-
-                Comment.count().then(count => {
-                    assert.equal(res.body.length, count);
-                    done();
-                }).catch(done);
+                assert.typeOf(res.body.rows, 'array');
+                assert.typeOf(res.body.paginate, 'object');
+                done();
             });
         });
 
