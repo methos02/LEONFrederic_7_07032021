@@ -35,36 +35,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.div-sidebar {
-  position: fixed;
-  top: 90px;
-  left: 120px;
-  bottom: 80px;
-  z-index: 10;
-
-  @media (max-width: 599px) {
-    left: -10px;
-  }
-
-  .sidebar-type button {
-    width: 145px;
-    justify-content: left;
-  }
-
-  .sidebar-btn {
-    position: absolute;
-    top: 0;
-    right: -30px;
-
-    @media (min-width: 600px) { display: none; }
-  }
-
-  &.hideSidebar {
-    @media (max-width: 599px) {
-      left: -170px;
-    }
-  }
-}
-</style>

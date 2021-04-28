@@ -1,17 +1,17 @@
 <template>
   <div>
     <div class="d-flex justify-space-between pa-3 div-image-meta">
-      <div class="d-flex image-meta">
+      <div class="d-flex post-meta">
         <router-link :to="'/user/' + post.User.slug">
-          <v-avatar class="image-meta-avatar white mr-3">
+          <v-avatar class="post-meta-avatar white mr-3">
             <img :src="post.User.avatarPath" alt="image de profil">
           </v-avatar>
         </router-link>
-        <div class="image-meta-infos">
+        <div class="post-meta-infos">
           <router-link :to="'/user/' + post.User.slug">
-            <div class="image-meta-author">{{ post.User.name }}</div>
+            <div class="post-meta-author">{{ post.User.name }}</div>
           </router-link>
-          <div class="image-meta-create">{{ post.formatCreatedAt }}</div>
+          <div class="post-meta-create">{{ post.formatCreatedAt }}</div>
         </div>
       </div>
       <div class="d-flex card-actions" v-if="has_action">
@@ -22,7 +22,7 @@
       <img v-if="post.imagePath" :src="post.imagePath" class="article-header" alt="illustration du post" />
     </div>
     <router-link :to="{ name: 'Post', params: { id : post.id } }">
-      <v-card-title v-if="post.title">{{ post.title }}</v-card-title>
+      <v-card-title class="post-title">{{ post.title }}</v-card-title>
     </router-link>
     <v-card-text v-if="post.content">{{ post.content | abbreviate }}</v-card-text>
   </div>

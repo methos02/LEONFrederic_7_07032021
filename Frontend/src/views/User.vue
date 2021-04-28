@@ -1,10 +1,10 @@
 <template>
-  <v-container>
+  <v-container class="container-user">
     <div class="text-center" v-if="user.slug === $route.params.slug">
-      <v-avatar class="white">
+      <v-avatar class="white" width="150px" height="150px">
         <img :src="user.avatarPath" alt="image de profil">
       </v-avatar>
-      <h1> Profil de {{ user.name }}</h1>
+      <h1 class="white--text"> {{ user.name }}</h1>
     </div>
     <post v-for="post in posts" :post="post" :key="post.id" @openConfirm="openConfirm"/>
     <paginate model="posts" @currentPageChange="onCurrentPageChange"/>

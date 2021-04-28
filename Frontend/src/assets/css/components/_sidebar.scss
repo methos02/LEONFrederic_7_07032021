@@ -1,0 +1,35 @@
+.div-sidebar {
+  position: fixed;
+  top: 90px;
+  left: 120px;
+  bottom: 80px;
+  z-index: 10;
+
+  @media (max-width: 1260px) {
+    left: 20px;
+  }
+
+  @media (max-width: 1049px) {
+    left: -10px;
+    top: 65px;
+  }
+
+  .sidebar-type button {
+    width: 145px;
+    justify-content: left;
+  }
+
+  .sidebar-btn {
+    position: absolute;
+    top: 0;
+    right: -30px;
+
+    @media (min-width: 1050px) { display: none; }
+  }
+
+  &.hideSidebar {
+    @media (max-width: 1049px) {
+      left: -170px;
+    }
+  }
+}

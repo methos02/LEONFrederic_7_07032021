@@ -1,6 +1,6 @@
 <template>
-  <v-app>
-    <v-app-bar app color="primary" dark >
+  <v-app class="groupamania network">
+    <v-app-bar app class="navbar">
       <div class="d-flex align-center">
         <router-link :to="{name: 'Home'}">
           <v-img alt="logo groupomania" class="shrink mr-2 hidden-xs-only" contain src="/images/groupomania-logo.png" transition="scale-transition" width="220"/>
@@ -89,9 +89,7 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "assets/css/app.scss";
-.container-main {
-  background: url("/images/auth-background.jpg");
-  background-size: cover;
+.groupamania.network {
+  @import "assets/css/app.scss";
 }
 </style>

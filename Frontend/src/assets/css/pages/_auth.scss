@@ -1,0 +1,28 @@
+.container-auth {
+  .div-auth {
+    min-height: 85vh !important;
+
+    .auth-title {
+      font-size: 3.5rem;
+
+      @media (max-width: 599px) {
+        text-align: center;
+        font-size: 1.8rem;
+      }
+    }
+    .auth-subtitle {
+      font-size: 2rem;
+      font-weight: 300;
+
+      @media (max-width: 599px) {
+        font-size: 1rem;
+        text-align: center;
+      }
+    }
+
+    .title {
+      color: $secondary;
+      font-size: 2rem !important;
+    }
+  }
+}

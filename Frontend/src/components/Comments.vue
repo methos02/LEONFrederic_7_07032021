@@ -7,15 +7,20 @@
         <v-btn @click="addComment(post.id)"> Envoyer </v-btn>
       </div>
     </v-card>
-    <div v-for="comment in orderComments(post.id)" :key="comment.id" class="card-size" v-show="post.showComment">
+    <div class="div-comment" v-for="comment in orderComments(post.id)" :key="comment.id" v-show="post.showComment">
       <div class="mb-2 d-flex">
-        <v-avatar class="comment-meta-avatar white mr-3">
+        <v-avatar class="d-none d-md-inline comment-avatar-md white mr-3">
           <img :src="comment.User.avatarPath" alt="image de profil">
         </v-avatar>
         <v-card class="flex">
-          <div class="pa-4">
-            <span class="font-weight-bold text-body-1">{{ comment.User.name }}</span>
-            <span class="font-weight-light text-body-2"> - Posté le {{ comment.formatCreatedAt }}</span>
+          <div class="pa-4 d-flex">
+            <v-avatar class="d-flex d-sm-none white mr-3">
+              <img :src="comment.User.avatarPath" alt="image de profil">
+            </v-avatar>
+            <div class="comment-meta">
+              <span class="font-weight-bold text-body-1 comment-meta-name">{{ comment.User.name }}</span>
+              <span class="font-weight-light text-body-2">Posté le {{ comment.formatCreatedAt }}</span>
+            </div>
           </div>
           <v-card-text class="px-4 py-0"> {{ comment.content }}</v-card-text>
           <v-card-actions class="d-flex flex-row-reverse">
@@ -33,13 +38,13 @@
         </div>
       </v-card>
       <div v-show="comment.showAnswers" class="div-answer ml-15 mb-2" v-for="answer in comment.answers" :key="answer.id">
-          <v-avatar class="comment-meta-avatar white mr-3">
+          <v-avatar class="white mr-3">
             <img :src="answer.User.avatarPath" alt="image de profil">
           </v-avatar>
-          <v-card class="grey lighten-4">
-            <div class="px-3 pt-2">
-              <span class="font-weight-bold text-body-1">{{ answer.User.name }}</span>
-              <span class="font-weight-light text-body-2"> - Posté le {{ answer.formatCreatedAt }}</span>
+          <v-card class="grey lighten-4 answer">
+            <div class="px-3 pt-2 comment-meta">
+              <span class="font-weight-bold text-body-1 comment-meta-name">{{ answer.User.name }}</span>
+              <span class="font-weight-light text-body-2">Posté le {{ answer.formatCreatedAt }}</span>
             </div>
             <v-card-text class="px-3 py-2"> {{ answer.content }} </v-card-text>
           </v-card>
@@ -90,17 +95,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.div-answer {
-  display: flex;
-}
-.btn-close {
-  position: absolute;
-  right: -10px;
-  top: -5px;
-}
-
-.relative {
-  position: relative;
-}
-</style>

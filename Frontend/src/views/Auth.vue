@@ -29,10 +29,13 @@
                 :error-messages="errors.confirm"
             />
             <div class="text-center">
-              <v-btn color="primary" @click="registerLogin"> S'inscrire </v-btn>
+              <v-btn class="secondary" width="150" @click="registerLogin"> S'inscrire </v-btn>
             </div>
           </form>
-          <v-card-text class="text-center"> Vous avez déjà un compte ? <router-link to="/login">Se connecter</router-link></v-card-text>
+          <v-card-text class="justify-center align-center d-flex flex-column flex-md-row">
+            <span class="mr-2">Vous avez déjà un compte ?</span>
+            <router-link to="/login">Se connecter</router-link>
+          </v-card-text>
         </v-card>
         <v-card class="pa-5" v-if="page==='login'">
           <h2 class="title text-center">Connexion</h2>
@@ -51,10 +54,12 @@
                 :error-messages="errors.password"
             />
             <div class="text-center">
-              <v-btn color="primary" @click="userLogin"> Login </v-btn>
+              <v-btn class="secondary" width="150" @click="userLogin"> Login </v-btn>
             </div>
           </form>
-          <v-card-text class="text-center"> Vous êtes nouveau ? <router-link to="/register"> S'inscrire </router-link></v-card-text>
+          <v-card-text class="justify-center align-center d-flex flex-column flex-md-row">
+            <span class="mr-2">Vous êtes nouveau ? </span><router-link to="/register"> S'inscrire </router-link>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -109,30 +114,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.div-auth {
-  min-height: 85vh !important;
-
-  .auth-title {
-    font-size: 3.5rem;
-
-    @media (max-width: 599px) {
-      text-align: center;
-      font-size: 1.8rem;
-    }
-  }
-  .auth-subtitle {
-    font-size: 2rem;
-    font-weight: 300;
-
-    @media (max-width: 599px) {
-      font-size: 1rem;
-      text-align: center;
-    }
-  }
-
-  .title {
-    color: #090a3c;
-  }
-}
-</style>

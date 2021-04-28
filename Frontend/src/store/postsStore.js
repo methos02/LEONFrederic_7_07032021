@@ -82,6 +82,7 @@ export default {
 
             if(res.status === 200) {
                 commit('SET_POST', res.data);
+                commit('comments/SET_COMMENT', {post_id: post_id, comments : res.data.Comments}, { root: true });
             }
             return res;
         },

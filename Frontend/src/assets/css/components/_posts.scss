@@ -1,0 +1,88 @@
+.div-post {
+  margin-top: 40px;
+
+  @media (max-width: 599px) {
+    margin-top: 10px;
+  }
+
+  .card-post {
+    width: 600px;
+
+    a {
+      color: $secondary;
+      text-decoration: none;
+
+      &:hover { text-decoration: underline}
+    }
+
+    .div-image-meta .card-actions{
+      @media (max-width: 599px) {
+        flex-direction: column;
+      }
+
+      .btn-edit {
+        @media (max-width: 599px) {
+          margin-bottom: 5px;
+          margin-right: 0 !important;
+        }
+      }
+    }
+
+    .post-meta {
+      @media (max-width: 599px) {
+        align-items: center;
+      }
+    }
+
+    .post-meta-avatar {
+      position: absolute;
+      top: -30px;
+      left: -30px;
+      width: 100px !important;
+      height: 100px !important;
+
+      @media (max-width: 599px) {
+        position: initial;
+        width: 60px !important;
+        height: 60px !important;
+      }
+    }
+
+    .post-meta-infos {
+      position: relative;
+      left: 70px;
+
+      @media (max-width: 599px) {
+        position: initial;
+      }
+    }
+
+    .div-image-description {
+      @media (min-width: 600px) {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 2;
+      }
+    }
+
+    .preview {
+      border-radius: 4px;
+      object-fit: cover;
+      width: 100%;
+      @media (min-width: 600px) {
+        height: 600px;
+      }
+    }
+
+    .post-title {
+      font-size: 2rem;
+      font-weight: bolder;
+
+      @media (max-width: 599px) {
+        font-size: 1.3rem;
+      }
+    }
+  }
+}

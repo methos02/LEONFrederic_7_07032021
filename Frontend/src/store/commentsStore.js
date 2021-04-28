@@ -3,10 +3,10 @@ import Api from "@/service/api";
 
 export default {
     namespaced: true,
-    state : {
-        comments: {}
-    },
     mutations : {
+        SET_COMMENT (state, data) {
+            Vue.set(state, data.post_id, data);
+        },
         SET_COMMENTS(state, comments) {
             comments.forEach(comment => {
                 Vue.set(state, comment.post_id, comment);
@@ -22,7 +22,6 @@ export default {
         TOGGLE_ANSWERS(state, data) {
             state[data.post_id].comments.forEach( comment => {
                 if(comment.id === data.comment_id) {
-                    console.log(comment.showAnswers);
                     Vue.set(comment, 'showAnswers', !comment.showAnswers);
                 }
             })
@@ -79,7 +78,7 @@ export default {
                     comments[comment.id].answers = [];
                     return;
                 }
-                console.log(comments[comment.ParentId], comment.ParentId)
+
                 comments[comment.ParentId].answers.push(comment);
             });
 

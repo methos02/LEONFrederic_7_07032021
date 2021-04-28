@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container class="container-admin-header">
       <v-card class="pa-3">
         <v-tabs>
           <v-tab :to="{name:'Comments'}"> Commentaires </v-tab>

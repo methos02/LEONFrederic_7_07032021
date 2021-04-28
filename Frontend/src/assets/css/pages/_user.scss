@@ -1,0 +1,20 @@
+.container-user {
+  h1 { font-size: 3rem;}
+
+  .user-avatar {
+    @media (max-width: 599px){
+      height: 100px !important;
+      width: 100px !important;
+    }
+  }
+
+  .card-post .post-meta {
+    align-items: center;
+    &-avatar, &-infos { position: initial !important;}
+
+    &-avatar {
+      width: 48px !important;
+      height: 48px !important;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+.container-admin-users {
+  .admin-item {
+    @media (max-width: 599px) {
+      flex-direction: column;
+      align-items: initial !important;
+    }
+
+    &-header {
+      margin-bottom: 5px;
+    }
+  }
+  .div-ban-reason {
+    @media (max-width: 599px) {
+      margin-left: 0 !important;
+    }
+  }
+}

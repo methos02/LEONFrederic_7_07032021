@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pt-0 div-container">
+  <v-container class="pt-0 container-home">
     <sidebar />
     <post v-for="post in posts" :post="post" :key="post.id" @openConfirm="openConfirm"/>
     <paginate model="posts" @currentPageChange="onCurrentPageChange"/>
@@ -55,8 +55,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.div-container {
-  position: relative;
-}
-</style>

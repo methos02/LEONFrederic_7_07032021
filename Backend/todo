@@ -1,2 +1,11 @@
-- Responsivité - Home Comment, Profil, AddArticle, AddPost, Admin, Login, Register
-- améliorré le design de la page de connexion et d'inscription
+- Responsivité - AddArticle, AddPost, Post
+- design Post
+- faire une transaction pour la suppression d'un compte
+- nettoyé le store principal
+- simplifier le code des commentaires
+
+FONCTION A AJOUTER ?
+- recherche d'utilisateur home et admin
+- notif new message / post utilisateur
+- suppression / update message
+- ajouté les droits de modérations a quelqu'un

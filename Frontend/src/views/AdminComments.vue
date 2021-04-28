@@ -1,21 +1,25 @@
 <template>
-  <v-container>
+  <v-container class="container-admin">
     <h1 class="mb-5">Commentaires</h1>
-    <div v-for="comment in comments" :key="comment.id"  class="mb-5 d-flex">
-      <v-avatar class="comment-meta-avatar white mr-3">
+    <div v-for="comment in comments" :key="comment.id"  class="div-admin-items mb-5 d-flex">
+      <v-avatar class="d-none d-sm-inline white mr-3">
         <img :src="comment.User.avatarPath" alt="image de profil">
       </v-avatar>
-      <v-card class="flex d-flex align-center">
-        <div class="py-4 px-8 flex">
-          <v-card-text class="pa-0 pb-2">
-            <span class="font-weight-light text-body-2"> {{ comment.ParentId === null ? 'Commentaire' : 'Réponse' }} - </span>
+      <v-card class="flex d-flex flex-column admin-item">
+        <div class="admin-item-header">
+          <v-avatar class="d-xs-flex d-sm-none white mr-2">
+            <img :src="comment.User.avatarPath" alt="image de profil">
+          </v-avatar>
+          <v-card-text class="admin-item-meta pa-0">
+            <span class="admin-item-meta-type font-weight-light text-body-2"> {{ comment.ParentId === null ? 'Commentaire' : 'Réponse' }}</span>
             <span class="font-weight-bold text-body-1">{{ comment.User.name }}</span>
-            <span class="font-weight-light text-body-2"> - Posté le {{ comment.formatCreatedAt }}</span>
+            <span class="admin-item-meta-date font-weight-light text-body-2">Posté le {{ comment.formatCreatedAt }}</span>
           </v-card-text>
-          <v-card-text class="pa-0">{{ comment.content }}</v-card-text>
         </div>
-        <v-card-actions>
-          <v-btn color="red" @click="$emit('openConfirm', true); comment_id = comment.id;"> Supprimer </v-btn>          </v-card-actions>
+        <v-card-text class="pa-0 admin-item-content">{{ comment.content }}</v-card-text>
+        <v-card-actions class="justify-end pa-0">
+          <v-btn color="red" @click="$emit('openConfirm', true); comment_id = comment.id;"> Supprimer </v-btn>
+        </v-card-actions>
       </v-card>
     </div>
     <paginate model="comments" @currentPageChange="onCurrentPageChange"/>
