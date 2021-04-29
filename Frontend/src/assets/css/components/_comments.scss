@@ -5,14 +5,16 @@
     top: -5px;
   }
 
-  .div-comment {
+  .div-comment, .div-textarea {
     width: 600px;
     margin: auto;
 
     @media (max-width: 625px) {
       width: initial;
     }
+  }
 
+  .div-comment {
     .comment-meta {
       display: flex;
       align-items: center;

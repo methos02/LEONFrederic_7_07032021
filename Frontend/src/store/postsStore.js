@@ -1,5 +1,4 @@
 import Api from "@/service/api";
-import Vue from "vue";
 import currentPage from "@/utils/paginateHelper";
 
 export default {
@@ -39,20 +38,13 @@ export default {
                 }
             });
         },
-        TOGGLE_COMMENTS(state, data) {
+        ADD_COMMENT(state, data) {
             state.posts.forEach(post => {
                 if(post.id === data.post_id) {
-                    Vue.set(post, 'showComment', data.state !== undefined ? data.state : !post.showComment);
+                    post.Comments = post.Comments.concat(data.comment);
                 }
             });
-        },
-        TOGGLE_TEXTAREA(state, data) {
-            state.posts.forEach(post => {
-                if(post.id === data.post_id) {
-                    Vue.set(post, 'showTextarea', data.state !== undefined ? data.state : !post.showTextarea );
-                }
-            });
-        },
+        }
     },
     actions: {
         async loadPosts({ commit }, options) {
@@ -60,20 +52,14 @@ export default {
             const res = await Api().get('/posts' + type + currentPage(options.page !== undefined ? options.page : undefined));
 
             if(res.status === 200) {
-                const comments = res.data.rows.map(post => { return { post_id: post.id, comments: post.Comments }});
-
                 commit('SET_POSTS', res.data.rows);
-                commit('comments/SET_COMMENTS', comments, { root: true })
                 commit('paginate/SET_PAGINATE', {model: 'posts', params: res.data.paginate}, { root: true })
             }
         },
         async loadUserPost({ commit }, options) {
             const res = await Api().get('/profil/' + options.slug + currentPage(options.page !== undefined ? options.page : undefined));
             if(res.status === 200) {
-                const comments = res.data.rows.map(post => { return { post_id: post.id, comments: post.Comments }});
-
                 commit('SET_POSTS', res.data.rows);
-                commit('comments/SET_COMMENTS', comments, { root: true });
                 commit('SET_USER', res.data.user, { root: true });
             }
         },
@@ -130,11 +116,14 @@ export default {
                 commit('SET_CURRENT_USER_LIKE', {post_id: data.post_id, like : res.data.cancel === true ? 0 : data.like}, { root: true })
             }
         },
-        toggleComments({ commit }, post_id) {
-            commit('TOGGLE_COMMENTS', post_id);
-        },
-        toggleTextarea({ commit }, data) {
-            commit('TOGGLE_TEXTAREA', data);
+        async createComment({ commit }, data) {
+            const res = await Api().post('/comments', data);
+
+            if(res.status === 201) {
+                commit('ADD_COMMENT', {post_id: data.PostId, comment : res.data.comment});
+            }
+
+            return res;
         },
     }
 }

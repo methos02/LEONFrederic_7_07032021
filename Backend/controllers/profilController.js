@@ -89,7 +89,6 @@ exports.delete = async (req, res) => {
         }
         return postToUpdate.dislike.push(like.PostId);
     });
-    console.log(postToUpdate.like);
 
     if(result) {
         const updateLike = Post.update({ like: sequelize.literal('like - 1') }, {where: {id : postToUpdate.like}});
