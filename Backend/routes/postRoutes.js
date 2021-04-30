@@ -16,7 +16,7 @@ const likeJoi = require('../schema/LikeJoi');
 
 router.get('/:type((articles|images)?)', auth, postCtrl.index);
 router.post('/', multer.single('image'), validateData(postJoi.create, 'post'), auth, postCtrl.store);
-router.get('/:id([0-9]+)', auth, postCtrl.show);
+router.get('/:slug', auth, postCtrl.show);
 router.put('/:id', multer.single('image'), validateData(postJoi.update,'post'), auth, isAllowed(Post), postCtrl.update);
 router.delete('/:id', auth, isAllowed(Post), postCtrl.delete);
 router.post('/:id/like', validateData(likeJoi), auth, postCtrl.like);

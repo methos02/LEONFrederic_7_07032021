@@ -14,6 +14,8 @@ exports.show = async (req, res) => {
     const page = getPage(req.query);
     const user = await User.findOne({ where: {slug: req.params.slug} }).catch(error => res.status(500).json({ error }));
 
+    if(user === null) { return res.status(404).json({ errors: 'Aucun utilisateur trouvé.'}) }
+
     const posts = await Post.findAndCountAll({
         where: {UserId : user.id},
         limit: constante.PAGINATE_LIMITE,
@@ -30,10 +32,6 @@ exports.show = async (req, res) => {
  * Met à jour le profil d'utilisateur action reservé à l'utilisateur
  */
 exports.update = async (req, res) => {
-    if(req.store.userLog.id !== parseInt(req.params.id)) {
-        return res.status(404).json({error: 'Utilisateur incompatible.'});
-    }
-
     const user = await User.findOne({where: {email: req.store.valideData.email}}).catch(error => res.status(500).json({ error }));
     if(user !== null && user.id !== req.store.userLog.id) {
         return res.status(422).json({error: 'Adresse email déjà utilisée.'});
@@ -45,7 +43,7 @@ exports.update = async (req, res) => {
         req.store.valideData.avatarPath = process.env.BASE_URL + avatarPath + req.store.valideData.avatar;
     }
 
-    User.update({ ...req.store.valideData }, { where: { id: req.params.id }})
+    User.update({ ...req.store.valideData }, { where: { id: req.store.userLog.id }})
         .then(() => res.status(200).json({ message: 'Profil modifié.', data : req.store.valideData }))
         .catch(error => res.status(400).json({ error }));
 }
@@ -54,17 +52,13 @@ exports.update = async (req, res) => {
  * Met à jour le profil d'utilisateur action reservé à l'utilisateur
  */
 exports.password = async (req, res) => {
-    if(req.store.userLog.id !== parseInt(req.params.id)) {
-        return res.status(404).json({error: 'Utilisateur incompatible.'});
-    }
-
     const valid = await bcrypt.compare(req.body.old, req.store.userLog.password).catch(error => res.status(500).json({ error }));
     if (!valid) {
         return res.status(401).json({ error: 'Ancien mot de passe invalide.' });
     }
 
     const hash = await bcrypt.hash(req.body.password, 10).catch(error => res.status(500).json({ error }));
-    User.update({ password: hash }, { where: { id: req.params.id }})
+    User.update({ password: hash }, { where: { id: req.store.userLog.id }})
         .then(() => res.status(200).json({ message: 'Mot de passe modifié.'}))
         .catch(error => res.status(500).json({ error }));
 }
@@ -73,14 +67,10 @@ exports.password = async (req, res) => {
  * Suppression d'un profil utilisateur action reservé a l'utilisateur
  */
 exports.delete = async (req, res) => {
-    if(req.store.userLog.id !== parseInt(req.params.id)) {
-        return res.status(404).json({error: 'Utilisateur introuvable.'})
-    }
-
     if(req.store.userLog.avatar !== defaultAvatar) { deleteImg(req.store.userLog.avatar)}
-    const result = await Comment.update({ UserId: 1 }, { where : { UserId: req.params.id, ParentId : {[Op.ne]: null} }}).catch(error => res.status(400).json({ error }));
+    const result = await Comment.update({ UserId: 1 }, { where : { UserId: req.store.userLog.id, ParentId : {[Op.ne]: null} }}).catch(error => res.status(400).json({ error }));
 
-    const likes = await Like.findAll({where: {UserId : req.params.id}}).catch(error => res.status(400).json({ error }));
+    const likes = await Like.findAll({where: {UserId : req.store.userLog.id }}).catch(error => res.status(400).json({ error }));
     const postToUpdate = {like : [], dislike : []};
 
     likes.map(( like) => {
@@ -91,11 +81,11 @@ exports.delete = async (req, res) => {
     });
 
     if(result) {
-        const updateLike = Post.update({ like: sequelize.literal('like - 1') }, {where: {id : postToUpdate.like}});
-        //const updateDislike = Post.update({ dislike: sequelize.literal('dislike - 1') }, {where: {id : postToUpdate.dislike}});
-        const deleteUser = User.destroy({ where: { id: req.params.id } });
+        const updateLike = Post.update({ likes: sequelize.literal('likes - 1') }, {where: {id : postToUpdate.like}});
+        const updateDislike = Post.update({ dislikes: sequelize.literal('dislikes - 1') }, {where: {id : postToUpdate.dislike}});
+        const deleteUser = User.destroy({ where: { id: req.store.userLog.id } });
 
-        Promise.all([updateLike, deleteUser])
+        Promise.all([updateLike, updateDislike, deleteUser])
             .then(() => res.status(200).json({ message: 'Votre profil a été supprimé.'}))
             .catch(error => res.status(400).json({ error }));
     }

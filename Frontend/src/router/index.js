@@ -92,7 +92,7 @@ const routes = [
       }
     ]
   }, {
-    path: '/post/:id',
+    path: '/post/:slug',
     name: 'Post',
     component: Post,
     params: true,

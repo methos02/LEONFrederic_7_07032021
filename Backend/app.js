@@ -31,7 +31,7 @@ app.use('/api/posts', require('./routes/postRoutes'));
 app.use('/api/comments', require('./routes/commentRoutes'));
 
 app.use((req, res) => {
-    res.status(404).end(req.originalUrl);
+    res.status(404).json({ errors: 'Page inconnue.'});
 });
 
 module.exports = app;

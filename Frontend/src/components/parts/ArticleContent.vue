@@ -21,7 +21,7 @@
     <div class="text-center">
       <img v-if="post.imagePath" :src="post.imagePath" class="article-header" alt="illustration du post" />
     </div>
-    <router-link :to="{ name: 'Post', params: { id : post.id } }">
+    <router-link :to="{ name: 'Post', params: { slug : post.slug } }">
       <v-card-title class="post-title">{{ post.title }}</v-card-title>
     </router-link>
     <v-card-text v-if="post.content">{{ post.content | abbreviate }}</v-card-text>

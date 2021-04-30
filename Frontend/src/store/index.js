@@ -109,8 +109,8 @@ export default new Vuex.Store({
 
       return res;
     },
-    async updateProfil({commit, state}, formData) {
-      const res = await Api().put('/profil/' + state.current_user.id , formData).catch(err => err.response);
+    async updateProfil({commit}, formData) {
+      const res = await Api().put('/profil/' , formData).catch(err => err.response);
 
       if(res.status === 200) {
         commit('UPDATE_CURRENT_USER_PROFIL', res.data.data);
@@ -118,8 +118,8 @@ export default new Vuex.Store({
 
       return res;
     },
-    async deleteProfil({commit}, user_id) {
-      const res = await Api().delete('/profil/' + user_id).catch(err => err.response);
+    async deleteProfil({commit}) {
+      const res = await Api().delete('/profil/').catch(err => err.response);
 
       if(res.status === 200) {
         commit('DELETE_CURRENT_USER');
@@ -128,8 +128,8 @@ export default new Vuex.Store({
 
       return res;
     },
-    async updatePassword({state}, passData) {
-      return await Api().put('/profil/' + state.current_user.id + '/password', passData).catch(err => err.response);
+    async updatePassword( passData ) {
+      return await Api().put('/profil/password', passData).catch(err => err.response);
     },
     logout({ commit }) {
       commit('DELETE_CURRENT_USER');

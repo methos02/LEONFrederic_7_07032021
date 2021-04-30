@@ -31,8 +31,11 @@ exports.index = async (req, res) => {
  * Retourne un post précise en fonction de l'id présent dans la requète
  */
 exports.show = (req, res) => {
-    Post.findByPk( req.params.id , { include: [userJoin, commentJoin]})
-        .then(post => res.status(200).json(post))
+    Post.findOne({where : { slug : req.params.slug }, include: [userJoin, commentJoin]})
+        .then(post => {
+            if(post === null) res.status(404).json({ errors : 'Article introuvable.'})
+            res.status(200).json(post)
+        })
         .catch(error => res.status(404).json({ error }));
 };
 

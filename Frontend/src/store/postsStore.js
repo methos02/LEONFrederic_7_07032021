@@ -63,12 +63,12 @@ export default {
                 commit('SET_USER', res.data.user, { root: true });
             }
         },
-        async loadPost({ commit }, post_id) {
-            const res = await Api().get('/posts/' + post_id );
+        async loadPost({ commit }, slug) {
+            const res = await Api().get('/posts/' + slug );
 
             if(res.status === 200) {
                 commit('SET_POST', res.data);
-                commit('comments/SET_COMMENT', {post_id: post_id, comments : res.data.Comments}, { root: true });
+                commit('comments/SET_COMMENT', {post_id: res.data.id, comments : res.data.Comments}, { root: true });
             }
             return res;
         },

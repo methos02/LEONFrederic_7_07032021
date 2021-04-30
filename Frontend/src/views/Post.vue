@@ -6,16 +6,16 @@
         <h1 v-if="post.title">{{ post.title }}</h1>
         <div v-html="post.content" v-if="post.content"></div>
         <div class="d-flex justify-space-between align-center px-3 pb-3 flex-wrap flex-md-nowrap">
-          <v-btn @click="toggleTextarea(post.id, true)"> Répondre </v-btn>
+          <v-btn @click="showTextarea"> Répondre </v-btn>
           <div v-if="post.Comments.length !== 0" class="order-2 order-md-1 btn-show-comments">
-            <v-btn v-if="!post.showComment" @click="toggleComments(post.id)" text> Afficher les commentaires </v-btn>
-            <v-btn v-else @click="toggleComments(post.id)" text> Cacher les commentaires </v-btn>
+            <v-btn v-if="!show.comments" @click="toggleComments" text> Afficher les commentaires </v-btn>
+            <v-btn v-else @click="toggleComments" text> Cacher les commentaires </v-btn>
           </div>
           <likes :post="post" class="order-1 order-md-2"/>
         </div>
       </div>
     </v-card>
-    <comments :post="post"/>
+    <comments :post="post" :show.sync="show"/>
   </v-container>
 </template>
 
@@ -28,8 +28,13 @@ export default {
   name: 'Post',
   components: { comments, likes },
   mounted() {
-    if(this.posts.find(post => post.id === parseInt(this.$route.params.id)) === undefined) {
-      this.$store.dispatch('posts/loadPost', parseInt(this.$route.params.id));
+    if(this.posts.find(post => post.slug === parseInt(this.$route.params.slug)) === undefined) {
+      this.$store.dispatch('posts/loadPost', this.$route.params.slug);
+    }
+  },
+  data() {
+    return {
+      show : { comments : false, textarea : false }
     }
   },
   computed: {
@@ -38,15 +43,15 @@ export default {
       posts: state => state.posts.posts,
     }),
     post() {
-      return this.posts.find(post => post.id === parseInt(this.$route.params.id) )
+      return this.posts.find(post => post.slug === this.$route.params.slug )
     },
   },
   methods: {
-    toggleComments(post_id) {
-      this.$store.dispatch('posts/toggleComments', {post_id});
+    toggleComments() {
+      this.show.comments = !this.show.comments;
     },
-    toggleTextarea(post_id, state) {
-      this.$store.dispatch('posts/toggleTextarea', {post_id, state});
+    showTextarea() {
+      this.show.textarea = true;
     },
   }
 }

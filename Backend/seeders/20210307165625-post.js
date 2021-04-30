@@ -6,13 +6,16 @@ const { getRandomInt } = require('../helpers/mathHelper');
 
 module.exports = {
     up: async (queryInterface) => {
-        const articles = [...Array(NB_ARTICLES)].map(() => ({
-                title: faker.lorem.words(10),
+        const articles = [...Array(NB_ARTICLES)].map(() =>{
+            const name = faker.lorem.words(10);
+            return {
+                title: name,
+                slug: name.replace(/\s+/g, '-').toLowerCase(),
                 content: faker.lorem.paragraphs(8),
                 UserId: getRandomInt(NB_MIN_USERS, NB_USERS),
                 type: typePost.ARTICLE.id
             }
-        ));
+        });
 
         const images = [...Array(NB_IMAGES)].map(() => ({
                 content: faker.lorem.words(10),

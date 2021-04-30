@@ -1,13 +1,12 @@
 - Responsivité - AddArticle, AddPost, Post
 - design Post
-- faire une transaction pour la suppression d'un compte
+- faire une transaction pour la suppression d'un compte + debug supp profil
 - nettoyé le store principal
-- simplifier le code des commentaires
-- slug pour les fiches article
-- suppression du param user pour l'update du profil
 - faire le seeder pour les likes / answers
 - animation sidebarre + changé l'icon quand la sidebarre est visible sur mobile
 - ajouté les droits de modérations a quelqu'un
 - recherche d'utilisateur home et admin
 - suppression / update message
 - favicone + nom de page
+- login quand enter
+- regex route profil et post show

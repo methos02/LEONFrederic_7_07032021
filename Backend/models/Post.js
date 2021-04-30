@@ -1,5 +1,6 @@
 const { postPath } = require('../helpers/imageHelper')
 const { formatDate } = require('../helpers/dateHelper')
+const SequelizeSlugify = require('sequelize-slugify');
 
 module.exports = (Sequelize, DataTypes) => {
     const Post = Sequelize.define('Post', {
@@ -15,6 +16,11 @@ module.exports = (Sequelize, DataTypes) => {
         },
         title: {
             type : DataTypes.STRING(256),
+            allowNull: true
+        },
+        slug: {
+            type: DataTypes.STRING(256),
+            unique: true,
             allowNull: true
         },
         content: {
@@ -50,6 +56,11 @@ module.exports = (Sequelize, DataTypes) => {
                 return formatDate(date);
             },
         }
+    });
+
+    SequelizeSlugify.slugifyModel(Post, {
+        source: ['title'],
+        overwrite: false,
     });
 
     Post.associate = function (models) {
