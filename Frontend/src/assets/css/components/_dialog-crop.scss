@@ -1,0 +1,12 @@
+.div-dialog-crop {
+  justify-content: space-around;
+
+  .preview-img {
+    height: 600px;
+    width: 600px;
+  }
+}
+
+.v-dialog:not(.v-dialog--fullscreen) {
+  max-height: initial !important;
+}

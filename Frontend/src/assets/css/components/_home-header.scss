@@ -1,0 +1,16 @@
+.div-home-header {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+
+  .share {
+    background-color: $primary;
+
+    &-title {
+      color: $secondary;
+      font-size: 2rem;
+    }
+  }
+}

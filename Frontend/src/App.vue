@@ -9,22 +9,6 @@
       </div>
       <v-spacer></v-spacer>
       <div v-if="current_user.name !== undefined">
-        <v-menu transition="slide-y-transition" offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn class="purple" color="primary mr-3" dark v-bind="attrs" v-on="on">
-              <span> Ajouter </span>
-              <v-icon>{{ attrs['aria-expanded'] !== 'true'? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item link :to="{name: 'AddImage'}">
-              <v-list-item-title>Images</v-list-item-title>
-            </v-list-item>
-            <v-list-item link :to="{name: 'AddArticle'}">
-              <v-list-item-title>Articles</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
         <v-menu transition="slide-y-transition" offset-y bottom >
           <template v-slot:activator="{ on, attrs }">
             <v-btn class="purple" color="primary" dark v-bind="attrs" v-on="on">

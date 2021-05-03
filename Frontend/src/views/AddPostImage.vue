@@ -112,13 +112,4 @@ export default {
   .div-btn-select-image { bottom: 150px; }
   .div-btn-upload-image { bottom: 50px; }
 }
-
-.div-crop-tools {
-  background-color: white;
-  position: fixed;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 300px;
-}
 </style>

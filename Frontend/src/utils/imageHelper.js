@@ -4,15 +4,15 @@ function imagePreview (e)  {
         path : ''
     }
     if(!image.file.type.match("image.*")) { return; }
-    const reader = new FileReader();
 
-    reader.onload = function (e) {
-        image.path = e.target.result;
-        document.dispatchEvent(new Event('image-load'));
-    }
-
-    reader.readAsDataURL(image.file);
-    return image;
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            image.path = e.target.result;
+            resolve(image);
+        }
+        reader.readAsDataURL(image.file);
+    });
 }
 
 async function addImgToFormData (cropper, file, formData, input_name) {

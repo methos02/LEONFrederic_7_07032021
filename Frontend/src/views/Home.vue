@@ -1,12 +1,12 @@
 <template>
   <v-container class="pt-0 container-home">
     <sidebar />
-    <post v-for="post in posts" :post="post" :key="post.id" @openConfirm="openConfirm"/>
+    <HomeHeader />
+    <post v-for="post in posts" :post="post" :key="post.id" @openConfirm="openConfirm" />
     <paginate model="posts" @currentPageChange="onCurrentPageChange"/>
     <confirm-action @confirm="deletePost"> Êtes vous sûr de vouloir supprimer votre {{ data.type }} </confirm-action>
   </v-container>
 </template>
-
 <script>
 import { mapState } from 'vuex';
 
@@ -14,10 +14,11 @@ import sidebar from "@/components/Sidebar";
 import paginate from "@/components/Paginate";
 import confirmAction from "@/components/confirmAction";
 import post from "@/components/Post";
+import HomeHeader from "../components/HomeHeader";
 
 export default {
   name: 'Home',
-  components: {post, sidebar, paginate, confirmAction },
+  components: {post, sidebar, paginate, confirmAction, HomeHeader },
   data() {
     return { data: ''}
   },
@@ -46,11 +47,11 @@ export default {
         this.dialog = false;
         this.data = {};
       }
-    }
+    },
   },
   watch:{
     $route (){
-      this.$store.dispatch('posts/loadPosts', {type : this.$route.params.type});
+      this.$store.dispatch('posts/loadPosts', { type : undefined });
     }
   }
 }

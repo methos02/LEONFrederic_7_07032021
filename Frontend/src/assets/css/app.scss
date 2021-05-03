@@ -5,11 +5,14 @@
 @import "components/main";
 @import "components/navbar";
 @import "components/posts";
+@import "components/home-header";
+@import "components/dialog-crop";
 @import "components/sidebar";
 
 @import "pages/admin";
 @import "pages/admin-users";
 @import "pages/auth";
+@import "pages/home";
 @import "pages/user";
 
 .btn-show-comments {
