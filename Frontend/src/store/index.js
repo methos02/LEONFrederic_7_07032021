@@ -72,6 +72,9 @@ export default new Vuex.Store({
     DELETE_CURRENT_USER(state) {
       state.current_user = {}
     },
+    UPDATE_ROLES(state, roles) {
+      state.user.roles = roles
+    }
   },
   getters: {
     getCurrentUser: state => { return state.current_user}

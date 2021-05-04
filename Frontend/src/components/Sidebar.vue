@@ -2,7 +2,8 @@
 <v-card id="div-sidebar" :class="{'hideSidebar' : !showSidebar}" class="div-sidebar pa-3 grey lighten-2">
   <div class="sidebar-btn grey lighten-2 py-3 pr-1 pl-3 rounded-r rounded-l-0">
     <button @click="showSidebar = !showSidebar">
-      <v-icon>mdi-chevron-double-right</v-icon>
+      <v-icon class="icon-opened">mdi-chevron-double-right</v-icon>
+      <v-icon class="icon-closed">mdi-chevron-double-left</v-icon>
     </button>
   </div>
   <div class="sidebar-type">

@@ -2,19 +2,20 @@
   <div class="div-home-header">
     <v-card class="share pa-2 my-5">
       <div class="share-title"> Partager </div>
-      <v-btn-toggle>
-        <v-btn>
-          <label for="image">
-            <input id="image" ref="file_image" type="file" accept="image/*" @change="onFileChange" name="image" v-show="false">
+      <v-btn-toggle class="d-flex">
+        <v-btn class="flex" @click="$refs.file_image.click()">
             <v-icon class="mr-2"> mdi-file-image </v-icon>
             <span> image </span>
-          </label>
         </v-btn>
-        <v-btn :to="{name: 'AddArticle'}"><v-icon class="mr-2"> mdi-file-document </v-icon> Article</v-btn>
+        <v-btn class="flex" :to="{name: 'AddArticle'}">
+          <v-icon class="mr-2"> mdi-file-document </v-icon>
+          <span> Article </span>
+        </v-btn>
       </v-btn-toggle>
     </v-card>
     <v-dialog v-model="dialog_crop" eager>
       <v-card class="div-dialog-crop d-flex">
+        <input id="image" ref="file_image" type="file" accept="image/*" @change="onFileChange" name="image" v-show="false">
         <div class="pa-2 text-center">
           <div class="px-3 pb-2 white">
             <v-textarea v-model="description" rows="1" auto-grow hide-details label="description"></v-textarea>

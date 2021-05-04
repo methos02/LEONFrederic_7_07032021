@@ -19,6 +19,9 @@ import HomeHeader from "../components/HomeHeader";
 export default {
   name: 'Home',
   components: {post, sidebar, paginate, confirmAction, HomeHeader },
+  metaInfo: {
+    title: 'Default Title'
+  },
   data() {
     return { data: ''}
   },
@@ -51,7 +54,7 @@ export default {
   },
   watch:{
     $route (){
-      this.$store.dispatch('posts/loadPosts', { type : undefined });
+      this.$store.dispatch('posts/loadPosts', { type : this.$route.params.type });
     }
   }
 }

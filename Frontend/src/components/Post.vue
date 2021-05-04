@@ -1,8 +1,8 @@
 <template>
   <div class="div-post">
     <v-card class="card-post mb-2 mx-auto">
-      <article_content v-if="post.type === 1" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.isAdmin === 1" />
-      <image_content  v-if="post.type === 2" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.isAdmin === 1" />
+      <article_content v-if="post.type === 1" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.roles.find( role => role === 'modo')" />
+      <image_content  v-if="post.type === 2" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.roles.find( role => role === 'modo')" />
       <div class="d-flex justify-space-between align-center px-3 pb-3 flex-wrap flex-md-nowrap">
         <v-btn @click="showTextarea"> Répondre </v-btn>
         <div v-if="post.Comments.length !== 0" class="order-2 order-md-1 btn-show-comments">

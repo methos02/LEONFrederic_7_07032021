@@ -39,16 +39,17 @@ exports.login = async (req, res) => {
 
     const dateBan = new Date(user.banUntil);
     const now = new Date();
-    if(dateBan > now) {
+    if(user.banUntil !== null && dateBan > now) {
         return res.status(401).json({ error: `Votre a été banni jusqu'au ${ formatDateHour(dateBan)}.`, message:  user.messageBan });
     }
 
-    if(dateBan <= now) {
+    if(user.banUntil !== null && dateBan <= now) {
         User.update({banUntil: null, messageBan: null }, {where: { id: user.id}}).catch(error => res.status(500).json({ error }));
     }
 
     const token = jwt.sign( { userId: user.id }, process.env.APP_KEY, { expiresIn: '24h' });
-    res.status(200).json({ user: {...await getUser(user), token : token}});
+    const userResp = await getUser(user).catch(error => res.status(500).json({ error }));
+    res.status(200).json({ user: { ...userResp, token : token }});
 };
 
 exports.currentUser = async (req, res) => {
@@ -56,6 +57,6 @@ exports.currentUser = async (req, res) => {
 }
 
 async function getUser(user) {
-    const likes = await Like.findAll({ where: { userId : user.id}, attributes: ['PostId', 'like']})
-    return { id: user.id, name : user.name, avatarPath : user.avatarPath, email: user.email, isAdmin: user.isAdmin, likes : likes }
+    const likes = await Like.findAll({ where: { userId : user.id}, attributes: ['PostId', 'like']}).catch(error =>  error );
+    return { id: user.id, name : user.name, avatarPath : user.avatarPath, email: user.email, roles: user.roles, likes : likes }
 }

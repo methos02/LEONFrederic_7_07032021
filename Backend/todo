@@ -3,10 +3,5 @@
 - faire une transaction pour la suppression d'un compte + debug supp profil
 - nettoyé le store principal
 - faire le seeder pour les likes / answers
-- animation sidebarre + changé l'icon quand la sidebarre est visible sur mobile
-- ajouté les droits de modérations a quelqu'un
-- recherche d'utilisateur home et admin
 - suppression / update message
-- favicone + nom de page
-- login quand enter
-- regex route profil et post show
+- regex route profile et post show

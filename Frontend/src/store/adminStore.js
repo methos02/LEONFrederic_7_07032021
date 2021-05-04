@@ -23,9 +23,18 @@ export default {
             }
         },
         async removeComment({ commit }, comment_id) {
-            const res = await Api().delete('/comments/' + comment_id);console.log(res.status === 200)
+            const res = await Api().delete('/comments/' + comment_id);
             if(res.status === 200) {
                 commit('REMOVE_COMMENT', comment_id);
+            }
+
+            return res;
+        },
+        async updateRoles({commit}, data) {
+            const res = await Api().put('profil/roles/' + data.user_id, { roles : data.roles }).catch((err) => err.response);
+
+            if(res.status === 200) {
+                commit('UPDATE_ROLES', data.roles, { root: true });
             }
 
             return res;

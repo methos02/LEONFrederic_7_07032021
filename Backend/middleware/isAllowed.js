@@ -2,7 +2,7 @@ module.exports = function validate(model) {
     return async (req, res, next) => {
         const ressource = await model.findByPk(req.params.id).catch(error => res.status(500).json({ error }));
 
-        if(ressource === null || (ressource.UserId !== req.store.userLog.id && req.store.userLog.isAdmin === 0)) {
+        if(ressource === null || (ressource.UserId !== req.store.userLog.id && req.store.userLog.roles.find(role => role === 'modo'))) {
             return res.status(404).json({ error: errors[model.name] });
         }
 

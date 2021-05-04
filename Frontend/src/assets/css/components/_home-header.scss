@@ -5,9 +5,11 @@
   justify-content: center;
   text-align: center;
 
-  .share {
-    background-color: $primary;
+  @media (max-width: 599px) {
+    width: 100%;
+  }
 
+  .share {
     &-title {
       color: $secondary;
       font-size: 2rem;

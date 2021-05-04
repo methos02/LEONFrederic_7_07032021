@@ -41,9 +41,9 @@ module.exports = {
         allowNull: false,
         defaultValue: defaultAvatar
       },
-      isAdmin: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
+      roles: {
+        type: Sequelize.STRING(256),
+        defaultValue: '[]'
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -69,7 +69,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: true,
       }
-    })
+    }).then(() => {
+      queryInterface.addIndex('users', ['lastname'], {name: 'lastname', type: "FULLTEXT"});
+      queryInterface.addIndex('users', ['firstname'], {name: 'firstname', type: "FULLTEXT"});
+    });
   },
 
   down: async (queryInterface) => {

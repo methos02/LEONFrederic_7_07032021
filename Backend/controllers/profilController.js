@@ -6,7 +6,7 @@ const userJoin = require('../helpers/join/userJoin');
 const commentJoin = require('../helpers/join/commentJoin');
 const bcrypt = require('bcrypt');
 const sequelize = require('sequelize');
-const {resolve} = require("sequelize-cli/lib/helpers/path-helper");
+const { orderSearch } = require('../helpers/searchHelper')
 const { formatResponse, getPage, constante } = require('../helpers/paginateHelper');
 const {Op} = require("sequelize");
 const { moveFromTemp, deleteImg, avatarPath, defaultAvatar } = require('../helpers/imageHelper');
@@ -35,13 +35,11 @@ exports.search = async (req, res) => {
         User.findAll({ where : { lastname: { [Op.like]: `${req.params.slug}%`} }, limit: 5 }),
     ]);
 
-    const usersUnion = users.flat().sort();
-    const usersSorted = Array.from(new Set(usersUnion.map(user => user.id))).map(id => { return usersUnion.find(user => user.id === id) });
-    return res.status(200).json({ users : usersSorted.slice(0, 5) });
+    return res.status(200).json({ users : orderSearch(users) });
 }
 
 /**
- * Met à jour le profil d'utilisateur action reservé à l'utilisateur
+ * Met à jour le profile d'utilisateur action reservé à l'utilisateur
  */
 exports.update = async (req, res) => {
     const user = await User.findOne({where: {email: req.store.valideData.email}}).catch(error => res.status(500).json({ error }));
@@ -58,6 +56,15 @@ exports.update = async (req, res) => {
     User.update({ ...req.store.valideData }, { where: { id: req.store.userLog.id }})
         .then(() => res.status(200).json({ message: 'Profil modifié.', data : req.store.valideData }))
         .catch(error => res.status(400).json({ error }));
+}
+
+/**
+ * Met à jour le role de l'utilisateur
+ */
+exports.roles = async (req, res) => {
+    User.update({ roles: req.store.valideData.roles }, { where: { id: req.params.id }})
+        .then(() => res.status(200).json({ message: 'Droits modifiés.'}))
+        .catch(error => res.status(500).json({ error }));
 }
 
 /**

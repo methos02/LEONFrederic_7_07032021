@@ -6,12 +6,13 @@ const express = require('express');
 const router = express.Router();
 const adminCtrl = require('../controllers/adminController');
 const auth = require('../middleware/auth');
-const isAdmin = require('../middleware/isAdmin');
+const hasRole = require('../middleware/hasRole');
 const validateData = require('../middleware/validateData');
 const banJoi = require('../schema/BanJoi')
 
-router.get('/users', auth, isAdmin, adminCtrl.users);
-router.put('/users/:id/ban', auth, isAdmin, validateData(banJoi),adminCtrl.ban);
-router.get('/comments', auth, isAdmin, adminCtrl.comments);
+router.get('/users', auth, hasRole('modo'), adminCtrl.users);
+router.get('/search/:slug', auth, adminCtrl.search);
+router.put('/users/:id/ban', auth, hasRole('modo'), validateData(banJoi),adminCtrl.ban);
+router.get('/comments', auth, hasRole('modo'), adminCtrl.comments);
 
 module.exports = router;

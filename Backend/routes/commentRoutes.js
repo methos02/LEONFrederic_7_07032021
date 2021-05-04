@@ -10,7 +10,7 @@ const auth = require('../middleware/auth');
 const isAllowed = require('../middleware/isAllowed');
 const Comment = require('../models').Comment;
 const validateData = require('../middleware/validateData');
-const isAdmin = require('../middleware/isAdmin');
+const hasRole = require('../middleware/hasRole');
 const commentJoi = require('../schema/CommentJoi');
 
 router.post('/', auth, validateData(commentJoi.create, 'comment'),  commentCtrl.store);

@@ -33,12 +33,12 @@ export default {
   },
   computed: {
     ...mapState({
-      users: state => state.search.users,
+      users: state => state.search.nav_search,
     })
   },
   methods: {
     async searchUsers() {
-      await this.$store.dispatch('search/searchUsers', this.search);
+      await this.$store.dispatch('search/searchNav', this.search);
     },
     hideSearch() {
       setTimeout(() => { this.showSearch = false}, 10)
@@ -47,7 +47,7 @@ export default {
   watch:{
     $route (){
       this.search = '';
-      this.$store.dispatch('search/resetUsers');
+      this.$store.dispatch('search/resetNavSearch');
       this.showSearch = false;
     }
   }

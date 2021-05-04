@@ -7,7 +7,7 @@
 @import "components/posts";
 @import "components/home-header";
 @import "components/dialog-crop";
-@import "components/search-users";
+@import "components/search-nav";
 @import "components/sidebar";
 
 @import "pages/admin";
@@ -20,4 +20,8 @@
   @media (max-width: 599px) {
     margin-top: 5px;
   }
+}
+
+a.v-btn, a.v-btn:hover {
+  text-decoration: none !important;
 }

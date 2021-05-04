@@ -7,6 +7,7 @@
 
   .card-post {
     width: 600px;
+    @media (max-width: 599px) { width: 100%; }
 
     a {
       color: $secondary;

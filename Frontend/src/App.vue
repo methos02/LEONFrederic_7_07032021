@@ -8,7 +8,7 @@
         </router-link>
       </div>
       <v-spacer></v-spacer>
-      <search />
+      <searchNav />
       <div v-if="current_user.name !== undefined">
         <v-menu transition="slide-y-transition" offset-y bottom >
           <template v-slot:activator="{ on, attrs }">
@@ -21,7 +21,7 @@
             <v-list-item link :to="{name: 'Infos'}">
               <v-list-item-title>{{ current_user.name}}</v-list-item-title>
             </v-list-item>
-            <v-list-item link :to="{name: 'Comments'}" v-if="current_user.isAdmin">
+            <v-list-item link :to="{name: 'Comments'}" v-if="current_user.roles.find( role => role === 'modo')">
               <v-list-item-title>Admin</v-list-item-title>
             </v-list-item>
             <v-list-item link>
@@ -34,7 +34,7 @@
     <v-main class="container-main">
       <router-view/>
     </v-main>
-    <v-snackbar v-model="snackbar.show" :timeout="-1" color="success">
+    <v-snackbar v-model="snackbar.show" :timeout="-1" :color="snackbar.type !== undefined ? snackbar.type : 'success'">
       {{ snackbar.text }}
       <v-btn text @click="resetSnackbar">X</v-btn>
     </v-snackbar>
@@ -43,10 +43,10 @@
 
 <script>
 import { mapState } from "vuex";
-import search from '@/components/Search'
+import searchNav from '@/components/SearchNav'
 export default {
   name: 'App',
-  components: { search },
+  components: { searchNav },
   async beforeCreate() {
     if(localStorage.getItem('token') !== null) {
       const resp = await this.$store.dispatch('getCurrentUser');

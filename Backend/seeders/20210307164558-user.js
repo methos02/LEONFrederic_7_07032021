@@ -25,7 +25,7 @@ module.exports = {
                         lastname: 'LEON',
                         slug: 'leon-frederic',
                         password: hash,
-                        isAdmin: 1,
+                        roles: '["admin","modo"]',
                     }
                 }
 
@@ -35,7 +35,7 @@ module.exports = {
                     lastname: 'User',
                     slug: 'user-' + index,
                     password: hash,
-                    isAdmin: 0,
+                    roles: '[]',
                 }
             }
         );

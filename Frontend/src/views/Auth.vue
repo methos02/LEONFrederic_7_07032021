@@ -8,7 +8,7 @@
       <v-col class="col-12 col-md-5 offset-md-1">
         <v-card class="pa-5" v-if="page==='register'">
           <h2 class="title text-center">S'inscrire</h2>
-          <form class="mb-2">
+          <form class="mb-2" @keyup.enter="registerLogin">
             {{ errors.general }}
             <div class="d-flex">
               <v-text-field v-model="userInfo.lastname" label="Nom" :error-messages="errors.name" class="mr-1"/>
@@ -42,7 +42,7 @@
         </v-card>
         <v-card class="pa-5" v-if="page==='login'">
           <h2 class="title text-center">Connexion</h2>
-          <form class="mb-2">
+          <form class="mb-2" @keyup.enter="userLogin">
             <v-alert v-if="errors.general" color="red" type="error" text>
               <p class="mb-0">{{ errors.general }}</p>
               <p class="mb-0 mt-2" v-if="message"> Raison du ban : {{ message }}</p>

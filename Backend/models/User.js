@@ -51,9 +51,15 @@ module.exports = (Sequelize, DataTypes) => {
                 return process.env.BASE_URL + avatarPath + this.avatar;
             },
         },
-        isAdmin : {
-            type: DataTypes.INTEGER,
-            default: 0
+        roles : {
+            type: DataTypes.STRING(256),
+            default: '[]',
+            get: function() {
+                return JSON.parse(this.getDataValue('roles'));
+            },
+            set: function(val) {
+                return this.setDataValue('roles', JSON.stringify(val));
+            }
         },
         banUntil: {
             type: DataTypes.DATE,
@@ -93,6 +99,10 @@ module.exports = (Sequelize, DataTypes) => {
         User.hasMany(models.Post);
         User.hasMany(models.Comment);
         User.hasMany(models.Like);
+    }
+
+    User.prototype.hasRole = function(name) {
+        return this.roles.find( (role) => role === name );
     }
 
     return User;

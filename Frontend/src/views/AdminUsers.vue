@@ -1,6 +1,17 @@
 <template>
   <v-container class="container-admin container-admin-users">
-    <h1 class="mb-5"> Utilisateurs</h1>
+    <div class="div-search">
+      <v-text-field
+          placeholder="Trouver un utilisateur"
+          @keyup="searchAdmin"
+          v-model="search"
+          dense
+          solo
+          autocomplete="off"
+          prepend-inner-icon="mdi-magnify"
+      />
+    </div>
+    <h1 class="mb-5">{{ title }}</h1>
     <div v-for="user in users" :key="user.id" class="mb-5 div-admin-items">
       <div class="d-flex">
         <v-avatar class="d-none d-sm-inline white mr-3">
@@ -30,7 +41,8 @@
         </div>
       </v-card>
     </div>
-    <paginate model="users" @currentPageChange="onCurrentPageChange"/>
+    <div v-if="search !== '' && users.length === 0"> Aucun utilisateur trouvé. </div>
+    <paginate model="users" @currentPageChange="onCurrentPageChange"  v-if="search === ''"/>
   </v-container>
 </template>
 
@@ -49,10 +61,24 @@ export default {
     return {
       user_id: '',
       message: {},
+      search: ''
     }
   },
   computed: {
-    ...mapState(['users'])
+    users: {
+      get() {
+        return this.search === '' ? this.users_load : this.admin_search;
+      }
+    },
+    title: {
+      get() {
+        return this.search === '' ? 'Utilisateurs' : 'Résultat de la recherche';
+      }
+    },
+    ...mapState({
+      users_load: 'users',
+      admin_search: state => state.search.admin_search,
+    })
   },
   methods: {
     onCurrentPageChange(page) {
@@ -64,6 +90,9 @@ export default {
     },
     compareDate(date_1) {
       return compareDate(date_1);
+    },
+    async searchAdmin() {
+      await this.$store.dispatch('search/searchAdmin', this.search);
     },
   }
 }

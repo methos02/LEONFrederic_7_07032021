@@ -1,10 +1,11 @@
 export default {
     namespaced: true,
     state : {
-        snackbar: {}
+        snackbar: {},
     },
     mutations : {
         SET_SNACKBAR(state, data) {
+            console.log(data)
             state.snackbar = data;
         },
         RESET_SNACKBAR(state) {
@@ -13,7 +14,7 @@ export default {
     },
     actions: {
         setSnackbar({ commit }, data) {
-            commit('SET_SNACKBAR', { text : data.text, show: true })
+            commit('SET_SNACKBAR', { show: true, ...data })
         },
         resetSnackbar({ commit }) {
             commit('RESET_SNACKBAR');

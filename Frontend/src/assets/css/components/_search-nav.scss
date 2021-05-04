@@ -1,4 +1,4 @@
-.div-search {
+.navbar .div-search {
   position: relative;
   background-color: lighten($secondary, 10);
   padding: 5px;
@@ -20,6 +20,7 @@
       min-width: initial;
       background-color: $secondary;
       input::placeholder, input { color: transparent; }
+      input { width: 0 }
 
       .result-users {display: none;}
     }

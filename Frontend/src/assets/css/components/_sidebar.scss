@@ -4,6 +4,7 @@
   left: 120px;
   bottom: 80px;
   z-index: 10;
+  transition: left 200ms ease-out;
 
   @media (max-width: 1260px) {
     left: 20px;
@@ -27,9 +28,14 @@
     @media (min-width: 1050px) { display: none; }
   }
 
+  .icon-opened { display: none; }
+
   &.hideSidebar {
     @media (max-width: 1049px) {
       left: -170px;
     }
+
+    .icon-closed { display: none; }
+    .icon-opened { display: initial; }
   }
 }

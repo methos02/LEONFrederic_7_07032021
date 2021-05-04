@@ -5,6 +5,10 @@
         <img :src="user.avatarPath" alt="image de profil">
       </v-avatar>
       <h1 class="white--text"> {{ user.name }}</h1>
+      <div v-if="current_user.roles.find( role => role === 'admin')">
+        <v-btn class="red white--text" v-if="user.roles.find( role => role === 'modo')" @click="updateRole([])"> Supprimer les droits </v-btn>
+        <v-btn class="green white--text" v-else @click="updateRole(['modo'])"> Devenir modérateur </v-btn>
+      </div>
     </div>
     <post v-for="post in posts" :post="post" :key="post.id" @openConfirm="openConfirm"/>
     <paginate model="posts" @currentPageChange="onCurrentPageChange"/>
@@ -17,6 +21,7 @@ import { mapState } from "vuex";
 import post from "@/components/Post";
 import paginate from "@/components/Paginate";
 import confirmAction from "@/components/confirmAction";
+import dispachError from "@/utils/sequelizeError";
 
 export default {
   name: 'User',
@@ -50,7 +55,17 @@ export default {
         this.dialog = false;
         this.data = {};
       }
-    }
+    },
+    async updateRole(roles) {
+      const res = await this.$store.dispatch('admin/updateRoles', { user_id : this.user.id, roles: roles });
+      if( res.status === 400) {
+        await this.$store.dispatch('snackbar/setSnackbar', { text: dispachError(res.data).roles, type: 'error' });
+      }
+
+      if( res.status === 200) {
+        await this.$store.dispatch('snackbar/setSnackbar', { text: roles === ['modo'] ? "Droit de modération ajouté à l'utilisateur." : "L'utilsateur n'est plus modérateur." });
+      }
+    },
   },
   watch:{
     $route (){

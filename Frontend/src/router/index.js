@@ -2,9 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Auth from '../views/Auth.vue'
-import AddPost from '../views/AddPost.vue'
 import AddPostArticle from '../views/AddPostArticle.vue'
-import AddPostImage from '../views/AddPostImage.vue'
 import UpdatePostArticle from '../views/UpdatePostArticle.vue'
 import Profil from '../views/Profil.vue'
 import ProfilInfos from '../views/ProfilInfos.vue'
@@ -23,6 +21,9 @@ const routes = [
     name: 'Home',
     component: Home,
     params: true,
+    meta: {
+      title: 'Groupomania'
+    },
     beforeEnter: (to, from, next) => {
       store.dispatch('posts/deletePosts');
       return next();
@@ -33,12 +34,18 @@ const routes = [
     name: 'Auth',
     component: Auth,
     params: true,
+    meta: {
+      title: 'Connexion - Groupomania'
+    },
   },
   {
     path: '/article/:id',
     name: 'UpdateArticle',
     component: UpdatePostArticle,
     params: true,
+    meta: {
+      title: 'Mise à jour aritcle - Groupomania'
+    },
   },{
     path: '/profil',
     name: 'Profil',
@@ -47,48 +54,51 @@ const routes = [
       {
         path: 'infos',
         name: 'Infos',
-        component: ProfilInfos
+        component: ProfilInfos,
+        meta: {
+          title: 'Profil - Groupomania'
+        },
       },
       {
         path: 'securite',
         name: 'Security',
-        component: ProfilSecurity
+        component: ProfilSecurity,
+        meta: {
+          title: 'Profil - Groupomania'
+        },
       }
     ]
   },{
-    path: '/add',
-    name: 'Add',
-    component: AddPost,
-    children: [
-      {
-        path: 'article',
-        name: 'AddArticle',
-        component: AddPostArticle
-      },
-      {
-        path: 'image',
-        name: 'AddImage',
-        component: AddPostImage
-      }
-    ]
+    path: '/add-article',
+    name: 'AddArticle',
+    component: AddPostArticle,
+    meta: {
+      title: 'Ajout Article - Groupomania'
+    }
   }, {
     path: '/admin',
     name: 'Admin',
     component: Admin,
     beforeEnter: (to, from, next) => {
-      if(store.state.current_user.isAdmin === 1) { return next(); }
+      if(store.state.current_user.roles !== undefined && store.state.current_user.roles.find(role => role === 'modo')) { return next(); }
       return next('/');
     },
     children: [
       {
         path: 'comments',
         name: 'Comments',
-        component: AdminComments
+        component: AdminComments,
+        meta: {
+          title: 'Administration Commentaires - Groupomania'
+        }
       },
       {
         path: 'users',
         name: 'Users',
-        component: AdminUsers
+        component: AdminUsers,
+        meta: {
+          title: 'Administration Utilisateurs - Groupomania'
+        }
       }
     ]
   }, {
@@ -96,11 +106,17 @@ const routes = [
     name: 'Post',
     component: Post,
     params: true,
+    meta: {
+      title: 'Articles - Groupomania'
+    }
   }, {
     path: '/user/:slug',
     name: 'User',
     component: User,
     params: true,
+    meta: {
+      title: 'Profil - Groupomania'
+    },
     beforeEnter: (to, from, next) => {
       store.dispatch('posts/deletePosts');
       return next();
@@ -115,6 +131,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  document.title = to.meta.title || 'Your Website';
   if(["Auth"].indexOf(to.name) !== -1 && localStorage.getItem('token') !== null) { return next('/');}
   if(["Auth"].indexOf(to.name) !== -1 || localStorage.getItem('token') !== null) { return next(); }
 
