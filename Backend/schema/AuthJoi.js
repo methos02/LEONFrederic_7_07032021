@@ -5,7 +5,8 @@ const joi = require('joi');
 
 module.exports = {
     signup : joi.object({
-        name: joi.string().required(),
+        lastname: joi.string().required(),
+        firstname: joi.string().required(),
         email: joi.string().email().required(),
         password: joi.string().min(6).max(24).required(),
         confirm: joi.string().equal(joi.ref('password'))

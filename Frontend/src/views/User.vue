@@ -51,6 +51,11 @@ export default {
         this.data = {};
       }
     }
+  },
+  watch:{
+    $route (){
+      this.$store.dispatch('posts/loadUserPost', { slug : this.$route.params.slug });
+    }
   }
 }
 </script>

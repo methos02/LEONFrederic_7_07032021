@@ -11,7 +11,8 @@ module.exports = {
                 if(index === 0) {
                     return {
                         email: 'no-account@groupomania.fr',
-                        name: 'Compte Supprimé',
+                        firstname: 'Compte',
+                        lastname: 'Supprimé',
                         slug: 'compte-supprimé',
                         password: hash,
                     }
@@ -20,7 +21,8 @@ module.exports = {
                 if(index === 1) {
                     return {
                         email: 'leonfrederic@gmx.fr',
-                        name: 'LEON Frédéric',
+                        firstname: 'Frédéric',
+                        lastname: 'LEON',
                         slug: 'leon-frederic',
                         password: hash,
                         isAdmin: 1,
@@ -29,7 +31,8 @@ module.exports = {
 
                 return {
                     email: `user${ index }@gmx.fr`,
-                    name: 'User ' + index,
+                    firstname: index,
+                    lastname: 'User',
                     slug: 'user-' + index,
                     password: hash,
                     isAdmin: 0,

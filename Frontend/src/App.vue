@@ -8,6 +8,7 @@
         </router-link>
       </div>
       <v-spacer></v-spacer>
+      <search />
       <div v-if="current_user.name !== undefined">
         <v-menu transition="slide-y-transition" offset-y bottom >
           <template v-slot:activator="{ on, attrs }">
@@ -42,9 +43,10 @@
 
 <script>
 import { mapState } from "vuex";
-
+import search from '@/components/Search'
 export default {
   name: 'App',
+  components: { search },
   async beforeCreate() {
     if(localStorage.getItem('token') !== null) {
       const resp = await this.$store.dispatch('getCurrentUser');

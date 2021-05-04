@@ -10,7 +10,10 @@
           <h2 class="title text-center">S'inscrire</h2>
           <form class="mb-2">
             {{ errors.general }}
-            <v-text-field v-model="userInfo.name" label="name" :error-messages="errors.name"/>
+            <div class="d-flex">
+              <v-text-field v-model="userInfo.lastname" label="Nom" :error-messages="errors.name" class="mr-1"/>
+              <v-text-field v-model="userInfo.firstname" label="Prénom" :error-messages="errors.name" class="ml-1"/>
+            </div>
             <v-text-field v-model="userInfo.email" label="Email" :error-messages="errors.email"/>
             <v-text-field
                 v-model="userInfo.password"

@@ -20,7 +20,6 @@ exports.signup = async (req, res) => {
     delete user.dataValues.password;
 
     return res.status(201).json({ message: 'Utilisateur créé !', user : {...user.dataValues, token : token, avatarPath: process.env.BASE_URL + avatarPath + defaultAvatar, likes : []}})
-
 };
 
 /**

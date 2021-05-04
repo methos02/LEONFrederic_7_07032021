@@ -16,10 +16,21 @@ module.exports = (Sequelize, DataTypes) => {
             required: true,
             allowNull: false
         },
-        name: {
+        firstname: {
             type: DataTypes.STRING(256),
             required: true,
             allowNull: false
+        },
+        lastname: {
+            type: DataTypes.STRING(256),
+            required: true,
+            allowNull: false
+        },
+        name: {
+            type: DataTypes.VIRTUAL,
+            get() {
+                return this.lastname + ' ' + this.firstname;
+            },
         },
         slug: {
             type: DataTypes.STRING(256),
@@ -74,7 +85,7 @@ module.exports = (Sequelize, DataTypes) => {
     });
 
     SequelizeSlugify.slugifyModel(User, {
-        source: ['name'],
+        source: ['lastname', 'firstname'],
         overwrite: false,
     });
 

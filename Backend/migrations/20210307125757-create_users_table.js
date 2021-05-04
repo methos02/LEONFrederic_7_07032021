@@ -16,7 +16,12 @@ module.exports = {
         required: true,
         allowNull: false
       },
-      name: {
+      firstname: {
+        type: Sequelize.STRING(256),
+        required: true,
+        allowNull: false
+      },
+      lastname: {
         type: Sequelize.STRING(256),
         required: true,
         allowNull: false

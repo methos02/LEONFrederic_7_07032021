@@ -6,6 +6,7 @@ const userJoin = require('../helpers/join/userJoin');
 const commentJoin = require('../helpers/join/commentJoin');
 const bcrypt = require('bcrypt');
 const sequelize = require('sequelize');
+const {resolve} = require("sequelize-cli/lib/helpers/path-helper");
 const { formatResponse, getPage, constante } = require('../helpers/paginateHelper');
 const {Op} = require("sequelize");
 const { moveFromTemp, deleteImg, avatarPath, defaultAvatar } = require('../helpers/imageHelper');
@@ -26,6 +27,17 @@ exports.show = async (req, res) => {
     }).catch(error => { return res.status(500).json({error}) });
 
     return res.status(200).json({...formatResponse(posts, page), user});
+}
+
+exports.search = async (req, res) => {
+    const users = await Promise.all([
+        User.findAll({ where : { firstname: { [Op.like]: `${req.params.slug}%`} }, limit: 5 }),
+        User.findAll({ where : { lastname: { [Op.like]: `${req.params.slug}%`} }, limit: 5 }),
+    ]);
+
+    const usersUnion = users.flat().sort();
+    const usersSorted = Array.from(new Set(usersUnion.map(user => user.id))).map(id => { return usersUnion.find(user => user.id === id) });
+    return res.status(200).json({ users : usersSorted.slice(0, 5) });
 }
 
 /**
