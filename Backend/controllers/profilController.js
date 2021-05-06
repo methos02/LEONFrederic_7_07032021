@@ -5,7 +5,7 @@ const Comment = require('../models').Comment;
 const userJoin = require('../helpers/join/userJoin');
 const commentJoin = require('../helpers/join/commentJoin');
 const bcrypt = require('bcrypt');
-const sequelize = require('sequelize');
+const { sequelize } = require('../config/database');
 const { orderSearch } = require('../helpers/searchHelper')
 const { formatResponse, getPage, constante } = require('../helpers/paginateHelper');
 const {Op} = require("sequelize");
@@ -100,12 +100,15 @@ exports.delete = async (req, res) => {
     });
 
     if(result) {
-        const updateLike = Post.update({ likes: sequelize.literal('likes - 1') }, {where: {id : postToUpdate.like}});
-        const updateDislike = Post.update({ dislikes: sequelize.literal('dislikes - 1') }, {where: {id : postToUpdate.dislike}});
-        const deleteUser = User.destroy({ where: { id: req.store.userLog.id } });
+        const t = await sequelize.transaction();
 
-        Promise.all([updateLike, updateDislike, deleteUser])
-            .then(() => res.status(200).json({ message: 'Votre profil a été supprimé.'}))
-            .catch(error => res.status(400).json({ error }));
+        try {
+            await Post.update({ likes: sequelize.literal('likes - 1') }, {where: {id : postToUpdate.like}, transaction : t});
+            await Post.update({ dislikes: sequelize.literal('dislikes - 1') }, {where: {id : postToUpdate.dislike}, transaction : t});
+            await User.destroy({ where: { id: req.store.userLog.id }, transaction : t });
+            await t.commit().then(() => res.status(200).json({ message: 'Votre profil a été supprimé.'}));
+        } catch (error) {
+            await t.rollback();
+        }
     }
 }

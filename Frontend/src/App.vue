@@ -8,7 +8,7 @@
         </router-link>
       </div>
       <v-spacer></v-spacer>
-      <searchNav />
+      <searchNav v-if="current_user.name !== undefined" />
       <div v-if="current_user.name !== undefined">
         <v-menu transition="slide-y-transition" offset-y bottom >
           <template v-slot:activator="{ on, attrs }">
@@ -49,7 +49,7 @@ export default {
   components: { searchNav },
   async beforeCreate() {
     if(localStorage.getItem('token') !== null) {
-      const resp = await this.$store.dispatch('getCurrentUser');
+      const resp = await this.$store.dispatch('auth/getCurrentUser');
 
       if(resp === false) {
         localStorage.removeItem('token');
@@ -59,13 +59,13 @@ export default {
   },
   computed: {
     ...mapState({
-      current_user: 'current_user',
+      current_user: state => state.auth.current_user,
       snackbar: state => state.snackbar.snackbar,
     })
   },
   methods: {
     logout() {
-      this.$store.dispatch('logout');
+      this.$store.dispatch('auth/logout');
       this.$router.push('/login');
     },
     resetSnackbar() {

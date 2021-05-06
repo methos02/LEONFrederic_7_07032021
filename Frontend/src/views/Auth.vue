@@ -87,7 +87,7 @@ export default {
   methods: {
     async registerLogin () {
       this.errors = {};
-      const resp = await this.$store.dispatch('userRegister', this.userInfo);
+      const resp = await this.$store.dispatch('auth/userRegister', this.userInfo);
 
       if (resp.status === 400) { return this.errors = dispachError(resp.data);}
       if (resp.status === 401) { return this.errors.general = resp.data.error; }
@@ -97,7 +97,7 @@ export default {
     },
     async userLogin () {
       this.errors = {};
-      const resp = await this.$store.dispatch('userLogin', this.userInfo);
+      const resp = await this.$store.dispatch('auth/userLogin', this.userInfo);
 
       if (resp.status === 400) { return this.errors = dispachError(resp.data);}
       if (resp.status === 401) {

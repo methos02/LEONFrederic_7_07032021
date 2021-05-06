@@ -80,7 +80,7 @@ const routes = [
     name: 'Admin',
     component: Admin,
     beforeEnter: (to, from, next) => {
-      if(store.state.current_user.roles !== undefined && store.state.current_user.roles.find(role => role === 'modo')) { return next(); }
+      if(store.state.auth.current_user.roles !== undefined && store.state.auth.current_user.roles.find(role => role === 'modo')) { return next(); }
       return next('/');
     },
     children: [

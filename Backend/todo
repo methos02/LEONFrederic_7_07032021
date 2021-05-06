@@ -1,7 +1,7 @@
-- Responsivité - AddArticle, AddPost, Post
+- Responsivité - Add/Update Article, Post
 - design Post
-- faire une transaction pour la suppression d'un compte + debug supp profil
-- nettoyé le store principal
-- faire le seeder pour les likes / answers
 - suppression / update message
 - regex route profile et post show
+- corriger la page admin
+
+- mettre en place un docker et regarder comment fonctionne les docker compose

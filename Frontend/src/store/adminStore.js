@@ -4,7 +4,8 @@ import currentPage from "@/utils/paginateHelper";
 export default {
     namespaced: true,
     state : {
-        comments: {}
+        comments: {},
+        users: {}
     },
     mutations : {
         SET_COMMENTS(state, comments) {
@@ -12,7 +13,19 @@ export default {
         },
         REMOVE_COMMENT(state, comment_id) {
             state.comments = state.comments.filter( comment => comment.id !== comment_id && comment.AnswerId !== comment_id);
-        }
+        },
+        SET_USERS(state, users) {
+            state.users = users;
+        },
+        BAN_USER(state, data) {
+            state.users.forEach(user => {
+                if(user.id === data.user_id) {
+                    user.banUntil =  data.banUntil
+                    user.formatBanUntil = data.formatBanUntil;
+                    ++user.nbBan;
+                }
+            })
+        },
     },
     actions: {
         async loadComments({ commit }, page) {
@@ -34,9 +47,30 @@ export default {
             const res = await Api().put('profil/roles/' + data.user_id, { roles : data.roles }).catch((err) => err.response);
 
             if(res.status === 200) {
-                commit('UPDATE_ROLES', data.roles, { root: true });
+                commit('user/UPDATE_ROLES', data.roles, { root: true });
             }
 
+            return res;
+        },
+        async loadUsers({commit}, page) {
+            const res = await Api().get('/admin/users' + currentPage(page !== undefined ? page : undefined)).catch(err => err.response);
+            if (res.status === 200) {
+                commit('SET_USERS', res.data.rows);
+                commit('paginate/SET_PAGINATE', {model: 'users', params: res.data.paginate}, {root : true});
+            }
+        },
+        async banUser({commit}, data) {
+            const res = await Api().put('/admin/users/' + data.user_id + '/ban', {
+                UserId: data.user_id,
+                message: data.message
+            }).catch(err => err.response);
+            if (res.status === 200) {
+                commit('BAN_USER', {
+                    user_id: data.user_id,
+                    banUntil: res.data.banUntil,
+                    formatBanUntil: res.data.formatBanUntil
+                })
+            }
             return res;
         }
     },

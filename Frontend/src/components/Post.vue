@@ -45,7 +45,7 @@ export default {
     },
   },
   computed: {
-    ...mapState({ current_user: 'current_user' })
+    ...mapState({ current_user: state => state.auth.current_user })
   },
   filters: {
     abbreviate(text) {

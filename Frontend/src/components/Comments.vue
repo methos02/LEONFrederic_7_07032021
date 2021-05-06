@@ -67,7 +67,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['current_user']),
+    ...mapState({ current_user: state => state.auth.current_user }),
     comments : {
       get: function () {
         const orderComments = {};

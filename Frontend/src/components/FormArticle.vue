@@ -79,8 +79,10 @@ export default {
       this.$refs.file_image.value = null;
     },
     onFileChange(e) {
-      this.image = imagePreview(e);
-      document.addEventListener('image-load', () => { this.cropper.replace(this.image.path); });
+      imagePreview(e).then( image => {
+        this.cropper.replace(image.path);
+        this.image = image;
+      });
     },
   }
 }

@@ -1,13 +1,40 @@
 'use strict';
+const Post = require('../models').Post;
+const { NB_LIKES, NB_USERS, NB_MIN_USERS } = require('../config/seederConfig');
+const { getRandomInt, getRandomUniqInt } = require('../helpers/mathHelper');
 
 module.exports = {
   up: async (queryInterface) => {
-    await queryInterface.bulkInsert('likes', [{
-      like: 1,
-      UserId: 2,
-      PostId: 1
-    }], {});
+    const posts = await Post.findAll();
 
+    const likes = [];
+    const postLikes = {}
+
+    posts.map( post => {
+      postLikes[post.id] = { likes : 0, dislikes : 0};
+      const userUsed = [];
+
+      likes.push([...Array(getRandomInt(0, NB_LIKES))].map(() => {
+        const like = getRandomInt(0, 100) % 2 === 0 ? 1 : -1;
+        const userId = getRandomUniqInt(NB_USERS, NB_MIN_USERS, userUsed);
+
+        userUsed.push(userId);
+        if( like === 1) { postLikes[post.id].likes ++}
+        if( like === -1) { postLikes[post.id].dislikes ++}
+
+        return {
+            like: like,
+            UserId: userId,
+            PostId: post.id
+          }
+      }));
+    });
+
+    for (const [post_id, postLike] of Object.entries(postLikes)) {
+      Post.update(postLike, { where: { id : post_id }});
+    }
+
+    await queryInterface.bulkInsert('likes', likes.flat(), {});
   },
 
   down: async (queryInterface) => {

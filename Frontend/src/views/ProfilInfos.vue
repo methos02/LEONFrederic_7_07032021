@@ -71,7 +71,7 @@ export default {
   },
   components: { confirmAction },
   computed: {
-    ...mapState(['current_user']),
+    ...mapState({ current_user: state => state.auth.current_user }),
     profil() {
       return {...this.current_user }
     }
@@ -85,7 +85,7 @@ export default {
       fd.append('user[email]', this.profil.email);
       fd = await addImgToFormData(this.cropper, this.avatar.file, fd, 'avatar');
 
-      const res = await this.$store.dispatch('updateProfil', fd);
+      const res = await this.$store.dispatch('auth/updateProfil', fd);
 
       if (res.status === 400) { return this.errors = dispachError(res.data);}
       if (res.status === 401) { return this.errors.general = res.data.error; }
@@ -97,7 +97,7 @@ export default {
       }
     },
     async deleteProfil() {
-      const res = await this.$store.dispatch('deleteProfil', this.current_user.id);
+      const res = await this.$store.dispatch('auth/deleteProfil', this.current_user.id);
 
       if (res.status === 200) {
         await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre profil a été supprimé.' });
@@ -107,8 +107,10 @@ export default {
       }
     },
     onFileChange(e) {
-      this.avatar = imagePreview(e)
-      document.addEventListener('image-load', () => { this.cropper.replace(this.avatar.path); });
+      imagePreview(e).then((avatar) => {
+        this.cropper.replace(avatar.path);
+        this.avatar = avatar;
+      })
     },
   }
 }

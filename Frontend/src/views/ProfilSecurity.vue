@@ -50,13 +50,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['current_user'])
+    ...mapState({ current_user: state => state.auth.current_user })
   },
   methods: {
     async updatePassword () {
       this.errors = {};
 
-      const resp = await this.$store.dispatch('updatePassword', this.password);
+      const resp = await this.$store.dispatch('auth/updatePassword', this.password);
 
       if (resp.status === 400) { return this.errors = dispachError(resp.data);}
       if (resp.status === 401) { return this.errors.general = resp.data.error; }

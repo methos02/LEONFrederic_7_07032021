@@ -34,9 +34,9 @@ export default {
   },
   computed: {
     ...mapState({
-      current_user: 'current_user',
+      current_user: state => state.auth.current_user,
       posts: state => state.posts.posts,
-      user: state => state.user
+      user: state => state.user.user
     })
   },
   methods: {

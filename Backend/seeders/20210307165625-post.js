@@ -3,9 +3,10 @@ const typePost = require('../helpers/postType');
 const faker = require('faker');
 const { NB_ARTICLES, NB_IMAGES, NB_USERS, NB_MIN_USERS } = require('../config/seederConfig');
 const { getRandomInt } = require('../helpers/mathHelper');
-
 module.exports = {
     up: async (queryInterface) => {
+        faker.setLocale('fr');
+
         const articles = [...Array(NB_ARTICLES)].map(() =>{
             const name = faker.lorem.words(10);
             return {

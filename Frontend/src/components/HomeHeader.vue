@@ -13,8 +13,9 @@
         </v-btn>
       </v-btn-toggle>
     </v-card>
-    <v-dialog v-model="dialog_crop" eager>
-      <v-card class="div-dialog-crop d-flex">
+    <v-dialog class="div-dialog-crop" v-model="dialog_crop" eager>
+      <v-card class="card-dialog-crop d-flex">
+        <v-btn class="btn-close grey--text white" @click="closeCropDialog" icon text small outlined elevation="4"><v-icon> mdi-close-circle-outline </v-icon></v-btn>
         <input id="image" ref="file_image" type="file" accept="image/*" @change="onFileChange" name="image" v-show="false">
         <div class="pa-2 text-center">
           <div class="px-3 pb-2 white">
@@ -103,13 +104,16 @@ export default {
 
         await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre image a été posté' });
         await this.$store.dispatch('posts/loadPosts', {type : this.$route.params.type});
-        this.dialog_crop = false;
-        this.cropper.reset();
-        this.description = '';
-        this.image = {};
-        this.$refs.file_image.value = '';
+       this.closeCropDialog()
       }, 'image/jpg')
     },
+    closeCropDialog() {
+      this.dialog_crop = false;
+      this.cropper.reset();
+      this.description = '';
+      this.image = {};
+      this.$refs.file_image.value = '';
+    }
   }
 }
 </script>

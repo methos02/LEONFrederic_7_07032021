@@ -55,7 +55,7 @@ export default {
   name: 'AdminUsers',
   components: { paginate },
   mounted() {
-    this.$store.dispatch('loadUsers');
+    this.$store.dispatch('admin/loadUsers');
   },
   data() {
     return {
@@ -76,7 +76,7 @@ export default {
       }
     },
     ...mapState({
-      users_load: 'users',
+      users_load: state => state.admin.users,
       admin_search: state => state.search.admin_search,
     })
   },

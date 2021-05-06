@@ -60,7 +60,7 @@ export default {
             const res = await Api().get('/profil/' + options.slug + currentPage(options.page !== undefined ? options.page : undefined));
             if(res.status === 200) {
                 commit('SET_POSTS', res.data.rows);
-                commit('SET_USER', res.data.user, { root: true });
+                commit('user/SET_USER', res.data.user, { root: true });
             }
         },
         async loadPost({ commit }, slug) {
@@ -113,7 +113,7 @@ export default {
             const res = await Api().post('/posts/' + data.post_id + '/like', {like : data.like}).catch((err) => err.response);
             if(res.status === 200 || res.status === 201) {
                 commit('SET_POST_LIKE', {post_id: data.post_id, likes: res.data.likes})
-                commit('SET_CURRENT_USER_LIKE', {post_id: data.post_id, like : res.data.cancel === true ? 0 : data.like}, { root: true })
+                commit('auth/SET_CURRENT_USER_LIKE', {post_id: data.post_id, like : res.data.cancel === true ? 0 : data.like}, { root: true })
             }
         },
         async createComment({ commit }, data) {

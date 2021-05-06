@@ -28,7 +28,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['current_user']),
+    ...mapState({ current_user: state => state.auth.current_user }),
     userLike() {
       if(this.current_user.likes === undefined) {
         return { like : 0 }
