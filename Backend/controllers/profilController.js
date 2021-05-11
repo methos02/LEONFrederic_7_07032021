@@ -55,7 +55,7 @@ exports.update = async (req, res) => {
 
     User.update({ ...req.store.valideData }, { where: { id: req.store.userLog.id }})
         .then(() => res.status(200).json({ message: 'Profil modifié.', data : req.store.valideData }))
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la mise à jour.'}) });
 }
 
 /**
@@ -64,7 +64,7 @@ exports.update = async (req, res) => {
 exports.roles = async (req, res) => {
     User.update({ roles: req.store.valideData.roles }, { where: { id: req.params.id }})
         .then(() => res.status(200).json({ message: 'Droits modifiés.'}))
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => { console.log(error); return res.status(500).json({error: 'Une erreur est survenue lors de la mise à jour des rôles.'}) });
 }
 
 /**

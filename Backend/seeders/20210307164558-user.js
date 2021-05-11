@@ -35,7 +35,6 @@ module.exports = {
                     lastname: 'User',
                     slug: 'user-' + index,
                     password: hash,
-                    roles: '[]',
                 }
             }
         );

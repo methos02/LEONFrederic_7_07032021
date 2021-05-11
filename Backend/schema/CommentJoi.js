@@ -3,14 +3,14 @@
  */
 const joi = require('joi');
 const base = {
-    UserId: joi.number().required(),
     content: joi.string().min(3).required(),
-    ParentId: joi.number()
 };
 
 module.exports =  {
     create: joi.object({ ...base,
+        UserId: joi.number().required(),
         PostId: joi.number().required(),
+        ParentId: joi.number()
     }),
     update: joi.object(base)
 };

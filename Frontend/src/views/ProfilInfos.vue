@@ -89,6 +89,7 @@ export default {
 
       if (res.status === 400) { return this.errors = dispachError(res.data);}
       if (res.status === 401) { return this.errors.general = res.data.error; }
+      if (res.status === 500) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error,  type: 'error' }); }
 
       if( res.status === 200) {
         await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre profil a été mis à jour.' });
@@ -115,17 +116,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.v-avatar {
-  height: 200px;
-  width: 200px;
-
-  img { object-fit: cover }
-}
-
-.profil-copper-controle {
-  display: block;
-  text-align: center;
-  margin: 15px 0;
-}
-</style>

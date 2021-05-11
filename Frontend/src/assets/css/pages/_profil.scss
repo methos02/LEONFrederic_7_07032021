@@ -1,0 +1,14 @@
+.profil {
+  .v-avatar {
+    height: 200px;
+    width: 200px;
+
+    img { object-fit: cover }
+  }
+
+  .profil-copper-controle {
+    display: block;
+    text-align: center;
+    margin: 15px 0;
+  }
+}

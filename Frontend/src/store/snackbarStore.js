@@ -5,7 +5,6 @@ export default {
     },
     mutations : {
         SET_SNACKBAR(state, data) {
-            console.log(data)
             state.snackbar = data;
         },
         RESET_SNACKBAR(state) {

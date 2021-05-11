@@ -44,6 +44,26 @@ export default {
                     post.Comments = post.Comments.concat(data.comment);
                 }
             });
+        },
+        UPDATE_COMMENT(state, data) {
+            state.posts.forEach(post => {
+                if(post.id === data.post_id) {
+                    post.Comments.forEach(comment => {
+                        if(comment.id === data.comment_id) {
+                            comment.content = data.content;
+                        }
+                    });
+                }
+            });
+        },
+        DELETE_COMMENT(state, data) {
+            state.posts.forEach(post => {
+                if(post.id === data.post_id) {
+                    post.Comments = post.Comments.filter( comment =>
+                        comment.id !== data.comment_id && comment.parentId !== data.comment_id
+                    );
+                }
+            });
         }
     },
     actions: {
@@ -125,5 +145,23 @@ export default {
 
             return res;
         },
+        async updateComment({ commit }, data) {
+            const res = await Api().put('/comments/' + data.comment_id, { content : data.content });
+
+            if(res.status === 200) {
+                commit('UPDATE_COMMENT', {comment_id : data.comment_id, content : data.content, post_id: data.post_id});
+            }
+
+            return res;
+        },
+        async deleteComment({ commit }, data) {
+            const res = await Api().delete('/comments/' + data.comment_id).catch((err) => err.response);
+
+            if(res.status === 200) {
+                commit('DELETE_COMMENT', { comment_id : data.comment_id, post_id: data.post_id});
+            }
+
+            return res;
+        }
     }
 }

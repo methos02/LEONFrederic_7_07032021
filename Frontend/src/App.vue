@@ -36,7 +36,11 @@
     </v-main>
     <v-snackbar v-model="snackbar.show" :timeout="-1" :color="snackbar.type !== undefined ? snackbar.type : 'success'">
       {{ snackbar.text }}
-      <v-btn text @click="resetSnackbar">X</v-btn>
+      <template v-slot:action="{ attrs }">
+        <v-btn icon text v-bind="attrs" @click="resetSnackbar">
+          <v-icon> mdi-close-circle-outline </v-icon>
+        </v-btn>
+      </template>
     </v-snackbar>
   </v-app>
 </template>

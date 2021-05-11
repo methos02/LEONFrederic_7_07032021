@@ -16,7 +16,8 @@
       </div>
       <div class="d-flex card-actions" v-if="has_action">
         <v-btn :to="{ name: 'UpdateArticle', params: { id : post.id } }" class="mr-1 green white--text btn-edit" fab small><v-icon> mdi-pencil </v-icon> </v-btn>
-        <v-btn @click="$emit('delete', { post_id : post.id, type : 'article' })" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn></div>
+        <v-btn @click="$emit('delete', { post_id : post.id, type : 'article' })" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
+      </div>
     </div>
     <div class="text-center">
       <img v-if="post.imagePath" :src="post.imagePath" class="article-header" alt="illustration du post" />

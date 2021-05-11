@@ -53,11 +53,20 @@ module.exports = (Sequelize, DataTypes) => {
         },
         roles : {
             type: DataTypes.STRING(256),
-            default: '[]',
             get: function() {
-                return JSON.parse(this.getDataValue('roles'));
+                if(this.getDataValue('roles') === null) {
+                    return [];
+                }
+
+                if(this.getDataValue('roles') !== undefined) {
+                    return JSON.parse(this.getDataValue('roles'));
+                }
             },
             set: function(val) {
+                if(val.length === 0) {
+                    return this.setDataValue('roles', null);
+                }
+
                 return this.setDataValue('roles', JSON.stringify(val));
             }
         },

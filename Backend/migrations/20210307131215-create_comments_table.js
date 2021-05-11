@@ -32,6 +32,7 @@ module.exports = {
       },
       ParentId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         allowNull: true,
         references: {
           model: 'comments',

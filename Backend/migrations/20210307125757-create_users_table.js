@@ -43,7 +43,6 @@ module.exports = {
       },
       roles: {
         type: Sequelize.STRING(256),
-        defaultValue: '[]'
       },
       createdAt: {
         type: Sequelize.DATE,

@@ -17,7 +17,7 @@ exports.users = async (req, res) => {
         attributes : ['id', 'firstname', 'lastname', 'name', 'email', 'avatar', 'avatarPath', 'nbBan', 'banUntil', 'formatBanUntil'],
         limit: constante.PAGINATE_LIMITE,
         offset: constante.PAGINATE_LIMITE * page,
-        where: { banUntil : null, roles: '[]' },
+        where: { banUntil : null, roles: null },
         order: [['id', 'DESC']]
     }).catch(error => res.status(500).json({ error }));
 
@@ -26,8 +26,8 @@ exports.users = async (req, res) => {
 
 exports.search = async (req, res) => {
     const users = await Promise.all([
-        User.findAll({ where : { firstname: { [Op.like]: `${req.params.slug}%`}, banUntil : null, roles: '[]'  }, limit: 5 }),
-        User.findAll({ where : { lastname: { [Op.like]: `${req.params.slug}%`}, banUntil : null, roles: '[]'  }, limit: 5 }),
+        User.findAll({ where : { firstname: { [Op.like]: `${req.params.slug}%`}, banUntil : null, roles: null  }, limit: 5 }),
+        User.findAll({ where : { lastname: { [Op.like]: `${req.params.slug}%`}, banUntil : null, roles: null  }, limit: 5 }),
     ]);
 
     return res.status(200).json({ users : orderSearch(users) });
