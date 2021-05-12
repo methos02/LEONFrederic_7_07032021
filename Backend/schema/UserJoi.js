@@ -6,7 +6,8 @@ const {roles} = require('../helpers/rolesHelper')
 
 module.exports = {
     profil_update : joi.object({
-        name: joi.string().min(3).required(),
+        lastname: joi.string().min(3).required(),
+        firstname: joi.string().min(3).required(),
         email: joi.string().email().required(),
         avatar: joi.string()
     }),

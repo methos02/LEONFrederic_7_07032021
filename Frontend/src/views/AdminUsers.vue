@@ -48,7 +48,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { compareDate } from '../utils/date';
+import { compareDate } from '../helpers/dateHelper';
 import paginate from '@/components/Paginate';
 
 export default {

@@ -33,7 +33,7 @@ exports.index = async (req, res) => {
 exports.show = (req, res) => {
     Post.findOne({where : { slug : req.params.slug }, include: [userJoin, commentJoin]})
         .then(post => {
-            if(post === null) res.status(404).json({ errors : 'Article introuvable.'})
+            if(post === null) res.status(404).json({ error : 'Article introuvable.'})
             res.status(200).json(post)
         })
         .catch(error => res.status(404).json({ error }));

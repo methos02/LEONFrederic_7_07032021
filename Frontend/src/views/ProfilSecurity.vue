@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-import dispachError from '/src/utils/sequelizeError';
+import dispachError from '/src/helpers/sequelizeError';
 import {mapState} from "vuex";
 
 export default {

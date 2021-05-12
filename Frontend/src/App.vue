@@ -21,7 +21,7 @@
             <v-list-item link :to="{name: 'Infos'}">
               <v-list-item-title>{{ current_user.name}}</v-list-item-title>
             </v-list-item>
-            <v-list-item link :to="{name: 'Comments'}" v-if="current_user.roles.find( role => role === 'modo')">
+            <v-list-item link :to="{name: 'Comments'}" v-if="isAdmin(current_user)">
               <v-list-item-title>Admin</v-list-item-title>
             </v-list-item>
             <v-list-item link>
@@ -48,6 +48,7 @@
 <script>
 import { mapState } from "vuex";
 import searchNav from '@/components/SearchNav'
+import {isAdmin} from "./helpers/authHelper";
 export default {
   name: 'App',
   components: { searchNav },
@@ -68,6 +69,7 @@ export default {
     })
   },
   methods: {
+    isAdmin,
     logout() {
       this.$store.dispatch('auth/logout');
       this.$router.push('/login');

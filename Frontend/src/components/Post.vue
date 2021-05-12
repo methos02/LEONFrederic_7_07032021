@@ -1,8 +1,8 @@
 <template>
   <div class="div-post">
     <v-card class="card-post mb-2 mx-auto">
-      <article_content v-if="post.type === 1" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.roles.find( role => role === 'modo')" />
-      <image_content  v-if="post.type === 2" :post="post" @delete="openConfirm" :has_action="current_user.id === post.UserId || current_user.roles.find( role => role === 'modo')" />
+      <article_content v-if="post.type === 1" :post="post" @delete="openConfirm" :has_action="isAllowed(current_user, post)" />
+      <image_content  v-if="post.type === 2" :post="post" @delete="openConfirm" :has_action="isAllowed(current_user, post)" />
       <div class="d-flex justify-space-between align-center px-3 pb-3 flex-wrap flex-md-nowrap">
         <v-btn @click="showTextarea"> Répondre </v-btn>
         <div v-if="post.Comments.length !== 0" class="order-2 order-md-1 btn-show-comments">
@@ -17,7 +17,8 @@
 </template>
 
 <script>
-import abbreviate from "@/utils/abbreviate";
+import abbreviate from "@/helpers/abbreviateHelper";
+import {isAllowed} from "../helpers/authHelper";
 import comments from '@/components/Comments'
 import article_content from "@/components/parts/ArticleContent";
 import image_content from "@/components/parts/ImageContent";
@@ -34,6 +35,7 @@ export default {
     }
   },
   methods: {
+    isAllowed,
     openConfirm(data) {
       this.$emit('openConfirm', data);
     },

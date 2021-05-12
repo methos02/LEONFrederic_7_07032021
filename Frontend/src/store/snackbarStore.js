@@ -8,7 +8,11 @@ export default {
             state.snackbar = data;
         },
         RESET_SNACKBAR(state) {
-            state.snackbar = {};
+            state.snackbar.show = false;
+
+            setTimeout(() => {
+                state.snackbar = {};
+            }, 300)
         }
     },
     actions: {

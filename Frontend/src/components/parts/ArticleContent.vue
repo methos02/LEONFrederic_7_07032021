@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import abbreviate from "@/utils/abbreviate";
+import abbreviate from "@/helpers/abbreviateHelper";
 
 export default {
   name: "PostArticle",

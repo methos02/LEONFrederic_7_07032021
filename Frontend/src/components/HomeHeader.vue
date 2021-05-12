@@ -51,9 +51,9 @@
 </template>
 
 <script>
-import { imagePreview } from "@/utils/imageHelper";
+import { imagePreview } from "@/helpers/imageHelper";
 import Cropper from "cropperjs";
-import dispachError from "@/utils/sequelizeError";
+import dispachError from "@/helpers/sequelizeError";
 
 export default {
   data() {

@@ -21,7 +21,7 @@ import { mapState } from "vuex";
 import post from "@/components/Post";
 import paginate from "@/components/Paginate";
 import confirmAction from "@/components/confirmAction";
-import dispachError from "@/utils/sequelizeError";
+import dispachError from "@/helpers/sequelizeError";
 
 export default {
   name: 'User',
@@ -29,8 +29,13 @@ export default {
   data() {
     return { data: ''}
   },
-  mounted() {
-    this.$store.dispatch('posts/loadUserPost', { slug : this.$route.params.slug });
+  async mounted() {
+    const res = await this.$store.dispatch('posts/loadUserPost', { slug : this.$route.params.slug });
+
+    if(res.status === 404) {
+      await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error, type: 'error' });
+      await this.$router.push('/');
+    }
   },
   computed: {
     ...mapState({

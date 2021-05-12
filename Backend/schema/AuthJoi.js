@@ -9,7 +9,7 @@ module.exports = {
         firstname: joi.string().required(),
         email: joi.string().email().required(),
         password: joi.string().min(6).max(24).required(),
-        confirm: joi.string().equal(joi.ref('password'))
+        confirm: joi.string().equal(joi.ref('password')).required()
     }),
 
     login : joi.object({

@@ -1,5 +1,5 @@
 import Api from "@/service/api";
-import currentPage from "@/utils/paginateHelper";
+import currentPage from "@/helpers/paginateHelper";
 
 export default {
     namespaced: true,
@@ -69,7 +69,7 @@ export default {
     actions: {
         async loadPosts({ commit }, options) {
             const type = options.type !== undefined ? '/' + options.type : '';
-            const res = await Api().get('/posts' + type + currentPage(options.page !== undefined ? options.page : undefined));
+            const res = await Api().get('/posts' + type + currentPage(options.page !== undefined ? options.page : undefined)).catch((err) => err.response);
 
             if(res.status === 200) {
                 commit('SET_POSTS', res.data.rows);
@@ -77,23 +77,27 @@ export default {
             }
         },
         async loadUserPost({ commit }, options) {
-            const res = await Api().get('/profil/' + options.slug + currentPage(options.page !== undefined ? options.page : undefined));
+            const res = await Api().get('/profil/' + options.slug + currentPage(options.page !== undefined ? options.page : undefined)).catch((err) => err.response);
+
             if(res.status === 200) {
                 commit('SET_POSTS', res.data.rows);
                 commit('user/SET_USER', res.data.user, { root: true });
             }
+
+            return res;
         },
         async loadPost({ commit }, slug) {
-            const res = await Api().get('/posts/' + slug );
+            const res = await Api().get('/posts/' + slug ).catch((err) => err.response);
 
             if(res.status === 200) {
                 commit('SET_POST', res.data);
                 commit('comments/SET_COMMENT', {post_id: res.data.id, comments : res.data.Comments}, { root: true });
             }
+
             return res;
         },
         async createPost({commit}, formData) {
-            const res = await Api().post('/posts', formData );
+            const res = await Api().post('/posts', formData ).catch((err) => err.response);
             if(res.status === 200) {
                 commit('CREATE_POST', res.data.data);
             }

@@ -8,7 +8,7 @@
 <script>
 import {mapState} from "vuex";
 import FormArticle from "@/components/FormArticle";
-import dispachError from "@/utils/sequelizeError";
+import dispachError from "@/helpers/sequelizeError";
 
 export default {
   name: 'AddPostArticle',

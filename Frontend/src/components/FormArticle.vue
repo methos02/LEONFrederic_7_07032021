@@ -36,7 +36,7 @@
   </form>
 </template>
 <script>
-import {imagePreview, addImgToFormData} from "@/utils/imageHelper";
+import {imagePreview, addImgToFormData} from "@/helpers/imageHelper";
 import Cropper from "cropperjs";
 
 export default {

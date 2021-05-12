@@ -1,5 +1,5 @@
 import Api from "@/service/api";
-import currentPage from "@/utils/paginateHelper";
+import currentPage from "@/helpers/paginateHelper";
 
 export default {
     namespaced: true,

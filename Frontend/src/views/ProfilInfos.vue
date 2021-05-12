@@ -26,11 +26,12 @@
             <v-btn @click="$refs.avatar_input.click()">Changer d'image</v-btn>
           </div>
         </div>
-        <div class="row col-8 align-center">
-          <div class="col">
-            <v-text-field v-model="profil.name" label="Name" :error-messages="errors.name" />
-            <v-text-field v-model="profil.email" label="Email" :error-messages="errors.email" />
+        <div class="col-8 align-center">
+          <div class="row">
+            <v-text-field v-model="profil.lastname" label="Nom" class="col-6" :error-messages="errors.lastname" />
+            <v-text-field v-model="profil.firstname" label="Prénom" class="col-6" :error-messages="errors.firstname" />
           </div>
+          <v-text-field v-model="profil.email" label="Email" :error-messages="errors.email" />
         </div>
       </div>
       <div class="row justify-center">
@@ -42,8 +43,8 @@
   </v-container>
 </template>
 <script>
-import dispachError from '/src/utils/sequelizeError';
-import {addImgToFormData, imagePreview} from "@/utils/imageHelper";
+
+import {addImgToFormData, imagePreview} from "@/helpers/imageHelper";
 import {mapState} from "vuex";
 import Cropper from "cropperjs";
 import confirmAction from "../components/confirmAction";
@@ -81,13 +82,14 @@ export default {
       this.errors = {};
       let fd = new FormData();
 
-      fd.append('user[name]', this.profil.name);
+      fd.append('user[lastname]', this.profil.lastname);
+      fd.append('user[firstname]', this.profil.firstname);
       fd.append('user[email]', this.profil.email);
       fd = await addImgToFormData(this.cropper, this.avatar.file, fd, 'avatar');
 
       const res = await this.$store.dispatch('auth/updateProfil', fd);
 
-      if (res.status === 400) { return this.errors = dispachError(res.data);}
+      if (res.status === 400) { return this.errors = res.data;}
       if (res.status === 401) { return this.errors.general = res.data.error; }
       if (res.status === 500) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error,  type: 'error' }); }
 

@@ -13,9 +13,9 @@ const { moveFromTemp, deleteImg, avatarPath, defaultAvatar } = require('../helpe
 
 exports.show = async (req, res) => {
     const page = getPage(req.query);
-    const user = await User.findOne({ where: {slug: req.params.slug} }).catch(error => res.status(500).json({ error }));
+    const user = await User.findOne({ where: {slug: req.params.slug} }).catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la recherche.'}) });
 
-    if(user === null) { return res.status(404).json({ errors: 'Aucun utilisateur trouvé.'}) }
+    if(user === null) { return res.status(404).json({ error: 'Aucun utilisateur trouvé.'}) }
 
     const posts = await Post.findAndCountAll({
         where: {UserId : user.id},
@@ -24,7 +24,7 @@ exports.show = async (req, res) => {
         include: [userJoin, commentJoin],
         distinct: true,
         order: [['id', 'DESC']]
-    }).catch(error => { return res.status(500).json({error}) });
+    }).catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la recherche.'}) });
 
     return res.status(200).json({...formatResponse(posts, page), user});
 }
@@ -33,7 +33,7 @@ exports.search = async (req, res) => {
     const users = await Promise.all([
         User.findAll({ where : { firstname: { [Op.like]: `${req.params.slug}%`} }, limit: 5 }),
         User.findAll({ where : { lastname: { [Op.like]: `${req.params.slug}%`} }, limit: 5 }),
-    ]);
+    ]).catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la recherche.'}) });
 
     return res.status(200).json({ users : orderSearch(users) });
 }
@@ -54,7 +54,7 @@ exports.update = async (req, res) => {
     }
 
     User.update({ ...req.store.valideData }, { where: { id: req.store.userLog.id }})
-        .then(() => res.status(200).json({ message: 'Profil modifié.', data : req.store.valideData }))
+        .then(() => res.status(200).json({ message: 'Profil modifié.', data : { ...req.store.valideData, name: req.store.valideData.lastname + ' ' + req.store.valideData.firstname } }))
         .catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la mise à jour.'}) });
 }
 

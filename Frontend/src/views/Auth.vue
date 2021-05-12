@@ -8,11 +8,11 @@
       <v-col class="col-12 col-md-5 offset-md-1">
         <v-card class="pa-5" v-if="page==='register'">
           <h2 class="title text-center">S'inscrire</h2>
-          <form class="mb-2" @keyup.enter="registerLogin">
+          <form class="mb-2" @keyup.enter="userRegister">
             {{ errors.general }}
             <div class="d-flex">
-              <v-text-field v-model="userInfo.lastname" label="Nom" :error-messages="errors.name" class="mr-1"/>
-              <v-text-field v-model="userInfo.firstname" label="Prénom" :error-messages="errors.name" class="ml-1"/>
+              <v-text-field v-model="userInfo.lastname" label="Nom" :error-messages="errors.lastname" class="mr-1"/>
+              <v-text-field v-model="userInfo.firstname" label="Prénom" :error-messages="errors.firstname" class="ml-1"/>
             </div>
             <v-text-field v-model="userInfo.email" label="Email" :error-messages="errors.email"/>
             <v-text-field
@@ -32,7 +32,7 @@
                 :error-messages="errors.confirm"
             />
             <div class="text-center">
-              <v-btn class="secondary" width="150" @click="registerLogin"> S'inscrire </v-btn>
+              <v-btn class="secondary" width="150" @click="userRegister"> S'inscrire </v-btn>
             </div>
           </form>
           <v-card-text class="justify-center align-center d-flex flex-column flex-md-row">
@@ -70,8 +70,6 @@
 </template>
 
 <script>
-import dispachError from '/src/utils/sequelizeError';
-
 export default {
   data () {
     return {
@@ -85,12 +83,13 @@ export default {
     this.page = this.$route.params.page === 'register' ? 'register' : 'login'
   },
   methods: {
-    async registerLogin () {
+    async userRegister () {
       this.errors = {};
-      const resp = await this.$store.dispatch('auth/userRegister', this.userInfo);
+      const res = await this.$store.dispatch('auth/userRegister', this.userInfo);
 
-      if (resp.status === 400) { return this.errors = dispachError(resp.data);}
-      if (resp.status === 401) { return this.errors.general = resp.data.error; }
+      if (res.status === 400) { return this.errors = res.data;}
+      if (res.status === 401) { return this.errors.general = res.data.error; }
+      if (res.status === 500) { return await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error, type: 'error' }); }
 
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Merci de vous être enregistré, vous avez été automatiquement connecté.' })
       await this.$router.push('/');
@@ -99,7 +98,7 @@ export default {
       this.errors = {};
       const resp = await this.$store.dispatch('auth/userLogin', this.userInfo);
 
-      if (resp.status === 400) { return this.errors = dispachError(resp.data);}
+      if (resp.status === 400) { return this.errors = resp.data;}
       if (resp.status === 401) {
         this.message = resp.data.message;
         return this.errors = { general : resp.data.error };

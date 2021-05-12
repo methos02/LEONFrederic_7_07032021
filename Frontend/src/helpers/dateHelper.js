@@ -4,5 +4,3 @@ export function compareDate(date_1, date_2 = undefined) {
 
     return date_1 > date_2;
 }
-
-export default { compareDate }

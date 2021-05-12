@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import dispachError from "@/utils/sequelizeError";
+import dispachError from "@/helpers/sequelizeError";
 import FormArticle from "@/components/FormArticle";
 
 export default {

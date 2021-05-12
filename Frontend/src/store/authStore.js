@@ -11,6 +11,8 @@ export default {
         },
         UPDATE_CURRENT_USER_PROFIL(state, user) {
             state.current_user.name = user.name;
+            state.current_user.lastname = user.lastname;
+            state.current_user.firstname = user.firstname;
             state.current_user.email = user.email;
 
             if(user.avatar !== undefined) {
