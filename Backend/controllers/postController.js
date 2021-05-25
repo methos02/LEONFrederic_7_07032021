@@ -47,7 +47,7 @@ exports.store = (req, res) => {
 
     Post.create( {...req.store.valideData, UserId: req.store.userLog.id }, { fields : defineCreateFields(req.store.valideData.type)} )
         .then((post) => res.status(201).json({ message: 'Post enregistré !', post}))
-        .catch(error => res.status(400).json({ message : 'Erreur de post :' + error }));
+        .catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la crétion du post."}) });
 };
 
 /**
@@ -61,7 +61,7 @@ exports.update = (req, res) => {
 
     Post.update( req.store.valideData, { where: { id: req.params.id }, fields: defineUpdateFields(req.store.Post.type)})
         .then(() => res.status(200).json({ message: 'Post modifié !'}))
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la modification du post."}) });
 }
 
 /**

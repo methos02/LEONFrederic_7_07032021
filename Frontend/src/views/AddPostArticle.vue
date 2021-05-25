@@ -1,12 +1,11 @@
 <template>
-  <v-container>
-    <h1>Ajouter un article </h1>
+  <v-container class="container-form-article">
+    <h1 class="text-center white--text">Ajouter un article </h1>
     <FormArticle :post="post" :errors="errors" @post="addPost"></FormArticle>
   </v-container>
 </template>
 
 <script>
-import dispachError from "@/helpers/sequelizeError";
 import FormArticle from "@/components/FormArticle";
 
 export default {
@@ -20,10 +19,12 @@ export default {
   },
   methods: {
     async addPost(formData) {
-      const resp = await this.$store.dispatch('posts/createPost', formData);
+      const res = await this.$store.dispatch('posts/createPost', formData);
 
-      if (resp.status === 400) { return this.errors = dispachError(resp.data);}
-      if (resp.status === 401) { return this.errors.general = resp.data.error; }
+      if (res.status === 400) { return this.errors = res.data;}
+      if (res.status === 401) { return this.errors.general = res.data.error; }
+      if (res.status === 500) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error,  type: 'error' }); }
+
 
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre article a été posté' })
       await this.$router.push('/');

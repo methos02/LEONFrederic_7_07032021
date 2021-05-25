@@ -44,11 +44,18 @@
 import { mapState } from "vuex";
 import comments from "@/components/Comments";
 import likes from "@/components/Likes";
+import verifParam from "@/helpers/verifParamHelper";
 
 export default {
   name: 'Post',
   components: { comments, likes },
   async mounted() {
+    if( !verifParam('slug', this.$route.params.slug) ) {
+      await this.$store.dispatch('snackbar/setSnackbar', { text: 'Le paramètre est invalide.', type: 'error' });
+      await this.$router.push('/');
+      return;
+    }
+
     if(this.posts.find(post => post.slug === this.$route.params.slug) === undefined) {
       const res = await this.$store.dispatch('posts/loadPost', this.$route.params.slug);
 

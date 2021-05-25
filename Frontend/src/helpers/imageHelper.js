@@ -3,9 +3,10 @@ function imagePreview (e)  {
         file : e.target.files[0],
         path : ''
     }
-    if(!image.file.type.match("image.*")) { return; }
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
+        if(!image.file.type.match("image.*")) { reject('Fichier invalide.') }
+
         const reader = new FileReader();
         reader.onload = function (e) {
             image.path = e.target.result;

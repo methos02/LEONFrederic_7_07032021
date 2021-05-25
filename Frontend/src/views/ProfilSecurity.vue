@@ -1,6 +1,6 @@
 <template>
   <div class="security">
-    <form class="my-3">
+    <form class="my-3" @keyup.enter="updatePassword">
       <h3> Modification du mot de passe </h3>
       {{ errors.general }}
       <div class="row col-8 align-center justify-center">
@@ -11,7 +11,7 @@
               :append-icon="show.old ? 'mdi-eye-off' : 'mdi-eye'"
               @click:append="show.old = !show.old"
               :type="show.old ? 'text' : 'password'"
-              :error-messages="errors.name"
+              :error-messages="errors.old"
           />
           <v-text-field
               v-model="password.password"
@@ -19,7 +19,7 @@
               :append-icon="show.password ? 'mdi-eye-off' : 'mdi-eye'"
               @click:append="show.password = !show.password"
               :type="show.password ? 'text' : 'password'"
-              :error-messages="errors.email"
+              :error-messages="errors.password"
           />
           <v-text-field
               v-model="password.confirm"
@@ -27,7 +27,7 @@
               :append-icon="show.confirm ? 'mdi-eye-off' : 'mdi-eye'"
               @click:append="show.confirm = !show.confirm"
               :type="show.confirm ? 'text' : 'password'"
-              :error-messages="errors.email"
+              :error-messages="errors.confirm"
           />
         </div>
       </div>
@@ -38,7 +38,6 @@
   </div>
 </template>
 <script>
-import dispachError from '/src/helpers/sequelizeError';
 import {mapState} from "vuex";
 
 export default {
@@ -56,10 +55,11 @@ export default {
     async updatePassword () {
       this.errors = {};
 
-      const resp = await this.$store.dispatch('auth/updatePassword', this.password);
+      const res = await this.$store.dispatch('auth/updatePassword', this.password);
 
-      if (resp.status === 400) { return this.errors = dispachError(resp.data);}
-      if (resp.status === 401) { return this.errors.general = resp.data.error; }
+      if (res.status === 400) { return this.errors = res.data;}
+      if (res.status === 401) { return this.errors.general = res.data.error; }
+      if (res.status === 500) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error,  type: 'error' }); }
 
       this.password = { old: '', password: '', confirm: ''};
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre mot de passe a été modifié' })

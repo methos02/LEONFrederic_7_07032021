@@ -17,15 +17,6 @@ export default {
         SET_USERS(state, users) {
             state.users = users;
         },
-        BAN_USER(state, data) {
-            state.users.forEach(user => {
-                if(user.id === data.user_id) {
-                    user.banUntil =  data.banUntil
-                    user.formatBanUntil = data.formatBanUntil;
-                    ++user.nbBan;
-                }
-            })
-        },
     },
     actions: {
         async loadComments({ commit }, page) {
@@ -60,17 +51,13 @@ export default {
             }
         },
         async banUser({commit}, data) {
-            const res = await Api().put('/admin/users/' + data.user_id + '/ban', {
-                UserId: data.user_id,
-                message: data.message
-            }).catch(err => err.response);
+            const res = await Api().put('/admin/users/' + data.user_id + '/ban', { UserId: data.user_id, message: data.message }).catch(err => err.response);
+
             if (res.status === 200) {
-                commit('BAN_USER', {
-                    user_id: data.user_id,
-                    banUntil: res.data.banUntil,
-                    formatBanUntil: res.data.formatBanUntil
-                })
+                commit('SET_USERS', res.data.rows);
+                commit('paginate/SET_PAGINATE', {model: 'users', params: res.data.paginate}, {root : true});
             }
+
             return res;
         }
     },

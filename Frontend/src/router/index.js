@@ -44,7 +44,7 @@ const routes = [
     component: UpdatePostArticle,
     params: true,
     meta: {
-      title: 'Mise à jour aritcle - Groupomania'
+      title: 'Mise à jour article - Groupomania'
     },
   },{
     path: '/profil',

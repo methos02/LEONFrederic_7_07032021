@@ -13,7 +13,7 @@ module.exports = {
     }),
     password_update: joi.object({
         old: joi.string().min(6).max(24).required(),
-        password: joi.string().min(6).max(24).required(),
+        password: joi.string().min(6).max(24).invalid(joi.ref('old')).required(),
         confirm: joi.string().equal(joi.ref('password'))
     }),
     roles_update: joi.object({

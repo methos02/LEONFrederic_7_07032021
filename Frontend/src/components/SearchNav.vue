@@ -23,6 +23,7 @@
 <script>
 
 import {mapState} from "vuex";
+import verifParam from "@/helpers/verifParamHelper";
 
 export default {
   data() {
@@ -38,7 +39,19 @@ export default {
   },
   methods: {
     async searchUsers() {
-      await this.$store.dispatch('search/searchNav', this.search);
+      if( this.search === '') { return; }
+
+      if( !verifParam('slug', this.search) ) {
+        await this.$store.dispatch('snackbar/setSnackbar', { text: 'La recherche est invalide.', type: 'error' });
+        return;
+      }
+
+      const res =  await this.$store.dispatch('search/searchNav', this.search);
+      if (res.status === 500) { return await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error, type: 'error' }); }
+
+      if( verifParam('slug', this.search) ) {
+        await this.$store.dispatch('snackbar/resetSnackbar');
+      }
     },
     hideSearch() {
       setTimeout(() => { this.showSearch = false}, 10)

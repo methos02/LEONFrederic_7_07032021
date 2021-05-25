@@ -21,7 +21,7 @@ import { mapState } from "vuex";
 import post from "@/components/Post";
 import paginate from "@/components/Paginate";
 import confirmAction from "@/components/confirmAction";
-import dispachError from "@/helpers/sequelizeError";
+import verifParam from "@/helpers/verifParamHelper";
 
 export default {
   name: 'User',
@@ -30,6 +30,12 @@ export default {
     return { data: ''}
   },
   async mounted() {
+    if( !verifParam('slug', this.$route.params.slug) ) {
+      await this.$store.dispatch('snackbar/setSnackbar', { text: 'Le paramètre est invalide.', type: 'error' });
+      await this.$router.push('/');
+      return;
+    }
+
     const res = await this.$store.dispatch('posts/loadUserPost', { slug : this.$route.params.slug });
 
     if(res.status === 404) {
@@ -63,13 +69,10 @@ export default {
     },
     async updateRole(roles) {
       const res = await this.$store.dispatch('admin/updateRoles', { user_id : this.user.id, roles: roles });
-      if( res.status === 400) {
-        await this.$store.dispatch('snackbar/setSnackbar', { text: dispachError(res.data).roles, type: 'error' });
-      }
 
-      if( res.status === 200) {
-        await this.$store.dispatch('snackbar/setSnackbar', { text: roles === ['modo'] ? "Droit de modération ajouté à l'utilisateur." : "L'utilsateur n'est plus modérateur." });
-      }
+      if( res.status === 200) { await this.$store.dispatch('snackbar/setSnackbar', { text: roles.length === 0 ? "L'utilsateur n'est plus modérateur." : "Droit de modération ajouté à l'utilisateur." });}
+      if( res.status === 400) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.roles, type: 'error' });}
+      if (res.status === 500) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error,  type: 'error' }); }
     },
   },
   watch:{

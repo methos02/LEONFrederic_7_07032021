@@ -60,6 +60,7 @@
             <span class="font-weight-bold text-body-1 comment-meta-name">{{ answer.User.name }}</span>
             <span class="font-weight-light text-body-2">Posté le {{ answer.formatCreatedAt }}</span>
             <v-btn @click="editComment(answer.id, answer.content)" class="mr-1 green white--text btn-edit" fab small><v-icon> mdi-pencil </v-icon> </v-btn>
+            <v-btn @click="deleteComment(answer.id, post.id)" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
           </div>
           <div class="px-3" v-if="isEdit.find(comment_id =>comment_id === answer.id)">
             {{ errors.global }}

@@ -19,12 +19,19 @@ module.exports = (Sequelize, DataTypes) => {
         firstname: {
             type: DataTypes.STRING(256),
             required: true,
-            allowNull: false
+            allowNull: false,
+            set: function(val) {
+                return this.setDataValue('firstname', val[0].toUpperCase() + val.substring(1));
+
+            }
         },
         lastname: {
             type: DataTypes.STRING(256),
             required: true,
-            allowNull: false
+            allowNull: false,
+            set: function(val) {
+                return this.setDataValue('lastname', val.toUpperCase());
+            }
         },
         name: {
             type: DataTypes.VIRTUAL,

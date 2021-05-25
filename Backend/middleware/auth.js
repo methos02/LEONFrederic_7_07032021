@@ -1,7 +1,6 @@
 /**
  * Middleware d'authentification.
  */
-
 const jwt = require('jsonwebtoken');
 const User = require('../models').User;
 const { deleteImg } = require('../helpers/imageHelper');

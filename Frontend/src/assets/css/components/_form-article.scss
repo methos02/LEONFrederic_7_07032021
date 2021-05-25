@@ -1,0 +1,48 @@
+.container-form-article {
+  h1 {
+    font-size: 60px;
+    @media (max-width: 599px) { font-size: 36px; }
+  }
+
+  .div-form-article {
+    width: 1000px;
+    margin: auto;
+  }
+
+  .article-image-container {
+    height: calc( (100vw - 24px) / 3);
+    @media (min-width: 900px) { height: calc(876px / 3); }
+    @media (min-width: 1264px) { height: calc(1000px / 3); }
+  }
+  
+  .cropper-view-box { border-radius: 5px 5px 0 0; }
+
+  .article-image {
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .header-article-cropper-controle {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+
+    @media ( max-width: 599px) {
+      button {
+        height: 30px !important;
+        min-width: 40px !important;
+      }
+
+      i { font-size: 17px !important;}
+    }
+  }
+
+  .div-upload-banner {
+    button {
+      @media ( max-width: 599px) {
+        width: 125px !important;
+        font-size: 0.65rem;
+      }
+    }
+  }
+}

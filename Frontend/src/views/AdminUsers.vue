@@ -50,6 +50,7 @@
 import { mapState } from 'vuex';
 import { compareDate } from '../helpers/dateHelper';
 import paginate from '@/components/Paginate';
+import verifParam from "@/helpers/verifParamHelper";
 
 export default {
   name: 'AdminUsers',
@@ -61,7 +62,8 @@ export default {
     return {
       user_id: '',
       message: {},
-      search: ''
+      search: '',
+      view: false
     }
   },
   computed: {
@@ -82,17 +84,33 @@ export default {
   },
   methods: {
     onCurrentPageChange(page) {
-      this.$store.dispatch('loadUsers', page );
+      this.$store.dispatch('admin/loadUsers', page );
     },
-    bannirUser() {
-      this.$store.dispatch('banUser', {user_id : this.user_id, message : this.message[this.user_id]});
+    async bannirUser() {
+      const res = await this.$store.dispatch('admin/banUser', {user_id : this.user_id, message : this.message[this.user_id]});
       this.user_id = '';
+
+      if(res.status === 200) {
+        await this.$store.dispatch('snackbar/setSnackbar', { text: 'Utilisateur banni une semaine.' });
+      }
     },
     compareDate(date_1) {
       return compareDate(date_1);
     },
     async searchAdmin() {
-      await this.$store.dispatch('search/searchAdmin', this.search);
+      if( this.search === '') { return; }
+
+      if( !verifParam('slug', this.search) ) {
+        await this.$store.dispatch('snackbar/setSnackbar', { text: 'La recherche est invalide.', type: 'error' });
+        return;
+      }
+
+      const  res = await this.$store.dispatch('search/searchAdmin', this.search);
+      if (res.status === 500) { return await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error, type: 'error' }); }
+
+      if( verifParam('slug', this.search) ) {
+        await this.$store.dispatch('snackbar/resetSnackbar');
+      }
     },
   }
 }

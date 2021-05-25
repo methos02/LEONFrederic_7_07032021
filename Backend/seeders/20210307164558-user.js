@@ -1,24 +1,17 @@
 'use strict';
 const bcrypt = require('bcrypt');
+const faker = require('faker');
 const { NB_USERS } = require('../config/seederConfig');
+const {addWeek} = require("../helpers/dateHelper");
 
 module.exports = {
     up: async (queryInterface) => {
         const hash = await bcrypt.hash('123123', 10).catch(error => console.log(error));
+        faker.locale = 'fr';
 
         const users = [
             ...Array(NB_USERS)].map((value, index) => {
                 if(index === 0) {
-                    return {
-                        email: 'no-account@groupomania.fr',
-                        firstname: 'Compte',
-                        lastname: 'Supprimé',
-                        slug: 'compte-supprimé',
-                        password: hash,
-                    }
-                }
-
-                if(index === 1) {
                     return {
                         email: 'leonfrederic@gmx.fr',
                         firstname: 'Frédéric',
@@ -29,11 +22,25 @@ module.exports = {
                     }
                 }
 
+                const lastname = faker.name.lastName();
+                const firstname = faker.name.firstName().toUpperCase();
+
+                if(index === 1) {
+                    return {
+                        email: 'ban-user@gmx.fr',
+                        firstname: firstname,
+                        lastname: lastname,
+                        slug: lastname.toLowerCase() + '-' + firstname.toLowerCase(),
+                        password: hash,
+                        banUntil: addWeek(new Date()),
+                    }
+                }
+
                 return {
                     email: `user${ index }@gmx.fr`,
-                    firstname: index,
-                    lastname: 'User',
-                    slug: 'user-' + index,
+                    firstname: firstname,
+                    lastname: lastname,
+                    slug: lastname.toLowerCase() + '-' + firstname.toLowerCase(),
                     password: hash,
                 }
             }

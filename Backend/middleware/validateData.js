@@ -4,6 +4,7 @@
 
 const {deleteImg} = require('../helpers/imageHelper');
 const User = require('../models').User;
+const bcrypt = require('bcrypt');
 
 /**
  * Valide ou non les datas dans la requête et enregistre les datas validées dans la requête
@@ -22,6 +23,13 @@ module.exports = function validate(joiSchema, model) {
         if (req.route.path === '/signup') {
             const user = await User.findOne({ where:{ email: paramValid.value.email } }).catch(error => { console.log(error);  res.status(500).json({error : "Une erreur est survenue lors de la verification de votre email."})});
             if(user !== null) { return res.status(400).json({ email: errors.email['email.uniq'] }); }
+        }
+
+        if (req.route.path === '/password') {
+            const valid = await bcrypt.compare(req.body.old, req.store.userLog.password).catch(error => { console.log(error);  res.status(500).json({error : "Une erreur est survenue lors de la verification de votre ancien mot de passe."})});
+            if (!valid) {
+                return res.status(400).json({ old: errors.old['any.invalid'] });
+            }
         }
 
         req.store.valideData = paramValid.value;
@@ -63,11 +71,20 @@ const errors = {
     },
     password : {
         'any.required' : "Le mot de passe est requit.",
-        'string.min' : "Le mot de passe doit faire minimum 6 caractères."
+        'string.empty' : "Le mot de passe est requit.",
+        'string.min' : "Le mot de passe doit faire minimum 6 caractères.",
+        'any.invalid' : "Votre mot de passe doit être différent de l'ancien.",
     },
     confirm : {
         'any.required' : "La confirmation du mot de passe est requise.",
+        'string.empty' : "La confirmation du mot de passe est requise.",
         'any.only' : "Le mot de passe et la confirmation doivent être identique."
+    },
+    old : {
+        'any.required' : "Votre ancien mot de passe est requit.",
+        'string.empty' : "Votre ancien mot de passe est requit.",
+        'string.min' : "Votre ancien mot de passe semble invalide.",
+        'any.invalid' : "Votre ancien mot de passe semble invalide.",
     },
     lastname : {
         'any.required' : "Le nom est requit.",
@@ -76,5 +93,16 @@ const errors = {
     firstname : {
         'any.required' : "Le prénom est requit.",
         'string.empty' : "Le prénom est requit.",
+    },
+    roles : {
+        'any.only' : "Le role est invalide."
+    },
+    title : {
+        'any.required' : "Le titre est requit.",
+        'string.empty' : "Le titre est requit.",
+    },
+    content : {
+        'any.required' : "Le contenu de l'article est requit.",
+        'string.empty' : "Le contenu de l'article est requit.",
     }
 }

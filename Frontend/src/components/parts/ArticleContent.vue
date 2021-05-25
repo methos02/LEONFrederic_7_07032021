@@ -2,13 +2,13 @@
   <div>
     <div class="d-flex justify-space-between pa-3 div-image-meta">
       <div class="d-flex post-meta">
-        <router-link :to="'/user/' + post.User.slug">
+        <router-link v-if="post.User" :to="{ name: 'User', params: { slug : post.User.slug } }">
           <v-avatar class="post-meta-avatar white mr-3">
             <img :src="post.User.avatarPath" alt="image de profil">
           </v-avatar>
         </router-link>
         <div class="post-meta-infos">
-          <router-link :to="'/user/' + post.User.slug">
+          <router-link v-if="post.User" :to="{ name: 'User', params: { slug : post.User.slug } }">
             <div class="post-meta-author">{{ post.User.name }}</div>
           </router-link>
           <div class="post-meta-create">{{ post.formatCreatedAt }}</div>
@@ -22,7 +22,7 @@
     <div class="text-center">
       <img v-if="post.imagePath" :src="post.imagePath" class="article-header" alt="illustration du post" />
     </div>
-    <router-link :to="{ name: 'Post', params: { slug : post.slug } }">
+    <router-link v-if="post.slug" :to="{ name: 'Post', params: { slug : post.slug } }">
       <v-card-title class="post-title">{{ post.title }}</v-card-title>
     </router-link>
     <v-card-text v-if="post.content">{{ post.content | abbreviate }}</v-card-text>

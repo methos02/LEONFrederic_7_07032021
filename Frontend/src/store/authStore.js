@@ -85,7 +85,9 @@ export default {
 
             return res;
         },
-        async updatePassword( passData ) {
+
+        // eslint-disable-next-line no-empty-pattern
+        async updatePassword( {},  passData ) {
             return await Api().put('/profil/password', passData).catch(err => err.response);
         },
         async deleteProfil({commit}) {

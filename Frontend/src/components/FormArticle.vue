@@ -1,12 +1,11 @@
 <template>
   <form class="my-3">
-    {{ errors.global }}
-    <v-card class="pb-5 div-form-article">
+    <v-card :class="{ 'pt-3' : image.error !== undefined }" class="pb-5 div-form-article">
       <div v-if="post.imagePath && image.path === undefined" class="article-image-container">
         <img class="article-image" height="250" :src="post.imagePath" alt="Entête de l'article">
       </div>
-      <div v-show="image.path" class="article-image-container">
-        <img ref="image" class="article-image" height="250" :src="image.path" alt="Entête de l'article">
+      <div v-show="image.path" class="article-image-container" id="article-image-container">
+        <img ref="image" class="article-image" :src="image.path" alt="Entête de l'article">
       </div>
       <v-btn-toggle class="header-article-cropper-controle" v-show="image.path">
         <v-btn @click="cropper.move(-10, 0)"><v-icon>mdi-chevron-left</v-icon></v-btn>
@@ -17,7 +16,10 @@
         <v-btn type="button" class="btn btn-secondary" @click="cropper.zoom(-0.1)"><v-icon>mdi-magnify-minus</v-icon></v-btn>
       </v-btn-toggle>
       <input ref="file_image" type="file" accept="image/*" @change="onFileChange" name="image" v-show="false">
-      <div class="pt-5 text-center">
+      <v-alert v-if="image.error" color="red" type="error" class="mx-5 mb-3" text>
+        <p class="mb-0">{{ image.error }}</p>
+      </v-alert>
+      <div class="pt-5 text-center div-upload-banner">
         <v-btn class="mx-2" width="175" @click="$refs.file_image.click()">
           <span v-if="datas.image || image.path">Modifiler l'image</span>
           <span v-else> Ajouter une image </span>
@@ -52,7 +54,7 @@ export default {
       dragMode : 'move',
       cropBoxMovable: false,
       cropBoxResizable: false,
-      minCropBoxHeight: 250,
+      minCropBoxHeight: 400,
       minCropBoxWidth: 1000,
       guides: false,
       viewMode: 3,
@@ -67,8 +69,8 @@ export default {
     async postUpdate() {
       let fd = new FormData();
 
-      fd.append('post[title]', this.datas.title);
-      fd.append('post[content]', this.datas.content);
+      if(this.datas.title !== undefined)  { fd.append('post[title]', this.datas.title); }
+      if(this.datas.content !== undefined)  { fd.append('post[content]', this.datas.content); }
       fd = await addImgToFormData(this.cropper, this.image.file, fd, 'image');
       if(this.post.id === undefined)  {  fd.append('post[type]', 1); }
 
@@ -79,32 +81,13 @@ export default {
       this.$refs.file_image.value = null;
     },
     onFileChange(e) {
+      this.image = {};
+
       imagePreview(e).then( image => {
         this.cropper.replace(image.path);
         this.image = image;
-      });
+      }).catch( error => this.image = { error });
     },
   }
 }
 </script>
-<style lang="scss" scoped>
-.div-form-article {
-  width: 1000px;
-  margin: auto;
-}
-
-.article-image-container {
-  height: 250px;
-}
-
-.article-image {
-  object-fit: cover;
-  width: 100%;
-}
-
-.header-article-cropper-controle {
-  display: block;
-  text-align: center;
-  margin-top: 15px;
-}
-</style>

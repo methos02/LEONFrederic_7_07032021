@@ -1,7 +1,6 @@
 const User = require('../models').User;
 const Post = require('../models').Post;
 const Like = require('../models').Like;
-const Comment = require('../models').Comment;
 const userJoin = require('../helpers/join/userJoin');
 const commentJoin = require('../helpers/join/commentJoin');
 const bcrypt = require('bcrypt');
@@ -71,11 +70,6 @@ exports.roles = async (req, res) => {
  * Met à jour le profil d'utilisateur action reservé à l'utilisateur
  */
 exports.password = async (req, res) => {
-    const valid = await bcrypt.compare(req.body.old, req.store.userLog.password).catch(error => res.status(500).json({ error }));
-    if (!valid) {
-        return res.status(401).json({ error: 'Ancien mot de passe invalide.' });
-    }
-
     const hash = await bcrypt.hash(req.body.password, 10).catch(error => res.status(500).json({ error }));
     User.update({ password: hash }, { where: { id: req.store.userLog.id }})
         .then(() => res.status(200).json({ message: 'Mot de passe modifié.'}))
@@ -87,28 +81,18 @@ exports.password = async (req, res) => {
  */
 exports.delete = async (req, res) => {
     if(req.store.userLog.avatar !== defaultAvatar) { deleteImg(req.store.userLog.avatar)}
-    const result = await Comment.update({ UserId: 1 }, { where : { UserId: req.store.userLog.id, ParentId : {[Op.ne]: null} }}).catch(error => res.status(400).json({ error }));
-
     const likes = await Like.findAll({where: {UserId : req.store.userLog.id }}).catch(error => res.status(400).json({ error }));
     const postToUpdate = {like : [], dislike : []};
 
-    likes.map(( like) => {
-        if(like.like === 1) {
-            return postToUpdate.like.push(like.PostId);
-        }
-        return postToUpdate.dislike.push(like.PostId);
-    });
+    likes.map(( like) => { return like.like === 1 ? postToUpdate.like.push(like.PostId) : postToUpdate.dislike.push(like.PostId); });
+    const t = await sequelize.transaction();
 
-    if(result) {
-        const t = await sequelize.transaction();
-
-        try {
-            await Post.update({ likes: sequelize.literal('likes - 1') }, {where: {id : postToUpdate.like}, transaction : t});
-            await Post.update({ dislikes: sequelize.literal('dislikes - 1') }, {where: {id : postToUpdate.dislike}, transaction : t});
-            await User.destroy({ where: { id: req.store.userLog.id }, transaction : t });
-            await t.commit().then(() => res.status(200).json({ message: 'Votre profil a été supprimé.'}));
-        } catch (error) {
-            await t.rollback();
-        }
+    try {
+        await Post.update({ likes: sequelize.literal('likes - 1') }, {where: {id : postToUpdate.like}, transaction : t});
+        await Post.update({ dislikes: sequelize.literal('dislikes - 1') }, {where: {id : postToUpdate.dislike}, transaction : t});
+        await User.destroy({ where: { id: req.store.userLog.id }, transaction : t });
+        await t.commit().then(() => res.status(200).json({ message: 'Votre profil a été supprimé.'}));
+    } catch (error) {
+        await t.rollback();
     }
 }

@@ -5,7 +5,7 @@ const { NB_ARTICLES, NB_IMAGES, NB_USERS, NB_MIN_USERS } = require('../config/se
 const { getRandomInt } = require('../helpers/mathHelper');
 module.exports = {
     up: async (queryInterface) => {
-        faker.setLocale('fr');
+        faker.locale = 'fr';
 
         const articles = [...Array(NB_ARTICLES)].map(() =>{
             const name = faker.lorem.words(10);
