@@ -20,7 +20,7 @@ module.exports = {
       slug: {
         type: Sequelize.STRING(256),
         unique: true,
-        allowNull: true
+        required: true,
       },
       content: {
         type : Sequelize.TEXT,

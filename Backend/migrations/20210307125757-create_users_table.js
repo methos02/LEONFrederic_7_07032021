@@ -64,10 +64,6 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      supp: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
-      }
     }).then(() => {
       queryInterface.addIndex('users', ['lastname'], {name: 'lastname', type: "FULLTEXT"});
       queryInterface.addIndex('users', ['firstname'], {name: 'firstname', type: "FULLTEXT"});

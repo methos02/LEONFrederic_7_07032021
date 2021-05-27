@@ -1,0 +1,47 @@
+.div-dialog-crop {
+  width: initial;
+  overflow-y: initial !important;
+
+  &.v-dialog:not(.v-dialog--fullscreen) {
+    max-height: initial !important;
+  }
+
+  .card-dialog-crop {
+    position: relative;
+    flex-direction: column;
+
+    .preview-img {
+      margin: auto;
+      height: 500px;
+      width: 500px;
+
+      @media (max-width: 599px) {
+        width: 250px;
+        height: 250px;
+      }
+    }
+
+    .btn-close {
+      position: absolute;
+      right: -10px;
+      top: -10px;
+    }
+
+    .crop-controls {
+      @media ( max-width: 599px) {
+        button {
+          height: 30px !important;
+          min-width: 40px !important;
+        }
+
+        i { font-size: 17px !important;}
+      }
+    }
+
+    .crop-btn button.success{
+      @media ( max-width: 599px) {
+        font-size: 0.6rem;
+      }
+    }
+  }
+}

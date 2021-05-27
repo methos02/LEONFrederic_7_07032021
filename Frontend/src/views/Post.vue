@@ -26,15 +26,15 @@
       <div class="px-3">
         <h1 class="post-title">{{ post.title }}</h1>
         <div class="py-4">{{ post.content }}</div>
-        <div class="d-flex justify-space-between align-center px-3 pb-3 flex-wrap flex-md-nowrap">
-          <v-btn @click="showTextarea"> Répondre </v-btn>
-          <div v-if="post.Comments.length !== 0" class="order-2 order-md-1 btn-show-comments">
-            <v-btn v-if="!show.comments" @click="toggleComments" text> Afficher les commentaires </v-btn>
-            <v-btn v-else @click="toggleComments" text> Cacher les commentaires </v-btn>
-          </div>
-          <likes :post="post" class="order-1 order-md-2"/>
-        </div>
       </div>
+      <div class="d-flex justify-space-between align-center px-3 pb-3 flex-wrap flex-md-nowrap">
+      <v-btn @click="showTextarea"> Répondre </v-btn>
+      <div v-if="post.Comments.length !== 0" class="order-2 order-md-1 btn-show-comments flex text-center">
+        <v-btn v-if="!show.comments" @click="toggleComments" text> Afficher les commentaires </v-btn>
+        <v-btn v-else @click="toggleComments" text> Cacher les commentaires </v-btn>
+      </div>
+      <likes :post="post" class="order-1 order-md-2"/>
+    </div>
     </v-card>
     <comments :post="post" :show.sync="show"/>
   </v-container>

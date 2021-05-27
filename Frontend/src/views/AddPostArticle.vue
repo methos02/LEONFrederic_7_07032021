@@ -19,12 +19,10 @@ export default {
   },
   methods: {
     async addPost(formData) {
+      formData.append('post[type]', 1);
       const res = await this.$store.dispatch('posts/createPost', formData);
 
       if (res.status === 400) { return this.errors = res.data;}
-      if (res.status === 401) { return this.errors.general = res.data.error; }
-      if (res.status === 500) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error,  type: 'error' }); }
-
 
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre article a été posté' })
       await this.$router.push('/');

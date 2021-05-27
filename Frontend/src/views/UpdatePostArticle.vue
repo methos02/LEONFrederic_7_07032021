@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <h1>Editer un article </h1>
+  <v-container class="container-form-article">
+    <h1 class="text-center white--text">Editer un article </h1>
     <FormArticle v-if="post" :post="post" :errors="errors" @post="onSubmit"></FormArticle>
   </v-container>
 </template>
@@ -8,7 +8,7 @@
 <script>
 import {mapState} from "vuex";
 import FormArticle from "@/components/FormArticle";
-import dispachError from "@/helpers/sequelizeError";
+import verifParam from "@/helpers/verifParamHelper";
 
 export default {
   name: 'AddPostArticle',
@@ -19,7 +19,20 @@ export default {
     }
   },
   async mounted() {
-    await this.$store.dispatch('posts/loadPost', parseInt(this.$route.params.id));
+    if( !verifParam('slug', this.$route.params.slug) ) {
+      await this.$store.dispatch('snackbar/setSnackbar', { text: 'Le paramètre est invalide.', type: 'error' });
+      await this.$router.push('/');
+      return;
+    }
+
+    if(this.posts.find(post => post.slug === this.$route.params.slug) === undefined) {
+      const res = await this.$store.dispatch('posts/loadPost', this.$route.params.slug);
+
+      if(res.status === 404) {
+        await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error, type: 'error' });
+        await this.$router.push('/');
+      }
+    }
   },
   computed : {
     ...mapState({
@@ -27,15 +40,14 @@ export default {
       posts: state => state.posts.posts,
     }),
     post() {
-      return this.posts.find(post => post.id === parseInt(this.$route.params.id) )
+      return this.posts.find(post => post.slug === this.$route.params.slug)
     }
   },
   methods: {
     async onSubmit(formData) {
       const res = await this.$store.dispatch('posts/updateArticle', {id: this.post.id, formData});
 
-      if (res.status === 400) { return this.errors = dispachError(res.data);}
-      if (res.status === 401) { return this.errors.global = res.data.error; }
+      if (res.status === 400) { return this.errors = res.data;}
 
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre article a été modifié.' })
       await this.$router.push('/');

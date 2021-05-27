@@ -1,6 +1,2 @@
-- Responsivité - Add/Update Article, Post, update delete comment
-- Traduire les erreurs form article, image, password et avatar
-- Verrifier les slug et id coté front
 - Verrifier les inputs des forms coté front
-
 - mettre en place un docker et regarder comment fonctionne les docker compose

@@ -5,7 +5,7 @@
       <image_content  v-if="post.type === 2" :post="post" @delete="openConfirm" :has_action="isAllowed(current_user, post)" />
       <div class="d-flex justify-space-between align-center px-3 pb-3 flex-wrap flex-md-nowrap">
         <v-btn @click="showTextarea"> Répondre </v-btn>
-        <div v-if="post.Comments.length !== 0" class="order-2 order-md-1 btn-show-comments">
+        <div v-if="post.Comments.length !== 0" class="order-2 order-md-1 btn-show-comments flex text-center">
           <v-btn v-if="!show.comments" @click="toggleComments" text> Afficher les commentaires </v-btn>
           <v-btn v-else @click="toggleComments" text> Cacher les commentaires </v-btn>
         </div>
@@ -56,8 +56,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.article-header {
-  width: 100%;
-}
-</style>

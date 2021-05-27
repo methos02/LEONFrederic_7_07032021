@@ -15,17 +15,19 @@
         </div>
       </div>
       <div class="d-flex card-actions" v-if="has_action">
-        <v-btn @click="editContent(post.id)" class="mr-1 green white--text btn-edit" v-if="isEdit === ''" fab small><v-icon> mdi-pencil </v-icon></v-btn>
-        <v-btn @click="isEdit = ''" class="mr-1 btn-edit" v-if="isEdit === post.id" fab small><v-icon> mdi-close </v-icon></v-btn>
+        <v-btn @click="editContent(post.id)" class="mr-1 green white--text btn-edit" v-if="isEdit === false" fab small><v-icon> mdi-pencil </v-icon></v-btn>
+        <v-btn @click="isEdit = false" class="mr-1 btn-edit" v-if="isEdit === true" fab small><v-icon> mdi-close </v-icon></v-btn>
         <v-btn @click="$emit('delete', { post_id : post.id, type : 'image'})" class="red white--text" fab small> <v-icon> mdi-delete </v-icon> </v-btn>
       </div>
     </div>
     <div class="post-image-body">
       <v-card-text class="div-image-description white pt-1">
-        <div v-if="isEdit === post.id">
-          {{ errors.global }}
-          <v-textarea v-model="post.content" :id="'editArticle' + post.id" :error-messages="errors.content" rows="1" auto-grow hide-details></v-textarea>
-          <div class="d-flex justify-end mt-3"> <v-btn @click="updateImage(post)">Mettre à jour</v-btn> </div>
+        <div v-if="isEdit">
+          <v-alert v-if="errors.type" color="red" type="error" class="mx-5 mb-3" text>
+            <p class="mb-0">{{ errors.type }}</p>
+          </v-alert>
+          <v-textarea v-model="datas.content" :id="'editArticle' + post.id" :error-messages="errors.content" rows="1" auto-grow hide-details></v-textarea>
+          <div class="d-flex justify-end mt-3"> <v-btn @click="updateImage(post.id)">Mettre à jour</v-btn> </div>
         </div>
         <div v-else>
           {{ post.content }}
@@ -37,42 +39,34 @@
 </template>
 
 <script>
-import dispachError from "@/helpers/sequelizeError";
-
 export default {
   name: "PostImage",
   props: ['post', 'has_action'],
 
   data () {
     return {
-      isEdit : '',
+      isEdit : false,
       errors: {},
     }
   },
+  computed: {
+    datas() {
+      return {content : this.post.content};
+    }
+  },
   methods: {
-    editContent(post_id) {
-      this.isEdit = post_id;
+    editContent() {
+      this.isEdit = true;
       setTimeout(() => document.getElementById('editArticle' + this.post.id).focus(), 1);
     },
-    async updateImage(post) {
-      const res = await this.$store.dispatch('posts/updateImage', post);
+    async updateImage() {
+      const res = await this.$store.dispatch('posts/updateImage', {id: this.post.id, content : this.datas.content });
 
-      if (res.status === 400) { return this.errors = dispachError(res.data);}
-      if (res.status === 401) { return this.errors.global = res.data.error; }
+      if (res.status === 400) { return this.errors = res.data;}
 
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre entête a été modifié.' });
-      this.isEdit = '';
+      this.isEdit = false;
     }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.card-post {
-  .div-meta-image {
-    position: relative;
-    z-index: 2;
-  }
-  .post-image-body { position: relative; }
-}
-</style>

@@ -38,7 +38,7 @@ export default {
 
     const res = await this.$store.dispatch('posts/loadUserPost', { slug : this.$route.params.slug });
 
-    if(res.status === 404) {
+    if([401, 404, 500].indexOf(res.status) !== -1) {
       await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error, type: 'error' });
       await this.$router.push('/');
     }
@@ -68,11 +68,7 @@ export default {
       }
     },
     async updateRole(roles) {
-      const res = await this.$store.dispatch('admin/updateRoles', { user_id : this.user.id, roles: roles });
-
-      if( res.status === 200) { await this.$store.dispatch('snackbar/setSnackbar', { text: roles.length === 0 ? "L'utilsateur n'est plus modérateur." : "Droit de modération ajouté à l'utilisateur." });}
-      if( res.status === 400) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.roles, type: 'error' });}
-      if (res.status === 500) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error,  type: 'error' }); }
+      await this.$store.dispatch('admin/updateRoles', { user_id : this.user.id, roles: roles });
     },
   },
   watch:{

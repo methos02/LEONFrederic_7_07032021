@@ -39,7 +39,7 @@ const routes = [
     },
   },
   {
-    path: '/article/:id',
+    path: '/article/:slug',
     name: 'UpdateArticle',
     component: UpdatePostArticle,
     params: true,

@@ -21,8 +21,9 @@ export default {
         async searchNav({commit}, search) {
             if(search !== '' ) {
                 const res = await Api().get('/profil/search/' + search).catch(err => err.response);
+
                 if(res.status === 200) { commit('search/SET_NAV_SEARCH', res.data.users, { root: true }); }
-                return res;
+                if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
             }
 
             commit('search/SET_NAV_SEARCH', [], { root: true });
@@ -30,8 +31,9 @@ export default {
         async searchAdmin({commit}, search) {
             if(search !== '' ) {
                 const res = await Api().get('/admin/search/' + search).catch(err => err.response);
+
                 if(res.status === 200) { commit('search/SET_ADMIN_SEARCH', res.data.users, { root: true }); }
-                return res;
+                if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
             }
 
             commit('search/SET_ADMIN_SEARCH', [], { root: true });

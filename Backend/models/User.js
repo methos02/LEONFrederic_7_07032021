@@ -61,7 +61,7 @@ module.exports = (Sequelize, DataTypes) => {
         roles : {
             type: DataTypes.STRING(256),
             get: function() {
-                if(this.getDataValue('roles') === null) {
+                if(this.getDataValue('roles') === null || this.getDataValue('roles') === undefined) {
                     return [];
                 }
 
@@ -100,10 +100,6 @@ module.exports = (Sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: true,
         },
-        supp : {
-            type: DataTypes.INTEGER,
-            default: 0
-        }
     });
 
     SequelizeSlugify.slugifyModel(User, {

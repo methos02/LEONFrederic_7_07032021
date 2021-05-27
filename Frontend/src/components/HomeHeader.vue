@@ -4,8 +4,8 @@
       <div class="share-title"> Partager </div>
       <v-btn-toggle class="d-flex">
         <v-btn class="flex" @click="$refs.file_image.click()">
-            <v-icon class="mr-2"> mdi-file-image </v-icon>
-            <span> image </span>
+          <v-icon class="mr-2"> mdi-file-image </v-icon>
+          <span> image </span>
         </v-btn>
         <v-btn class="flex" :to="{name: 'AddArticle'}">
           <v-icon class="mr-2"> mdi-file-document </v-icon>
@@ -13,7 +13,7 @@
         </v-btn>
       </v-btn-toggle>
     </v-card>
-    <v-dialog class="div-dialog-crop" v-model="dialog_crop" eager>
+    <v-dialog content-class="div-dialog-crop" v-model="dialog_crop" eager>
       <v-card class="card-dialog-crop d-flex">
         <v-btn class="btn-close grey--text white" @click="closeCropDialog" icon text small outlined elevation="4"><v-icon> mdi-close-circle-outline </v-icon></v-btn>
         <input id="image" ref="file_image" type="file" accept="image/*" @change="onFileChange" name="image" v-show="false">
@@ -25,8 +25,8 @@
             <img ref="image" :src="image.path" alt="image de profil">
           </div>
         </div>
-        <div class="div-crop-tools d-flex align-center align-content-stretch">
-          <div class="text-center div-btn-upload-image" v-show="image.file !== null">
+        <div class="crop-controls px-2 d-flex justify-center">
+          <div>
             <h2> Déplacer </h2>
             <v-btn-toggle>
               <v-btn @click="cropper.move(-10, 0)"><v-icon>mdi-chevron-left</v-icon></v-btn>
@@ -34,16 +34,18 @@
               <v-btn type="button" class="btn btn-secondary" @click="cropper.move(0, -10)"><v-icon>mdi-chevron-up</v-icon></v-btn>
               <v-btn type="button" class="btn btn-secondary" @click="cropper.move(0, 10)"><v-icon>mdi-chevron-down</v-icon></v-btn>
             </v-btn-toggle>
+          </div>
+          <div>
             <h2> Zoomer </h2>
             <v-btn-toggle>
               <v-btn type="button" class="btn btn-secondary" @click="cropper.zoom(0.1)"><v-icon>mdi-magnify-plus</v-icon></v-btn>
               <v-btn type="button" class="btn btn-secondary" @click="cropper.zoom(-0.1)"><v-icon>mdi-magnify-minus</v-icon></v-btn>
             </v-btn-toggle>
-            <div>
-              <v-btn class="mx-3 success" @click="addPost"> Ajouter </v-btn>
-              <v-btn class="mx-3 success" @click="$refs.file_image.click()"> Changer d'image </v-btn>
-            </div>
           </div>
+        </div>
+        <div class="crop-btn d-flex justify-space-between pa-2">
+          <v-btn class="success" @click="addImage"> Ajouter </v-btn>
+          <v-btn class="success" @click="$refs.file_image.click()"> Changer d'image </v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -53,7 +55,6 @@
 <script>
 import { imagePreview } from "@/helpers/imageHelper";
 import Cropper from "cropperjs";
-import dispachError from "@/helpers/sequelizeError";
 
 export default {
   data() {
@@ -71,7 +72,6 @@ export default {
       dragMode : 'move',
       cropBoxMovable: false,
       cropBoxResizable: false,
-      minContainerWidth: 600,
       minCropBoxHeight: 600,
       minCropBoxWidth: 600,
       guides: false,
@@ -82,12 +82,17 @@ export default {
   methods: {
     onFileChange(e) {
       imagePreview(e).then(result => {
+        if(result === null) { return ;  }
+
         this.image = result;
         this.cropper.replace(result.path);
         this.dialog_crop = true;
+      }).catch( error => {
+        this.$refs.file_image.value = '';
+        this.$store.dispatch('snackbar/setSnackbar', {text: error, type: 'error'})
       });
     },
-    addPost() {
+    addImage() {
       this.cropper.getCroppedCanvas().toBlob(async (blob) => {
         const fd = new FormData();
         fd.append('post[type]', 2);
@@ -97,14 +102,10 @@ export default {
           fd.append('post[content]', this.description);
         }
 
-        const resp = await this.$store.dispatch('posts/createPost', fd);
-
-        if (resp.status === 400) { return this.errors = dispachError(resp.data);}
-        if (resp.status === 401) { return this.errors.general = resp.data.error; }
-
+        await this.$store.dispatch('posts/createPost', fd);
         await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre image a été posté' });
         await this.$store.dispatch('posts/loadPosts', {type : this.$route.params.type});
-       this.closeCropDialog()
+        this.closeCropDialog()
       }, 'image/jpg')
     },
     closeCropDialog() {
@@ -117,24 +118,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.div-form-article {
-  width: 1000px;
-  margin: auto;
-}
-
-.article-image-container {
-  height: 250px;
-}
-
-.article-image {
-  object-fit: cover;
-  width: 100%;
-}
-
-.header-article-cropper-controle {
-  display: block;
-  text-align: center;
-  margin-top: 15px;
-}
-</style>

@@ -15,7 +15,7 @@ exports.signup = async (req, res) => {
     const token = jwt.sign( { userId: user.id }, process.env.APP_KEY, { expiresIn: '24h' });
     delete user.dataValues.password;
 
-    return res.status(201).json({ message: 'Utilisateur créé !', user : {...user.dataValues, name: user.name, token : token, avatarPath: process.env.BASE_URL + avatarPath + defaultAvatar, likes : []}})
+    return res.status(201).json({ message: 'Utilisateur créé !', user : {...user.dataValues, name: user.name, token : token, avatarPath: process.env.BASE_URL + avatarPath + defaultAvatar, likes : [], roles : user.roles}})
 };
 
 /**

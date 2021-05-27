@@ -1,7 +1,15 @@
-.profil {
+.container-profil {
+  h1 {
+    @media (max-width: 599px) { font-size: 1.5rem }
+  }
   .v-avatar {
     height: 200px;
     width: 200px;
+
+    @media (max-width: 599px) {
+      height: 150px;
+      width: 150px;
+    }
 
     img { object-fit: cover }
   }
@@ -10,5 +18,13 @@
     display: block;
     text-align: center;
     margin: 15px 0;
+  }
+
+  .btns-action {
+    @media (max-width: 599px) {
+      & > :first-child {
+        margin-bottom: 10px;
+      }
+    }
   }
 }

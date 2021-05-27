@@ -16,6 +16,8 @@
       &:hover { text-decoration: underline}
     }
 
+    .post-image-body { position: relative; }
+
     .div-image-meta .card-actions{
       @media (max-width: 599px) {
         flex-direction: column;
@@ -76,6 +78,8 @@
         height: 600px;
       }
     }
+
+    .post-image { width: 100%; }
 
     .post-title {
       font-size: 2rem;

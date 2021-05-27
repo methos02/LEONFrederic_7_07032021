@@ -98,34 +98,33 @@ export default {
         },
         async createPost({commit}, formData) {
             const res = await Api().post('/posts', formData ).catch((err) => err.response);
-            if(res.status === 200) {
-                commit('CREATE_POST', res.data.data);
-            }
+
+            if(res.status === 200) { commit('CREATE_POST', res.data.data); }
+            if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
 
             return res;
         },
         async updateArticle({commit}, data) {
             const res = await Api().put('/posts/' + data.id, data.formData).catch((err) => err.response);
-            if(res.status === 200) {
-                commit('UPDATE_POST', data);
-            }
+
+            if(res.status === 200) { commit('UPDATE_POST', data); }
+            if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
 
             return res;
         },
         async updateImage({commit}, post) {
-            const res = await Api().put('/posts/' + post.id, { content: post.content}).catch((err) => err.response);
-            if(res.status === 200) {
-                commit('UPDATE_POST', post);
-            }
+            const res = await Api().put('/posts/' + post.id, { content: post.content, type : '2'}).catch((err) => err.response);
+
+            if(res.status === 200) { commit('UPDATE_POST', post); }
+            if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
 
             return res;
         },
         async deletePost({commit}, post_id) {
             const res = await Api().delete('/posts/' + post_id).catch((err) => err.response);
 
-            if(res.status === 200) {
-                commit('DELETE_POST', post_id);
-            }
+            if(res.status === 200) { commit('DELETE_POST', post_id); }
+            if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
 
             return res;
         },
@@ -139,22 +138,29 @@ export default {
                 commit('SET_POST_LIKE', {post_id: data.post_id, likes: res.data.likes})
                 commit('auth/SET_CURRENT_USER_LIKE', {post_id: data.post_id, like : res.data.cancel === true ? 0 : data.like}, { root: true })
             }
+
+            if (res.status === 500) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true }); }
         },
         async createComment({ commit }, data) {
-            const res = await Api().post('/comments', data);
+            const res = await Api().post('/comments', data).catch((err) => err.response);
 
             if(res.status === 201) {
                 commit('ADD_COMMENT', {post_id: data.PostId, comment : res.data.comment});
             }
 
+            if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
+
             return res;
         },
         async updateComment({ commit }, data) {
-            const res = await Api().put('/comments/' + data.comment_id, { content : data.content });
+            const res = await Api().put('/comments/' + data.comment_id, { content : data.content }).catch((err) => err.response);
 
             if(res.status === 200) {
                 commit('UPDATE_COMMENT', {comment_id : data.comment_id, content : data.content, post_id: data.post_id});
+                commit('snackbar/SET_SNACKBAR', { text: res.data.message, show : true }, { root: true });
             }
+
+            if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
 
             return res;
         },
@@ -163,9 +169,10 @@ export default {
 
             if(res.status === 200) {
                 commit('DELETE_COMMENT', { comment_id : data.comment_id, post_id: data.post_id});
+                commit('snackbar/SET_SNACKBAR', { text: res.data.message, show : true }, { root: true });
             }
 
-            return res;
+            if( [401, 404, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
         }
     }
 }

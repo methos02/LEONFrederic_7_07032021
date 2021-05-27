@@ -29,10 +29,5 @@ export default {
   data() {
     return { showSidebar : false }
   },
-  methods: {
-    loadPosts() {
-      this.$store.dispatch('posts/loadPosts', {type : this.$route.params.type});
-    },
-  }
 }
 </script>

@@ -5,6 +5,7 @@ function imagePreview (e)  {
     }
 
     return new Promise((resolve, reject) => {
+        if(image.file === undefined) { resolve(null) }
         if(!image.file.type.match("image.*")) { reject('Fichier invalide.') }
 
         const reader = new FileReader();

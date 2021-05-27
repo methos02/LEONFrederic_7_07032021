@@ -9,7 +9,6 @@
         <v-card class="pa-5" v-if="page==='register'">
           <h2 class="title text-center">S'inscrire</h2>
           <form class="mb-2" @keyup.enter="userRegister">
-            {{ errors.general }}
             <div class="d-flex">
               <v-text-field v-model="userInfo.lastname" label="Nom" :error-messages="errors.lastname" class="mr-1"/>
               <v-text-field v-model="userInfo.firstname" label="Prénom" :error-messages="errors.firstname" class="ml-1"/>
@@ -88,8 +87,6 @@ export default {
       const res = await this.$store.dispatch('auth/userRegister', this.userInfo);
 
       if (res.status === 400) { return this.errors = res.data;}
-      if (res.status === 401) { return this.errors.general = res.data.error; }
-      if (res.status === 500) { return await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error, type: 'error' }); }
 
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Merci de vous être enregistré, vous avez été automatiquement connecté.' })
       await this.$router.push('/');

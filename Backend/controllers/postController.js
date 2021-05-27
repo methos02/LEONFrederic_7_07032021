@@ -8,7 +8,7 @@ const postType = require('../helpers/postType');
 const {postPath} = require("../helpers/imageHelper");
 
 /**
- * Retourne toutes les posts du site
+ * Retourne tous les posts du site
  */
 exports.index = async (req, res) => {
     const page = getPage(req.query);
@@ -28,7 +28,7 @@ exports.index = async (req, res) => {
 };
 
 /**
- * Retourne un post précise en fonction de l'id présent dans la requète
+ * Retourne un post précise en fonction du slug présent dans la requète
  */
 exports.show = (req, res) => {
     Post.findOne({where : { slug : req.params.slug }, include: [userJoin, commentJoin]})
@@ -36,7 +36,7 @@ exports.show = (req, res) => {
             if(post === null) res.status(404).json({ error : 'Article introuvable.'})
             res.status(200).json(post)
         })
-        .catch(error => res.status(404).json({ error }));
+        .catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la récupération du post."}) });
 };
 
 /**
@@ -72,7 +72,7 @@ exports.delete = (req, res) => {
 
     Post.destroy({ where: { id: req.params.id } })
         .then(() => res.status(200).json({ message: 'Post supprimé !'}))
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la suppression du post."}) });
 }
 
 /**
@@ -89,14 +89,17 @@ exports.like = async (req, res) => {
         await Post.update(likes, { where: { id: req.params.id }});
         Like.create({UserId: req.store.userLog.id, PostId: req.params.id, like: req.store.valideData.like })
             .then(() => res.status(201).json({ message: 'Like enregistré !', likes}))
-            .catch(error => res.status(400).json({ error }));
+            .catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de votre like."}) });
     }
 
-    await Post.update(likes, { where: { id: req.params.id }});
-    await Like.update({ like: like.like === parseInt(req.store.valideData.like) ? 0 : req.store.valideData.like }, { where: { UserId: req.store.userLog.id, PostId: req.params.id }});
+    await Post.update(likes, { where: { id: req.params.id }}).catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la mise a jour des likes du post."}) });
+    await Like.update({ like: like.like === parseInt(req.store.valideData.like) ? 0 : req.store.valideData.like }, { where: { UserId: req.store.userLog.id, PostId: req.params.id }}).catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la mise a jour de votre like."}) });
     return res.status(200).json({ message: 'Like update !', likes, cancel :  like.like === req.store.valideData.like });
 }
 
+/**
+ * défini les likes et dislikes d'un post en fonction du nouveau vote
+ */
 function calculLikeDislike(post, like, vote) {
     if(like !== null && like.like === 1) { post.likes--; }
     if(like !== null && like.like === -1) { post.dislikes--; }
@@ -107,12 +110,17 @@ function calculLikeDislike(post, like, vote) {
     return { likes: post.likes, dislikes: post.dislikes }
 }
 
+/**
+ * Helper pour définir les champs lors de la création d'un post en fonction de son type
+ */
 function defineCreateFields(type) {
     const fields = ['UserId', 'type', 'image', 'content'];
-    return parseInt(type) === postType.ARTICLE.id ? [...fields, 'title'] : fields;
+    return parseInt(type) === postType.ARTICLE.id ? [...fields, 'title', 'slug'] : fields;
 }
 
+/**
+ * Helper pour définir les champs lors de la mise a jour d'un post en fonction de son type
+ */
 function defineUpdateFields(type) {
-    const fields = ['image'];
-    return parseInt(type) === postType.ARTICLE.id ? [...fields, 'title', 'content'] : fields;
+    return parseInt(type) === postType.ARTICLE.id ? ['image', 'title', 'content'] : ['content'];
 }

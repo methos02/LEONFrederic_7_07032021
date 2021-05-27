@@ -39,9 +39,6 @@ export default {
             state.current_user = {}
         },
     },
-    getters: {
-        getCurrentUser: state => { return state.current_user}
-    },
     actions: {
         async getCurrentUser({ commit }) {
             const res = await Api().get('/auth/current_user').catch(() => false);
@@ -70,6 +67,8 @@ export default {
                 localStorage.setItem('token', res.data.user.token);
             }
 
+            if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
+
             return res;
         },
         logout({ commit }) {
@@ -79,9 +78,8 @@ export default {
         async updateProfil({commit}, formData) {
             const res = await Api().put('/profil/' , formData).catch(err => err.response);
 
-            if(res.status === 200) {
-                commit('UPDATE_CURRENT_USER_PROFIL', res.data.data);
-            }
+            if(res.status === 200) { commit('UPDATE_CURRENT_USER_PROFIL', res.data.data); }
+            if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
 
             return res;
         },
@@ -97,6 +95,8 @@ export default {
                 commit('DELETE_CURRENT_USER');
                 localStorage.removeItem('token');
             }
+
+            if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
 
             return res;
         },

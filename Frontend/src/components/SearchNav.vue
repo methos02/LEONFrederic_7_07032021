@@ -46,8 +46,7 @@ export default {
         return;
       }
 
-      const res =  await this.$store.dispatch('search/searchNav', this.search);
-      if (res.status === 500) { return await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error, type: 'error' }); }
+      await this.$store.dispatch('search/searchNav', this.search);
 
       if( verifParam('slug', this.search) ) {
         await this.$store.dispatch('snackbar/resetSnackbar');

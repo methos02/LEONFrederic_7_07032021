@@ -1,13 +1,12 @@
 <template>
-  <div class="security">
+  <div class="container-profil">
     <form class="my-3" @keyup.enter="updatePassword">
-      <h3> Modification du mot de passe </h3>
-      {{ errors.general }}
-      <div class="row col-8 align-center justify-center">
-        <div class="col">
+      <h1 class="my-3 text-center"> Modification du mot de passe </h1>
+      <div class="row col-12 col-sm-9 mx-auto align-center justify-center">
           <v-text-field
               v-model="password.old"
               label="Ancien Mot de passe"
+              class="col-12"
               :append-icon="show.old ? 'mdi-eye-off' : 'mdi-eye'"
               @click:append="show.old = !show.old"
               :type="show.old ? 'text' : 'password'"
@@ -16,6 +15,7 @@
           <v-text-field
               v-model="password.password"
               label="Nouveau Mot de passe"
+              class="col-12"
               :append-icon="show.password ? 'mdi-eye-off' : 'mdi-eye'"
               @click:append="show.password = !show.password"
               :type="show.password ? 'text' : 'password'"
@@ -24,12 +24,12 @@
           <v-text-field
               v-model="password.confirm"
               label="Confirmation"
+              class="col-12"
               :append-icon="show.confirm ? 'mdi-eye-off' : 'mdi-eye'"
               @click:append="show.confirm = !show.confirm"
               :type="show.confirm ? 'text' : 'password'"
               :error-messages="errors.confirm"
           />
-        </div>
       </div>
       <div class="row justify-center">
         <v-btn class="mx-3" @click="updatePassword"> Mettre à jour </v-btn>
@@ -58,8 +58,6 @@ export default {
       const res = await this.$store.dispatch('auth/updatePassword', this.password);
 
       if (res.status === 400) { return this.errors = res.data;}
-      if (res.status === 401) { return this.errors.general = res.data.error; }
-      if (res.status === 500) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error,  type: 'error' }); }
 
       this.password = { old: '', password: '', confirm: ''};
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre mot de passe a été modifié' })

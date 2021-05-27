@@ -104,5 +104,10 @@ const errors = {
     content : {
         'any.required' : "Le contenu de l'article est requit.",
         'string.empty' : "Le contenu de l'article est requit.",
+    },
+    type : {
+        'any.required' : "Le type de l'article est requit.",
+        'string.empty' : "Le type de l'article est requit.",
+        'any.only' : "Le type semble invalide."
     }
 }

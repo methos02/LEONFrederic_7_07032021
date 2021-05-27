@@ -42,7 +42,7 @@
           </v-card-actions>
         </v-card>
       </div>
-      <v-card class="mb-2 ml-15 pa-2" v-show="showAnswersTextarea[comment.id]">
+      <v-card class="mb-2 ml-sm-15 pa-2" v-show="showAnswersTextarea[comment.id]">
         <v-btn class="btn-close grey--text white" @click="toggleAnswersTextarea(comment.id)" icon text small outlined elevation="4">
           <v-icon> mdi-close-circle-outline </v-icon>
         </v-btn>
@@ -56,11 +56,15 @@
           <img :src="answer.User.avatarPath" alt="image de profil">
         </v-avatar>
         <v-card class="grey lighten-4 answer">
-          <div class="px-3 pt-2 comment-meta">
-            <span class="font-weight-bold text-body-1 comment-meta-name">{{ answer.User.name }}</span>
-            <span class="font-weight-light text-body-2">Posté le {{ answer.formatCreatedAt }}</span>
-            <v-btn @click="editComment(answer.id, answer.content)" class="mr-1 green white--text btn-edit" fab small><v-icon> mdi-pencil </v-icon> </v-btn>
-            <v-btn @click="deleteComment(answer.id, post.id)" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
+          <div class="px-3 pt-2 d-flex justify-space-between">
+            <div class="comment-meta">
+              <span class="font-weight-bold text-body-1 comment-meta-name">{{ answer.User.name }}</span>
+              <span class="font-weight-light text-body-2">Posté le {{ answer.formatCreatedAt }}</span>
+            </div>
+            <div class="d-flex card-actions align-content-center">
+              <v-btn @click="editComment(answer.id, answer.content)" class="mr-1 green white--text btn-edit" fab small><v-icon> mdi-pencil </v-icon> </v-btn>
+              <v-btn @click="deleteComment(answer.id, post.id)" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
+            </div>
           </div>
           <div class="px-3" v-if="isEdit.find(comment_id =>comment_id === answer.id)">
             {{ errors.global }}
@@ -145,16 +149,10 @@ export default {
     async updateComment(comment_id, post_id) {
       const res = await this.$store.dispatch('posts/updateComment', { comment_id, content: this.commentsEdit[comment_id], post_id})
 
-      if(res.status === 200) {
-        this.cancelEditComment(comment_id);
-        await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.message });
-      }
+      if(res.status === 200) { this.cancelEditComment(comment_id); }
     },
-    async deleteComment(comment_id, post_id) {
-      const res = await this.$store.dispatch('posts/deleteComment', { comment_id, post_id })
-
-      if (res.status === 200) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.message }); }
-      if (res.status === 404) { await this.$store.dispatch('snackbar/setSnackbar', { text: res.data.error,  type: 'error' }); }
+    deleteComment(comment_id, post_id) {
+     this.$store.dispatch('posts/deleteComment', { comment_id, post_id })
     },
     async addAnswer(post_id, comment_id) {
       const res = await this.$store.dispatch('posts/createComment', { UserId: this.current_user.id, PostId: post_id, ParentId: comment_id, content: this.answersTemp[comment_id] })

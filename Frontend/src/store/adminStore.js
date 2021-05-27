@@ -39,7 +39,9 @@ export default {
 
             if(res.status === 200) {
                 commit('user/UPDATE_ROLES', data.roles, { root: true });
+                commit('snackbar/SET_SNACKBAR', { text: data.roles.length === 0 ? "L'utilsateur n'est plus modérateur." : "Droit de modération ajouté à l'utilisateur.", show : true }, { root: true });
             }
+            if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
 
             return res;
         },
