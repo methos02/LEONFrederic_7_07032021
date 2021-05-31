@@ -87,9 +87,10 @@ export default {
       const res = await this.$store.dispatch('auth/userRegister', this.userInfo);
 
       if (res.status === 400) { return this.errors = res.data;}
-
-      await this.$store.dispatch('snackbar/setSnackbar', { text: 'Merci de vous être enregistré, vous avez été automatiquement connecté.' })
-      await this.$router.push('/');
+      if( res.status === 200) {
+        await this.$store.dispatch('snackbar/setSnackbar', { text: 'Merci de vous être enregistré, vous avez été automatiquement connecté.' })
+        await this.$router.push('/');
+      }
     },
     async userLogin () {
       this.errors = {};

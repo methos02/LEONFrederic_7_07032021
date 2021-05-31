@@ -11,10 +11,10 @@
     "dialect": "sqlite"
   },
   "production": {
-    "username": "user",
-    "password": "123",
+    "username": "root",
     "database": "p07_social_network",
-    "host": "mysql",
+    "password": "secret",
+    "host": "mysqldb",
     "dialect": "mysql"
   }
 }

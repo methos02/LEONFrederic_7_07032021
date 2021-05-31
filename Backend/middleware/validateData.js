@@ -22,14 +22,15 @@ module.exports = function validate(joiSchema, model) {
 
         if (req.route.path === '/signup') {
             const user = await User.findOne({ where:{ email: paramValid.value.email } }).catch(error => { console.log(error);  res.status(500).json({error : "Une erreur est survenue lors de la verification de votre email."})});
+
+            if(user === undefined) { return; }
             if(user !== null) { return res.status(400).json({ email: errors.email['email.uniq'] }); }
         }
 
         if (req.route.path === '/password') {
             const valid = await bcrypt.compare(req.body.old, req.store.userLog.password).catch(error => { console.log(error);  res.status(500).json({error : "Une erreur est survenue lors de la verification de votre ancien mot de passe."})});
-            if (!valid) {
-                return res.status(400).json({ old: errors.old['any.invalid'] });
-            }
+            if(valid === undefined) { return; }
+            if (!valid) { return res.status(400).json({ old: errors.old['any.invalid'] }); }
         }
 
         req.store.valideData = paramValid.value;
