@@ -8,7 +8,7 @@ const postType = require('../helpers/postType');
 const {postPath} = require("../helpers/imageHelper");
 
 /**
- * Retourne tous les posts du site
+ * Retourne tous les posts du site en fonction de la pagination
  */
 exports.index = async (req, res) => {
     const page = getPage(req.query);
@@ -33,7 +33,7 @@ exports.index = async (req, res) => {
 exports.show = (req, res) => {
     Post.findOne({where : { slug : req.params.slug }, include: [userJoin, commentJoin]})
         .then(post => {
-            if(post === null) res.status(404).json({ error : 'Article introuvable.'})
+            if(post === null) return res.status(404).json({ error : 'Article introuvable.'});
             res.status(200).json(post)
         })
         .catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la récupération du post."}) });

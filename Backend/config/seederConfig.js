@@ -1,3 +1,6 @@
+/**
+ * Variable des seeders
+ */
 module.exports = {
     NB_ARTICLES : 30,
     NB_IMAGES : 30,

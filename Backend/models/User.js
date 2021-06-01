@@ -22,7 +22,6 @@ module.exports = (Sequelize, DataTypes) => {
             allowNull: false,
             set: function(val) {
                 return this.setDataValue('firstname', val[0].toUpperCase() + val.substring(1));
-
             }
         },
         lastname: {

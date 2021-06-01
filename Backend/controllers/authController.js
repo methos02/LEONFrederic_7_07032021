@@ -48,10 +48,16 @@ exports.login = async (req, res) => {
     res.status(200).json({ user: { ...userResp, token : token }});
 };
 
+/**
+ * Récupération de l'utilisateur courant
+ */
 exports.currentUser = async (req, res) => {
     res.status(200).json(await getUser(req.store.userLog));
 }
 
+/**
+ * Fonction helper pour la récupération et le formatage de l'utilisateur courant
+ */
 async function getUser(user) {
     const likes = await Like.findAll({ where: { userId : user.id}, attributes: ['PostId', 'like']}).catch(error =>  error );
     return { id: user.id, lastname: user.lastname, firstname: user.firstname, name : user.name, avatarPath : user.avatarPath, email: user.email, roles: user.roles, likes : likes }

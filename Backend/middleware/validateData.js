@@ -57,9 +57,13 @@ function defineDataFromReq(req, model) {
     return { ...req.body }
 }
 
+/**
+ * Formate l'erreur de Joi pour la response et la log en console
+ * @param data
+ * @returns {{}}
+ */
 function getError(data) {
     console.log(data.error.details[0].path[0] + ' - ' + data.error.details[0].type + ' : ' + data.error.details[0].message);
-
     return { [data.error.details[0].path[0]]: errors[data.error.details[0].path[0]][data.error.details[0].type] }
 }
 

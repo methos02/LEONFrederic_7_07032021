@@ -1,3 +1,6 @@
+/**
+ * Ordonner la recherche d'utilisateur pour supprimer les doublons de la recherche par nom et par prénom puis ne garder que les 5 premiers résultat
+ */
 module.exports = {
     orderSearch: (result) => {
         const resultUnion = result.flat().sort();

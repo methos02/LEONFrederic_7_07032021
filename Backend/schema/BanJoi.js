@@ -1,5 +1,5 @@
 /**
- * Schéma de validation Joi pour les Commentaires
+ * Schéma de validation Joi pour les bans
  */
 const joi = require('joi');
 

@@ -1,5 +1,5 @@
 /**
- * Routes pour Sauces
+ * Routes pour les commentaires
  */
 
 const express = require('express');

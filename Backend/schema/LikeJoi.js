@@ -1,5 +1,5 @@
 /**
- * Schéma de validation Joi pour les Post
+ * Schéma de validation Joi pour les Likes
  */
 const joi = require('joi');
 

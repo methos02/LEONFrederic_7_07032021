@@ -10,6 +10,9 @@ const { formatResponse, getPage, constante } = require('../helpers/paginateHelpe
 const {Op} = require("sequelize");
 const { moveFromTemp, deleteImg, avatarPath, defaultAvatar } = require('../helpers/imageHelper');
 
+/**
+ * Affiche le profil d'un utilisateur
+ */
 exports.show = async (req, res) => {
     const page = getPage(req.query);
     const user = await User.findOne({ where: {slug: req.params.slug} }).catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la recherche.'}) });
@@ -28,6 +31,9 @@ exports.show = async (req, res) => {
     return res.status(200).json({...formatResponse(posts, page), user});
 }
 
+/**
+ * Recherche des utilisateurs dans la navbarre
+ */
 exports.search = async (req, res) => {
     const users = await Promise.all([
         User.findAll({ where : { firstname: { [Op.like]: `${req.params.slug}%`} }, limit: 5 }),
@@ -58,7 +64,7 @@ exports.update = async (req, res) => {
 }
 
 /**
- * Met à jour le role de l'utilisateur
+ * Met à jour le role de l'utilisateur réservé a l'admin
  */
 exports.roles = async (req, res) => {
     User.update({ roles: req.store.valideData.roles }, { where: { id: req.params.id }})

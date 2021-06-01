@@ -8,7 +8,8 @@ chai.use(chaiHttp);
 describe('test auth controller', () => {
     it('signup', (done) => {
         const signup_data = {
-            name: "Methos Sengien",
+            lastname: "Methos",
+            firstname: "Sengien",
             email: 'methos@gmx.fr',
             password: "123123",
             confirm: "123123"
@@ -22,7 +23,8 @@ describe('test auth controller', () => {
 
     it('signup existing email', (done) => {
         const duplicate_user = {
-            name: "LEON Frédéric",
+            lastname:  "LEON",
+            firstname: "Frédéric",
             email: 'leonfrederic@gmx.fr',
             password: "123123",
             confirm: "123123"
@@ -30,6 +32,7 @@ describe('test auth controller', () => {
 
         chai.request(app).post("/api/auth/signup").send(duplicate_user).end((err, res) => {
             assert.equal(res.status, 400);
+            assert.hasAllKeys(res.body, 'email');
             done();
         });
     });
@@ -43,7 +46,7 @@ describe('test auth controller', () => {
         chai.request(app).post("/api/auth/login").send(login_data).end((err, res) => {
             assert.equal(res.status, 200);
             assert.exists(res.body.user);
-            assert.hasAllKeys(res.body.user, ['id', 'name', 'avatarPath', 'email', 'roles', 'likes', 'token']);
+            assert.hasAllKeys(res.body.user, ['id', 'lastname', 'firstname', 'name', 'avatarPath', 'email', 'roles', 'likes', 'token']);
             done();
         });
     });

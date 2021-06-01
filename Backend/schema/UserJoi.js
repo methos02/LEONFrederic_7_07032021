@@ -1,5 +1,5 @@
 /**
- * Schéma de validation Joi pour les Post
+ * Schéma de validation Joi pour le profil utilisateur et les droits
  */
 const joi = require('joi');
 const {roles} = require('../helpers/rolesHelper')

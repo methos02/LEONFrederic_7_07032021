@@ -8,7 +8,7 @@ const {Op} = require("sequelize");
 
 const assert = chai.assert;
 chai.use(chaiHttp);
-let postTestId, admin, admin_token, user, user_token;
+let articleTest, admin, admin_token, user, user_token;
 
 describe('GET posts', () => {
     before((done) => {
@@ -43,18 +43,17 @@ describe('GET posts', () => {
     });
 
     it('get specific post', (done) => {
-        chai.request(app).get("/api/posts/1")
-            .set('Authorization', 'Bearer ' + admin_token)
-            .end((err, res) => {
-                assert.equal(res.status, 200);
-                assert.notEqual(res.body.User, undefined);
-                assert.isUndefined(res.body.User.password);
-
-                Post.findByPk(1).then(post => {
+        Post.findOne({ where : { type : typePost.ARTICLE.id}}).then( post => {
+            chai.request(app).get("/api/posts/" + post.slug)
+                .set('Authorization', 'Bearer ' + admin_token)
+                .end((err, res) => {
+                    assert.equal(res.status, 200);
+                    assert.notEqual(res.body.User, undefined);
+                    assert.isUndefined(res.body.User.password);
                     assert.equal(res.body.title, post.title);
                     done();
-                }).catch(done);
-            })
+                })
+        }).catch(err => { console.log(err); done() })
         ;
     });
 
@@ -70,16 +69,15 @@ describe('GET posts', () => {
                 .set('Authorization', 'Bearer ' + admin_token)
                 .send(create_post)
                 .end((err, res) => {
-                    console.log(res.body)
                     assert.equal(res.status, 201);
                     assert.equal(res.body.message, 'Post enregistré !');
 
-                    Post.findByPk(res.body.post.id).then(post => {
-                        postTestId = post.id;
-                        assert.equal(create_post.content, post.content);
-                        assert.equal(create_post.title, post.title);
+                    Post.findByPk(res.body.post.id).then(article => {
+                        articleTest = article;
+                        assert.equal(create_post.content, article.content);
+                        assert.equal(create_post.title, article.title);
                         done();
-                    }).catch(done);
+                    }).catch(err => { console.log(err); done() });
                 })
             ;
         });
@@ -97,9 +95,8 @@ describe('GET posts', () => {
                     Post.findByPk(res.body.post.id).then(post => {
                         assert.equal(null, post.title);
                         assert.equal(null, post.content);
-                        // assert.isTrue(fs.existsSync(path.resolve(__dirname, './../..' + post.image)));
                         done();
-                    }).catch(done);
+                    }).catch(err => { console.log(err); done() });
                 })
             ;
         });
@@ -107,61 +104,73 @@ describe('GET posts', () => {
         it('update specific post', (done) => {
             const updated_post = {
                 title : 'Premier post modifié',
-                content: 'Contenu modifié!'
+                content: 'Contenu modifié!',
+                type: articleTest.type.toString()
             };
 
-            chai.request(app).put("/api/posts/" + postTestId).set('Authorization', 'Bearer ' + admin_token).send(updated_post).end((err, res) => {
-                assert.equal(res.status, 200);
-                assert.equal(res.body.message, 'Post modifié !');
+            chai.request(app).put("/api/posts/" + articleTest.id)
+                .set('Authorization', 'Bearer ' + admin_token)
+                .send(updated_post)
+                .end((err, res) => {
+                    assert.equal(res.status, 200);
+                    assert.equal(res.body.message, 'Post modifié !');
 
-                Post.findByPk(postTestId).then(post => {
-                    assert.equal(post.content, updated_post.content);
-                    assert.equal(post.title, updated_post.title);
-                    done();
-                }).catch(done);
-            });
+                    Post.findByPk(articleTest.id).then(post => {
+                        assert.equal(post.content, updated_post.content);
+                        assert.equal(post.title, updated_post.title);
+                        done();
+                    }).catch(err => { console.log(err); done() });
+                });
         });
 
         it('update specific post has admin', (done) => {
             const updated_post = {
                 title : "Post de john doe modifié par l'admin",
-                content: "Contenu de modifié par l'admin!"
+                content: "Contenu de modifié par l'admin!",
+                type : articleTest.type.toString()
             };
 
             Post.findOne({where: {UserId : {[Op.ne]: admin.id, type: typePost.ARTICLE.id}}}).then( post => {
-                chai.request(app).put("/api/posts/" + post.id).set('Authorization', 'Bearer ' + admin_token).send(updated_post).end((err, res) => {
-                    assert.equal(res.status, 200);
-                    assert.equal(res.body.message, 'Post modifié !');
+                chai.request(app).put("/api/posts/" + articleTest.id)
+                    .set('Authorization', 'Bearer ' + admin_token)
+                    .send(updated_post)
+                    .end((err, res) => {
+                        assert.equal(res.status, 200);
+                        assert.equal(res.body.message, 'Post modifié !');
 
-                    Post.findByPk(post.id).then(post => {
-                        assert.equal(post.content, updated_post.content);
-                        assert.equal(post.title, updated_post.title);
-                        done();
-                    }).catch(done);
-                }).catch(err => { console.log(err); done() });
+                        Post.findByPk(articleTest.id).then(post => {
+                            assert.equal(post.content, updated_post.content);
+                            assert.equal(post.title, updated_post.title);
+                            done();
+                        }).catch(err => { console.log(err); done() });
+                    });
             }).catch(err => { console.log(err); done() });
         });
 
         it('update post from other', (done) => {
             const updated_post = {
                 title : 'Premier post modifié',
-                content: 'Contenu modifié!'
+                content: 'Contenu modifié!',
+                type: articleTest.type.toString()
             };
 
             Post.findOne({where: {UserId : {[Op.ne]: user.id}}}).then( post => {
-                console.log(post.UserId, user.id);
-                chai.request(app).put("/api/posts/" + post.id).set('Authorization', 'Bearer ' + user_token).send(updated_post).end((err, res) => {
-                    assert.equal(res.status, 404);
-                    assert.equal(res.body.error, 'Le post est introuvable.');
-                    done();
-                });
+                chai.request(app)
+                    .put("/api/posts/" + post.id).set('Authorization', 'Bearer ' + user_token)
+                    .send(updated_post)
+                    .end((err, res) => {
+                        assert.equal(res.status, 404);
+                        assert.equal(res.body.error, 'Le post est introuvable.');
+                        done();
+                    });
             }).catch(err => { console.log(err); done() });
         });
 
         it('update unexist post', (done) => {
             const updated_post = {
                 title : 'Premier post modifié',
-                content: 'Contenu modifié!'
+                content: 'Contenu modifié!',
+                type: articleTest.type.toString()
             };
 
             chai.request(app).put("/api/posts/14557").set('Authorization', 'Bearer ' + admin_token).send(updated_post).end((err, res) => {
@@ -174,7 +183,7 @@ describe('GET posts', () => {
 
     describe('DELETE test', () => {
         it('delete specific post', (done) => {
-            chai.request(app).delete("/api/posts/" + postTestId).set('Authorization', 'Bearer ' + admin_token).end((err, res) => {
+            chai.request(app).delete("/api/posts/" + articleTest.id).set('Authorization', 'Bearer ' + admin_token).end((err, res) => {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.message, 'Post supprimé !');
                 done();
@@ -211,41 +220,41 @@ describe('GET posts', () => {
     describe('LIKE test', () => {
         it('like post', (done) => {
             Post.findOne({where: {type: typePost.ARTICLE.id}}).then(post => {
-                postTestId = post.id;
-                chai.request(app).post("/api/posts/" + postTestId + "/like").set('Authorization', 'Bearer ' + admin_token).send({like: 1}).end((err, res) => {
+                articleTest = post;
+                chai.request(app).post("/api/posts/" + articleTest.id + "/like").set('Authorization', 'Bearer ' + admin_token).send({like: 1}).end((err, res) => {
                     assert.equal(res.status, 201);
                     assert.equal(res.body.message, 'Like enregistré !');
 
-                    Post.findByPk( postTestId ).then(post => {
-                        assert.equal(post.likes, 1);
+                    Post.findByPk( articleTest.id ).then(post => {
+                        assert.equal(post.likes, articleTest.likes + 1);
                         done();
-                    }).catch(done);
+                    }).catch(err => { console.log(err); done() });
                 });
             });
         });
 
         it('change like', (done) => {
-            chai.request(app).post("/api/posts/" + postTestId + "/like").set('Authorization', 'Bearer ' + admin_token).send({ like: -1 }).end((err, res) => {
+            chai.request(app).post("/api/posts/" + articleTest.id + "/like").set('Authorization', 'Bearer ' + admin_token).send({ like: -1 }).end((err, res) => {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.message, 'Like update !');
 
-                Post.findByPk(postTestId).then(post => {
-                    assert.equal(post.likes, 0);
-                    assert.equal(post.dislikes, 1);
+                Post.findByPk(articleTest.id).then(post => {
+                    assert.equal(post.likes, articleTest.likes);
+                    assert.equal(post.dislikes, articleTest.dislikes + 1);
                     done();
-                }).catch(done);
+                }).catch(err => { console.log(err); done() });
             });
         });
 
         it('remove like', (done) => {
-            chai.request(app).post("/api/posts/" + postTestId + "/like").set('Authorization', 'Bearer ' + admin_token).send({ like: -1 }).end((err, res) => {
+            chai.request(app).post("/api/posts/" + articleTest.id + "/like").set('Authorization', 'Bearer ' + admin_token).send({ like: -1 }).end((err, res) => {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.message, 'Like update !');
 
-                Post.findByPk(postTestId).then(post => {
-                    assert.equal(post.dislikes, 0);
+                Post.findByPk(articleTest.id).then(post => {
+                    assert.equal(post.dislikes, articleTest.dislikes);
                     done();
-                }).catch(done);
+                }).catch(err => { console.log(err); done() });
             });
         });
 

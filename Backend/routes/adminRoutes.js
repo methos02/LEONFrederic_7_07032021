@@ -1,5 +1,5 @@
 /**
- * Routes pour l'authentification
+ * Routes pour la partie admin
  */
 const express = require('express');
 

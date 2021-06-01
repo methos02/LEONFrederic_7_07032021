@@ -8,13 +8,16 @@ const {Op} = require("sequelize");
 const { orderSearch } = require('../helpers/searchHelper')
 
 /**
- * affiche la liste de tout les utilisateurs, uniquement pour l'admin
+ * affiche la liste de tout les utilisateurs pour l'admin
  */
 exports.users = async (req, res) => {
     const res_users = await loadUsers(req.query);
     return res.status( res_users.error === undefined ? 200 : 500 ).json(res_users);
 };
 
+/**
+ * Fonction de recherche pour l'admin
+ */
 exports.search = async (req, res) => {
     const users = await Promise.all([
         User.findAll({ where : { firstname: { [Op.like]: `${req.params.slug}%`}, banUntil : null, roles: null  }, limit: 5 }),
@@ -57,6 +60,9 @@ exports.comments = async (req, res) => {
     return res.status(200).json(formatResponse(comments, page));
 };
 
+/**
+ * Fonction helper pour chargé les utilisateurs pour l'admin avec la pagination
+ */
 const loadUsers = async (query) => {
     const page = getPage(query);
 

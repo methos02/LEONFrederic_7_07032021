@@ -4,10 +4,11 @@ const app = require('../../app');
 const typePost = require("../../helpers/postType");
 const Comment = require('../../models').Comment;
 const Post = require('../../models').Post;
+const {Op} = require("sequelize");
 
 const assert = chai.assert;
 chai.use(chaiHttp);
-let commentTestId, admin, admin_token, doe_token;
+let commentTestId, admin, admin_token, user, user_token;
 
 describe('GET Comments', () => {
     before((done) => {
@@ -17,7 +18,8 @@ describe('GET Comments', () => {
         });
 
         chai.request(app).post("/api/auth/login").send({email: "user2@gmx.fr", password: "123123"}).end((err, res) => {
-            doe_token = res.body.user.token;
+            user = res.body.user;
+            user_token = res.body.user.token;
             done();
         });
     });
@@ -40,7 +42,7 @@ describe('GET Comments', () => {
                     assert.equal(comment.content, create_comment.content);
                     assert.equal(comment.title, create_comment.title);
                     done();
-                }).catch(done);
+                }).catch(err => { console.log(err); done() });
             });
         });
     });
@@ -66,10 +68,7 @@ describe('GET Comments', () => {
 
     describe('UPDATE test', () => {
         it('update specific comment', (done) => {
-            const updated_comment = {
-                content: 'Contenu modifié!',
-                UserId: admin.id,
-            };
+            const updated_comment = { content: 'Contenu modifié!' };
 
             chai.request(app).put("/api/comments/" + commentTestId).set('Authorization', 'Bearer ' + admin_token).send(updated_comment).end((err, res) => {
                 assert.equal(res.status, 200);
@@ -78,38 +77,36 @@ describe('GET Comments', () => {
                 Comment.findByPk(commentTestId).then(comment => {
                     assert.equal(comment.content, updated_comment.content);
                     done();
-                }).catch(done);
+                }).catch(err => { console.log(err); done() });
             });
         });
 
         it('update specific comment has admin', (done) => {
-            const updated_comment = {
-                UserId: admin.id,
-                content: "Contenu modifié par l'admin!"
-            };
+            const updated_comment = { content: "Contenu modifié par l'admin!" };
 
-            chai.request(app).put("/api/comments/2").set('Authorization', 'Bearer ' + admin_token).send(updated_comment).end((err, res) => {
-                assert.equal(res.status, 200);
-                assert.equal(res.body.message, 'Commentaire modifié.');
+            Comment.findOne({ where : {UserId : {[Op.ne]: admin.id}}}).then( comment => {
+                chai.request(app).put("/api/comments/" + comment.id).set('Authorization', 'Bearer ' + admin_token).send(updated_comment).end((err, res) => {
+                    assert.equal(res.status, 200);
+                    assert.equal(res.body.message, 'Commentaire modifié.');
 
-                Comment.findByPk(2).then(comment => {
-                    assert.equal(comment.content, updated_comment.content);
-                    done();
-                }).catch(done);
-            });
+                    Comment.findByPk(comment.id).then(comment => {
+                        assert.equal(comment.content, updated_comment.content);
+                        done();
+                    }).catch(err => { console.log(err); done() });
+                });
+            }).catch(err => { console.log(err); done() })
         });
 
         it('update comment from other', (done) => {
-            const updated_comment = {
-                UserId: admin.id,
-                content: 'Contenu modifié!'
-            };
+            const updated_comment = { content: 'Contenu modifié!' };
 
-            chai.request(app).put("/api/comments/1").set('Authorization', 'Bearer ' + doe_token).send(updated_comment).end((err, res) => {
-                assert.equal(res.status, 404);
-                assert.equal(res.body.error, 'Le commentaire est introuvable.');
-                done();
-            });
+            Comment.findOne({ where : {UserId : {[Op.ne]: user.id}}}).then( comment => {
+                chai.request(app).put("/api/comments/" + comment.id).set('Authorization', 'Bearer ' + user_token).send(updated_comment).end((err, res) => {
+                    assert.equal(res.status, 404);
+                    assert.equal(res.body.error, 'Le commentaire est introuvable.');
+                    done();
+                });
+            }).catch(err => { console.log(err); done() });
         });
 
         it('update unexist comment', (done) => {
@@ -151,11 +148,15 @@ describe('GET Comments', () => {
         });
 
         it('supp comment from other', (done) => {
-            chai.request(app).delete("/api/comments/1").set('Authorization', 'Bearer ' + doe_token).send({ UserId: 2}).end((err, res) => {
-                assert.equal(res.status, 404);
-                assert.equal(res.body.error, 'Le commentaire est introuvable.');
-                done();
-            });
+            Comment.findOne({ where: { UserId : {[Op.ne]: user.id}}}).then( comment => {
+                chai.request(app).delete("/api/comments/" + comment.id)
+                    .set('Authorization', 'Bearer ' + user_token)
+                    .end((err, res) => {
+                        assert.equal(res.status, 404);
+                        assert.equal(res.body.error, 'Le commentaire est introuvable.');
+                        done();
+                    });
+            }).catch( done );
         });
     })
 })

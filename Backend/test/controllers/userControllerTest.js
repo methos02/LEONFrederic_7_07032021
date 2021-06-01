@@ -31,34 +31,35 @@ describe('USER test', () => {
     describe('UPDATE Profil test', () => {
         it('update profil', (done) => {
             const updated_profil = {
-                name: 'superAdmin',
+                lastname: 'super',
+                firstname: 'admin',
                 email: 'leonfrederic@gmx.com'
             };
 
-            chai.request(app).put("/api/profil/" + admin.id)
+            chai.request(app).put("/api/profil")
                 .set('Authorization', 'Bearer ' + admin_token)
                 .send(updated_profil)
                 .end((err, res) => {
-                    console.log(res.body);
                     assert.equal(res.status, 200);
                     assert.equal(res.body.message, 'Profil modifié.');
 
                     User.findByPk(admin.id).then(user => {
-                        assert.equal(user.name, updated_profil.name);
+                        assert.equal(user.name, updated_profil.lastname.toUpperCase() + ' ' + updated_profil.firstname[0].toUpperCase() + updated_profil.firstname.substring(1));
                         assert.equal(user.email, updated_profil.email);
                         done();
-                    }).catch(done);
+                    }).catch(err => { console.log(err); done() });
                 })
             ;
         });
 
         it('update profil with avatar', (done) => {
             const updated_profil = {
-                name: 'superAdmin',
+                lastname: 'super',
+                firstname: 'admin',
                 email: 'leonfrederic@gmx.com'
             };
 
-            chai.request(app).put("/api/profil/" + admin.id)
+            chai.request(app).put("/api/profil")
                 .set('Authorization', 'Bearer ' + admin_token)
                 .field('user', JSON.stringify(updated_profil))
                 .attach('avatar', fs.readFileSync('./test/images/image_test.jpg'), 'image_test.jpg')
@@ -67,51 +68,31 @@ describe('USER test', () => {
                     assert.equal(res.body.message, 'Profil modifié.');
 
                     User.findByPk(admin.id).then(user => {
-                        assert.equal(user.name, updated_profil.name);
+                        assert.equal(user.name, updated_profil.lastname.toUpperCase() + ' ' + updated_profil.firstname[0].toUpperCase() + updated_profil.firstname.substring(1));
                         assert.equal(user.email, updated_profil.email);
                         done();
-                    }).catch(done);
+                    }).catch(err => { console.log(err); done() });
                 })
             ;
         });
 
-        it('update profil from other has admin', (done) => {
-            const updated_profil = {
-                name: 'superAdmin',
-                email: 'leonfrederic@gmx.com'
-            };
-
-            chai.request(app).put("/api/profil/" + user_2.id).set('Authorization', 'Bearer ' + admin_token).send(updated_profil).end((err, res) => {
-                assert.equal(res.status, 404);
-                assert.equal(res.body.error, 'Utilisateur incompatible.');
-                done();
-            });
-        });
-
-        it('update profil from other not has admin', (done) => {
-            const updated_profil = {
-                name: 'superAdmin',
-                email: 'leonfrederic@gmx.com'
-            };
-
-            chai.request(app).put("/api/profil/" + admin.id).set('Authorization', 'Bearer ' + user_2_token).send(updated_profil).end((err, res) => {
-                assert.equal(res.status, 404);
-                assert.equal(res.body.error, 'Utilisateur incompatible.');
-                done();
-            });
-        });
-
         it('update profil with existing email', (done) => {
-            const updated_profil = {
-                name: 'superAdmin',
-                email: 'methos@gmx.fr'
-            };
+            User.findByPk(6).then( user => {
+                const updated_profil = {
+                    lastname: 'super',
+                    firstname: 'admin',
+                    email: user.email
+                };
 
-            chai.request(app).put("/api/profil/" + user_2.id).set('Authorization', 'Bearer ' + user_2_token).send(updated_profil).end((err, res) => {
-                assert.equal(res.status, 422);
-                assert.equal(res.body.error, 'Adresse email déjà utilisée.');
-                done();
-            });
+                chai.request(app).put("/api/profil").set('Authorization', 'Bearer ' + user_2_token)
+                    .send(updated_profil)
+                    .end((err, res) => {
+                    assert.equal(res.status, 422);
+                    assert.equal(res.body.error, 'Adresse email déjà utilisée.');
+                    done();
+                });
+
+            }).catch(err => { console.log(err); done() });
         });
     });
 
@@ -123,7 +104,7 @@ describe('USER test', () => {
                 confirm: '234567',
             };
 
-            chai.request(app).put("/api/profil/" + admin.id + "/password").set('Authorization', 'Bearer ' + admin_token).send(updated_profil).end((err, res) => {
+            chai.request(app).put("/api/profil/password").set('Authorization', 'Bearer ' + admin_token).send(updated_profil).end((err, res) => {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.message, 'Mot de passe modifié.');
 
@@ -133,35 +114,13 @@ describe('USER test', () => {
                 });
             });
         });
-
-        it('update password from other', (done) => {
-            const updated_profil = {
-                old: '123123',
-                password: '234567',
-                confirm: '234567',
-            };
-
-            chai.request(app).put("/api/profil/" + user_2.id +"/password").set('Authorization', 'Bearer ' + admin_token).send(updated_profil).end((err, res) => {
-                assert.equal(res.status, 404);
-                assert.equal(res.body.error, 'Utilisateur incompatible.');
-                done();
-            });
-        });
     });
 
     describe('DELETE user', () => {
         it('delete profil', (done) => {
-            chai.request(app).delete("/api/profil/" + user_3.id).set('Authorization', 'Bearer ' + user_3_token).send({UserId: 3}).end((err, res) => {
+            chai.request(app).delete("/api/profil/").set('Authorization', 'Bearer ' + user_3_token).send({UserId: 3}).end((err, res) => {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.message, 'Votre profil a été supprimé.');
-                done();
-            });
-        });
-
-        it('supp profil from other has admin', (done) => {
-            chai.request(app).delete("/api/profil/" + user_2.id).set('Authorization', 'Bearer ' + admin_token).send({ UserId: 1}).end((err, res) => {
-                assert.equal(res.status, 404);
-                assert.equal(res.body.error, 'Utilisateur introuvable.');
                 done();
             });
         });

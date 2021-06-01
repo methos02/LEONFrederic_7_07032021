@@ -1,3 +1,6 @@
+/**
+ * Middleware pour verrifier le role de l'utilisateur.
+ */
 module.exports = function validate(model) {
     return async (req, res, next) => {
         const ressource = await model.findByPk(req.params.id).catch(error => res.status(500).json({ error }));

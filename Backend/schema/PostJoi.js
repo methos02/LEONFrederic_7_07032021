@@ -1,5 +1,5 @@
 /**
- * Schéma de validation Joi pour les Post
+ * Schéma de validation Joi pour les Posts
  */
 const joi = require('joi');
 const postType = require('../helpers/postType')
