@@ -2,6 +2,7 @@
  * Middleware qui déplace les files de la requête dans le dossier temp .
  */
 const multer = require('multer');
+const path = require('path');
 
 const MIME_TYPES = {
     'image/jpg': 'jpg',
@@ -11,7 +12,8 @@ const MIME_TYPES = {
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, 'images/temp');
+        const folder = {image: 'post', avatar: 'avatar'};
+        callback(null, path.join(__dirname, './../images/' + folder[file.fieldname]));
     },
     fileFilter: (req, file, callback) => {
         if (MIME_TYPES.keys.indexOf(file.mimetype) === undefined) {

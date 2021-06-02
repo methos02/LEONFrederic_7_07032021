@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon server",
     "test": "npm run reset && mocha --timeout 5000",
-    "reset": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
+    "migrate": "npx sequelize-cli db:create  && sequelize db:migrate:undo:all && sequelize db:migrate",
+    "seed": "npx sequelize-cli db:create  && sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
   },
   "repository": {
     "type": "git",

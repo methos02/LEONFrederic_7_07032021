@@ -86,23 +86,23 @@ export default {
       this.errors = {};
       const res = await this.$store.dispatch('auth/userRegister', this.userInfo);
 
-      if (res.status === 400) { return this.errors = res.data;}
-      if( res.status === 200) {
+      if (res.status === 400) { this.errors = res.data;}
+      if( res.status === 201) {
         await this.$store.dispatch('snackbar/setSnackbar', { text: 'Merci de vous être enregistré, vous avez été automatiquement connecté.' })
         await this.$router.push('/');
       }
     },
     async userLogin () {
       this.errors = {};
-      const resp = await this.$store.dispatch('auth/userLogin', this.userInfo);
+      const res = await this.$store.dispatch('auth/userLogin', this.userInfo);
 
-      if (resp.status === 400) { return this.errors = resp.data;}
-      if (resp.status === 401) {
-        this.message = resp.data.message;
-        return this.errors = { general : resp.data.error };
+      if (res.status === 400) { this.errors = res.data;}
+      if (res.status === 401) {
+        this.message = res.data.message;
+        return this.errors = { general : res.data.error };
       }
 
-      await this.$router.push('/');
+      if( res.status === 200) { await this.$router.push('/'); }
     }
   },
   watch:{

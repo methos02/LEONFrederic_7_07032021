@@ -16,7 +16,7 @@ module.exports = {
 
         await queryInterface.bulkInsert('comments', comments, {});
 
-        const insert_comments =  await queryInterface.sequelize.query( `SELECT id from comments;` );
+        const insert_comments =  await queryInterface.sequelize.query( `SELECT id, PostId from comments;` );
         const answers = [];
         insert_comments[0].map( comment => {
             answers.push([...Array(getRandomInt(0, NB_ANSWERS))].map(() => ({

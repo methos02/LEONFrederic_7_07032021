@@ -38,11 +38,11 @@ module.exports = (Sequelize, DataTypes) => {
         },
         likes: {
             type: DataTypes.INTEGER,
-            default: 0
+            defaultValue: 0
         },
         dislikes: {
             type: DataTypes.INTEGER,
-            default: 0
+            defaultValue: 0
         },
         UserId: {
             type: DataTypes.INTEGER,

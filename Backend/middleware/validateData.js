@@ -14,7 +14,6 @@ const bcrypt = require('bcrypt');
 module.exports = function validate(joiSchema, model) {
     return async (req, res, next) => {
         const paramValid = joiSchema.validate(defineDataFromReq(req, model));
-
         if(paramValid.error !== undefined) {
             if(req.file) { deleteImg(req.file.path)}
             return res.status(400).json( getError(paramValid) );
@@ -29,6 +28,7 @@ module.exports = function validate(joiSchema, model) {
 
         if (req.route.path === '/password') {
             const valid = await bcrypt.compare(req.body.old, req.store.userLog.password).catch(error => { console.log(error);  res.status(500).json({error : "Une erreur est survenue lors de la verification de votre ancien mot de passe."})});
+
             if(valid === undefined) { return; }
             if (!valid) { return res.status(400).json({ old: errors.old['any.invalid'] }); }
         }

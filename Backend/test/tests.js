@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 before(() => {
-    resetDir('./images/temp');
     resetDir('./images/post');
     resetDir('./images/avatar');
 })

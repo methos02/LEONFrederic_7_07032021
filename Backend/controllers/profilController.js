@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const { orderSearch } = require('../helpers/searchHelper')
 const { formatResponse, getPage, constante } = require('../helpers/paginateHelper');
 const {Op} = require("sequelize");
-const { moveFromTemp, deleteImg, avatarPath, defaultAvatar } = require('../helpers/imageHelper');
+const {deleteImg, avatarPath, defaultAvatar } = require('../helpers/imageHelper');
 
 /**
  * Affiche le profil d'un utilisateur
@@ -51,7 +51,6 @@ exports.update = async (req, res) => {
 
     if (req.file) {
         if(req.store.userLog.avatar !== defaultAvatar) { deleteImg(avatarPath + req.store.userLog.avatar)}
-        moveFromTemp(req.file.path, 'avatar')
         req.store.valideData.avatarPath = process.env.BASE_URL + avatarPath + req.store.valideData.avatar;
     }
 

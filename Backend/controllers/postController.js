@@ -1,7 +1,7 @@
 const {Post, Like} = require('../config/database');
 const userJoin = require('../helpers/join/userJoin');
 const commentJoin = require('../helpers/join/commentJoin');
-const { moveFromTemp, deleteImg } = require('../helpers/imageHelper');
+const { deleteImg } = require('../helpers/imageHelper');
 const { formatResponse, getPage, constante } = require('../helpers/paginateHelper');
 const postType = require('../helpers/postType');
 const {postPath} = require("../helpers/imageHelper");
@@ -41,9 +41,7 @@ exports.show = (req, res) => {
 /**
  * Enregistre un post en bdd
  */
-exports.store = (req, res) => {
-    if (req.file) { moveFromTemp(req.file.path, 'post') }
-
+exports.store = async (req, res) => {
     Post.create( {...req.store.valideData, UserId: req.store.userLog.id }, { fields : defineCreateFields(req.store.valideData.type)} )
         .then((post) => res.status(201).json({ message: 'Post enregistré !', post}))
         .catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la crétion du post."}) });
@@ -55,7 +53,6 @@ exports.store = (req, res) => {
 exports.update = (req, res) => {
     if (req.file) {
         if(req.store.Post.image !== null) { deleteImg(postPath + req.store.Post.image)}
-        moveFromTemp(req.file.path, 'post')
     }
 
     Post.update( req.store.valideData, { where: { id: req.params.id }, fields: defineUpdateFields(req.store.Post.type)})

@@ -1,5 +1,5 @@
 const {formatDate} = require("../helpers/dateHelper");
-const { avatarPath } = require('../helpers/imageHelper');
+const { avatarPath, defaultAvatar } = require('../helpers/imageHelper');
 const SequelizeSlugify = require('sequelize-slugify');
 
 module.exports = (Sequelize, DataTypes) => {
@@ -48,7 +48,7 @@ module.exports = (Sequelize, DataTypes) => {
         },
         avatar: {
             type: DataTypes.STRING(256),
-            default: null,
+            defaultValue: defaultAvatar,
         },
         avatarPath: {
             type: DataTypes.VIRTUAL,
@@ -92,7 +92,7 @@ module.exports = (Sequelize, DataTypes) => {
         },
         nbBan: {
             type: DataTypes.INTEGER,
-            default: 0
+            defaultValue: 0
         },
         messageBan: {
             type: DataTypes.TEXT,

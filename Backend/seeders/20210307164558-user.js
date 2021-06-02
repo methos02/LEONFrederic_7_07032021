@@ -10,10 +10,10 @@ module.exports = {
         faker.locale = 'fr';
 
         const users = [
-            ...Array(NB_USERS)].map((value, index) => {
+            ...Array(NB_USERS + 1)].map((value, index) => {
                 if(index === 0) {
                     return {
-                        email: 'leonfrederic@gmx.fr',
+                        email: 'admin@groupomania.com',
                         firstname: 'Frédéric',
                         lastname: 'LEON',
                         slug: 'leon-frederic',
@@ -25,9 +25,9 @@ module.exports = {
                 const lastname = faker.name.lastName();
                 const firstname = faker.name.firstName().toUpperCase();
 
-                if(index === 1) {
+                if(index === NB_USERS + 1) {
                     return {
-                        email: 'ban-user@gmx.fr',
+                        email: 'ban-user@groupomania.com',
                         firstname: firstname,
                         lastname: lastname,
                         slug: lastname.toLowerCase() + '-' + firstname.toLowerCase(),
@@ -37,7 +37,7 @@ module.exports = {
                 }
 
                 return {
-                    email: `user${ index }@gmx.fr`,
+                    email: `user${ index }@groupomania.com`,
                     firstname: firstname,
                     lastname: lastname,
                     slug: lastname.toLowerCase() + '-' + firstname.toLowerCase(),

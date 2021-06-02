@@ -1,25 +1,21 @@
 const fs = require('fs');
-const path = require('path')
+const { access, rename } = require ('fs/promises');
+const path = require('path');
 
 /**
-* Fonction Helper pour les image
+ * Fonction Helper pour les image
  */
 module.exports = {
-    /**
-     * Déplace les images upload du dossier temp dans le dossier ciblé
-     * @param img
-     * @param folder
-     */
-    moveFromTemp: (img, folder = '') => {
-        fs.rename(fs.realpathSync(img), fs.realpathSync(img).replace('\\temp', defineFolder(folder)), (err) => { if (err) throw err; });
-    },
-
     /**
      * Suppression d'une image
      * @param img
      */
     deleteImg: (img) => {
-        fs.unlink(path.resolve(__dirname, './../' + img), (err) => { if (err) throw err; })
+        fs.access( path.resolve(__dirname, './../' + img), fs.F_OK, (err) => {
+            if (!err) {
+                fs.unlink(path.resolve(__dirname, './../' + img), (err) => { if (err) throw err; })
+            }
+        })
     },
     avatarPath: '/images/avatar/',
     postPath: '/images/post/',

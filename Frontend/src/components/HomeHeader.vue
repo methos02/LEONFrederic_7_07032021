@@ -102,10 +102,13 @@ export default {
           fd.append('post[content]', this.description);
         }
 
-        await this.$store.dispatch('posts/createPost', fd);
-        await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre image a été posté' });
-        await this.$store.dispatch('posts/loadPosts', {type : this.$route.params.type});
-        this.closeCropDialog()
+        const res = await this.$store.dispatch('posts/createPost', fd);
+
+        if(res.status === 201) {
+          await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre image a été posté' });
+          await this.$store.dispatch('posts/loadPosts', {type : this.$route.params.type});
+          this.closeCropDialog()
+        }
       }, 'image/jpg')
     },
     closeCropDialog() {
