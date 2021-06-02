@@ -2,7 +2,7 @@
  * Middleware d'authentification.
  */
 const jwt = require('jsonwebtoken');
-const User = require('../models').User;
+const {User} = require('../config/database');
 const { deleteImg } = require('../helpers/imageHelper');
 
 module.exports = async (req, res, next) => {

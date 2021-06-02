@@ -1,7 +1,6 @@
 const {addWeek} = require("../helpers/dateHelper");
 const { formatResponse, getPage, constante } = require('../helpers/paginateHelper');
-const User = require('../models').User;
-const Comment = require('../models').Comment;
+const { User, Comment} = require('../config/database');
 const sequelize = require('sequelize');
 const userJoin = require('../helpers/join/userJoin');
 const {Op} = require("sequelize");

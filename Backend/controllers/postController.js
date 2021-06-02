@@ -1,7 +1,6 @@
-const Post = require('../models').Post;
+const {Post, Like} = require('../config/database');
 const userJoin = require('../helpers/join/userJoin');
 const commentJoin = require('../helpers/join/commentJoin');
-const Like = require('../models').Like;
 const { moveFromTemp, deleteImg } = require('../helpers/imageHelper');
 const { formatResponse, getPage, constante } = require('../helpers/paginateHelper');
 const postType = require('../helpers/postType');

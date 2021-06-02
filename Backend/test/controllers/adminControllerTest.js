@@ -2,7 +2,7 @@ const chai = require('chai');
 const chaiHttp= require('chai-http');
 const app = require('../../app');
 const {addWeek, formatDate} = require("../../helpers/dateHelper");
-const User = require('../../models').User;
+const {User} = require('../../config/database');
 
 const assert = chai.assert;
 chai.use(chaiHttp);

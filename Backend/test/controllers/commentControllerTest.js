@@ -2,8 +2,7 @@ const chai = require('chai');
 const chaiHttp= require('chai-http');
 const app = require('../../app');
 const typePost = require("../../helpers/postType");
-const Comment = require('../../models').Comment;
-const Post = require('../../models').Post;
+const {Comment, Post} = require('../../config/database');
 const {Op} = require("sequelize");
 
 const assert = chai.assert;

@@ -1,4 +1,4 @@
-const User = require('../../models').User;
+const {User} = require('../../config/database');
 
 /**
  * Include des users pour les requêtes Sequelize

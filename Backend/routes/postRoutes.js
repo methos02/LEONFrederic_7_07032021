@@ -11,7 +11,7 @@ const auth = require('../middleware/auth');
 const isAllowed = require('../middleware/isAllowed');
 const validateData = require('../middleware/validateData');
 const validParams = require('../middleware/validParams');
-const Post = require('../models').Post;
+const {Post} = require('../config/database');
 const postJoi = require('../schema/PostJoi');
 const likeJoi = require('../schema/LikeJoi');
 

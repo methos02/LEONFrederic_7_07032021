@@ -1,7 +1,7 @@
 const chai = require('chai');
 const chaiHttp= require('chai-http');
 const app = require('../../app');
-const User = require('../../models').User;
+const {User} = require('../../config/database');
 const fs = require('fs');
 
 const assert = chai.assert;

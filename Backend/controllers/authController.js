@@ -2,8 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {defaultAvatar, avatarPath} = require("../helpers/imageHelper");
 const { formatDateHour } = require('../helpers/dateHelper')
-const User = require('../models').User;
-const Like = require('../models').Like;
+const { User, Like }= require('../config/database');
 
 /**
  * Enregistre un utilisateur en bdd

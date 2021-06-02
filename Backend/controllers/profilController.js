@@ -1,10 +1,7 @@
-const User = require('../models').User;
-const Post = require('../models').Post;
-const Like = require('../models').Like;
+const {User, Post, Like, sequelize} = require('../config/database');
 const userJoin = require('../helpers/join/userJoin');
 const commentJoin = require('../helpers/join/commentJoin');
 const bcrypt = require('bcrypt');
-const { sequelize } = require('../config/database');
 const { orderSearch } = require('../helpers/searchHelper')
 const { formatResponse, getPage, constante } = require('../helpers/paginateHelper');
 const {Op} = require("sequelize");

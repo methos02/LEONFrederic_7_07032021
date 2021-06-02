@@ -1,6 +1,4 @@
-const Comment = require('../models').Comment;
-const Post = require('../models').Post;
-const User = require('../models').User;
+const {Comment, Post, User} = require('../config/database');
 const userJoin = require('../helpers/join/userJoin');
 
 /**

@@ -1,7 +1,6 @@
 'use strict';
 const faker = require('faker');
 const { NB_COMMENTS, NB_USERS, NB_MIN_USERS, NB_IMAGES, NB_ARTICLES, NB_ANSWERS } = require('../config/seederConfig');
-const Comment = require('../models').Comment;
 const { getRandomInt } = require('../helpers/mathHelper');
 
 module.exports = {
@@ -17,9 +16,9 @@ module.exports = {
 
         await queryInterface.bulkInsert('comments', comments, {});
 
-        const insert_comments = await Comment.findAll();
+        const insert_comments =  await queryInterface.sequelize.query( `SELECT id from comments;` );
         const answers = [];
-        insert_comments.map( comment => {
+        insert_comments[0].map( comment => {
             answers.push([...Array(getRandomInt(0, NB_ANSWERS))].map(() => ({
                     content: faker.lorem.words(10),
                     UserId: getRandomInt(NB_MIN_USERS, NB_USERS),

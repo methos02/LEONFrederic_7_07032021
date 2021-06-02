@@ -1,4 +1,3 @@
-'use strict';
 const {formatDate} = require("../helpers/dateHelper");
 const { avatarPath } = require('../helpers/imageHelper');
 const SequelizeSlugify = require('sequelize-slugify');

@@ -3,7 +3,7 @@
  */
 
 const {deleteImg} = require('../helpers/imageHelper');
-const User = require('../models').User;
+const {User} = require('../config/database');
 const bcrypt = require('bcrypt');
 
 /**
