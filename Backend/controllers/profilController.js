@@ -12,7 +12,7 @@ const {deleteImg, avatarPath, defaultAvatar } = require('../helpers/imageHelper'
  */
 exports.show = async (req, res) => {
     const page = getPage(req.query);
-    const user = await User.findOne({ where: {slug: req.params.slug} }).catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la recherche.'}) });
+    const user = await User.findOne({ attributes : defineUserFields(), where: {slug: req.params.slug} }).catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la recherche.'}) });
 
     if(user === null) { return res.status(404).json({ error: 'Aucun utilisateur trouvé.'}) }
 
@@ -33,8 +33,8 @@ exports.show = async (req, res) => {
  */
 exports.search = async (req, res) => {
     const users = await Promise.all([
-        User.findAll({ where : { firstname: { [Op.like]: `${req.params.slug}%`} }, limit: 5 }),
-        User.findAll({ where : { lastname: { [Op.like]: `${req.params.slug}%`} }, limit: 5 }),
+        User.findAll({ attributes : defineUserFields(),  where : { firstname: { [Op.like]: `${req.params.slug}%`} }, limit: 5 }),
+        User.findAll({ attributes : defineUserFields(),  where : { lastname: { [Op.like]: `${req.params.slug}%`} }, limit: 5 }),
     ]).catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la recherche.'}) });
 
     return res.status(200).json({ users : orderSearch(users) });
@@ -97,4 +97,14 @@ exports.delete = async (req, res) => {
     } catch (error) {
         await t.rollback();
     }
+}
+
+/**
+ * Défini les attribu utilisateur a récupérer
+ */
+/**
+ * Helper pour définir les champs lors de la création d'un post en fonction de son type
+ */
+function defineUserFields() {
+    return ['id', 'firstname', 'lastname', 'name', 'slug', 'avatar', 'avatarPath', 'roles']
 }

@@ -100,7 +100,6 @@ export default {
         async createPost({commit}, formData) {
             const res = await Api().post('/posts', formData ).catch((err) => err.response);
 
-            if(res.status === 200) { commit('CREATE_POST', res.data.data); }
             if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
 
             return res;

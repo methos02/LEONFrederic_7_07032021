@@ -16,8 +16,8 @@ const postJoi = require('../schema/PostJoi');
 const likeJoi = require('../schema/LikeJoi');
 
 router.get('/:type((articles|images)?)', auth, postCtrl.index);
-router.post('/', multer.single('image'), validateData(postJoi.create, 'post'), auth, postCtrl.store);
 router.get('/:slug', validParams('slug'), auth, postCtrl.show);
+router.post('/', multer.single('image'), validateData(postJoi.create, 'post'), auth, postCtrl.store);
 router.put('/:id', validParams('id'), multer.single('image'), validateData(postJoi.update,'post'), auth, isAllowed(Post), postCtrl.update);
 router.delete('/:id', validParams('id'), auth, isAllowed(Post), postCtrl.delete);
 router.post('/:id/like', validParams('id'), validateData(likeJoi), auth, postCtrl.like);

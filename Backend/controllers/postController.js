@@ -43,7 +43,7 @@ exports.show = (req, res) => {
  */
 exports.store = async (req, res) => {
     Post.create( {...req.store.valideData, UserId: req.store.userLog.id }, { fields : defineCreateFields(req.store.valideData.type)} )
-        .then((post) => res.status(201).json({ message: 'Post enregistré !', post}))
+        .then((post) => res.status(201).json({ message: 'Post enregistré !'}))
         .catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la crétion du post."}) });
 };
 
