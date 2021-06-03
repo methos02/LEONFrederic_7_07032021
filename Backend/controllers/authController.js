@@ -9,6 +9,8 @@ const { User, Like }= require('../config/database');
  */
 exports.signup = async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10).catch(error => { console.log(error); res.status(500).json({ error : "Une erreur est survenue lors du traitement de votre mot de passe." })});
+
+    if(req.store.valideData.email === 'admin@groupomania.com') { req.store.valideData.roles = ['admin', 'modo']; }
     const user = await User.create({ ...req.store.valideData, password: hash}).catch(error => { console.log(error); res.status(500).json({error : "Une erreur est survenue lors de la création de votre compte." })});
 
     const token = jwt.sign( { userId: user.id }, process.env.APP_KEY, { expiresIn: '24h' });

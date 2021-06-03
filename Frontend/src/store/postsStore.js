@@ -59,8 +59,9 @@ export default {
         DELETE_COMMENT(state, data) {
             state.posts.forEach(post => {
                 if(post.id === data.post_id) {
-                    post.Comments = post.Comments.filter( comment =>
-                        comment.id !== data.comment_id && comment.parentId !== data.comment_id
+                    post.Comments = post.Comments.filter( comment => {
+                            return comment.id !== data.comment_id && comment.ParentId !== data.comment_id;
+                        }
                     );
                 }
             });

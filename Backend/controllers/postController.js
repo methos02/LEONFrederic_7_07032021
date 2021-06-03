@@ -64,7 +64,7 @@ exports.update = (req, res) => {
  * Supprime un post en fonction de l'id présent dans la requête
  */
 exports.delete = (req, res) => {
-    if(req.store.Post.image !== null) { deleteImg(postPath + req.store.Post.image)}
+    if(req.store.Post.image !== null && req.store.Post.image !== 'post_3.webp') { deleteImg(postPath + req.store.Post.image)}
 
     Post.destroy({ where: { id: req.params.id } })
         .then(() => res.status(200).json({ message: 'Post supprimé !'}))

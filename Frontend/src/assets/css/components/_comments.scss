@@ -42,7 +42,15 @@
     @media (max-width: 599px) { margin-left: 0 !important; }
 
     .answer {
-      @media (max-width: 599px) { flex: 1; }
+      flex: 1;
+
+      @media (max-width: 599px) {
+        .btns-action button {
+          font-size: 0.7rem;
+          height: 30px;
+          padding: 12px;
+        }
+      }
     }
   }
 

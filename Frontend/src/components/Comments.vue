@@ -23,7 +23,7 @@
             </div>
             <div class="d-flex card-actions">
               <v-btn @click="editComment(comment.id, comment.content)" class="mr-1 green white--text btn-edit" fab small><v-icon> mdi-pencil </v-icon> </v-btn>
-              <v-btn @click="deleteComment(comment.id, post.id)" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
+              <v-btn @click="openConfirm({ post_id : post.id, comment_id : comment.id })" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
             </div>
           </div>
           <div class="px-3" v-if="isEdit.find(comment_id => comment_id === comment.id)">
@@ -63,13 +63,13 @@
             </div>
             <div class="d-flex card-actions align-content-center">
               <v-btn @click="editComment(answer.id, answer.content)" class="mr-1 green white--text btn-edit" fab small><v-icon> mdi-pencil </v-icon> </v-btn>
-              <v-btn @click="deleteComment(answer.id, post.id)" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
+              <v-btn @click="openConfirm({ post_id : post.id, comment_id : answer.id })" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
             </div>
           </div>
-          <div class="px-3" v-if="isEdit.find(comment_id =>comment_id === answer.id)">
+          <div class="px-3 pb-3" v-if="isEdit.find(comment_id =>comment_id === answer.id)">
             {{ errors.global }}
             <v-textarea v-model="commentsEdit[answer.id]" :error-messages="errors.content" rows="1" auto-grow hide-details></v-textarea>
-            <div class="d-flex justify-end mt-3">
+            <div class="d-flex justify-end mt-3 btns-action">
               <v-btn color="error" @click="cancelEditComment(answer.id)">Annuler</v-btn>
               <v-btn @click="updateComment(answer.id, post.id)">Mettre à jour</v-btn>
             </div>
@@ -78,18 +78,22 @@
         </v-card>
       </div>
     </div>
+    <confirm-action @confirm="deleteComment"> Êtes vous sûr de vouloir supprimer ce commentaire </confirm-action>
   </div>
 </template>
 <script>
 import {mapState} from "vuex";
 import Vue from "vue";
+import confirmAction from "@/components/confirmAction";
 
 export default {
   props: ['post', 'show'],
+  components: { confirmAction },
   data () {
     return {
       commentsTemp:"",
       isEdit: [],
+      dataDelete: {},
       commentsEdit: {},
       answersTemp: {},
       showAnswers: {},
@@ -118,6 +122,10 @@ export default {
     }
   },
   methods: {
+    openConfirm(data) {
+      this.$emit('openConfirm', true);
+      this.dataDelete = data;
+    },
     toggleAnswers(comment_id) {
       Vue.set(this.showAnswers, comment_id, !this.showAnswers[comment_id]);
     },
@@ -151,8 +159,8 @@ export default {
 
       if(res.status === 200) { this.cancelEditComment(comment_id); }
     },
-    deleteComment(comment_id, post_id) {
-     this.$store.dispatch('posts/deleteComment', { comment_id, post_id })
+    deleteComment() {
+     this.$store.dispatch('posts/deleteComment', this.dataDelete)
     },
     async addAnswer(post_id, comment_id) {
       const res = await this.$store.dispatch('posts/createComment', { UserId: this.current_user.id, PostId: post_id, ParentId: comment_id, content: this.answersTemp[comment_id] })
