@@ -23,7 +23,7 @@ export default {
       const res = await this.$store.dispatch('posts/createPost', formData);
 
       if (res.status === 400) { return this.errors = res.data;}
-      if( res.status === 200 ) {
+      if( res.status === 201 ) {
         await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre article a été posté' })
         await this.$router.push('/');
       }
