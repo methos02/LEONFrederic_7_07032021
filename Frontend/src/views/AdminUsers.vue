@@ -48,7 +48,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import { compareDate } from '../helpers/dateHelper';
 import paginate from '@/components/Paginate';
 import verifParam from "@/helpers/verifParamHelper";
 
@@ -93,9 +92,6 @@ export default {
       if(res.status === 200) {
         await this.$store.dispatch('snackbar/setSnackbar', { text: 'Utilisateur banni une semaine.' });
       }
-    },
-    compareDate(date_1) {
-      return compareDate(date_1);
     },
     async searchAdmin() {
       if( this.search === '') { return; }

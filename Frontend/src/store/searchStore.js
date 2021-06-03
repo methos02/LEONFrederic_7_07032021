@@ -14,6 +14,7 @@ export default {
             state.nav_search = [];
         },
         SET_ADMIN_SEARCH(state, users) {
+            console.log(users, 'test');
             state.admin_search = users;
         }
     },
@@ -24,6 +25,7 @@ export default {
 
                 if(res.status === 200) { commit('search/SET_NAV_SEARCH', res.data.users, { root: true }); }
                 if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
+                return;
             }
 
             commit('search/SET_NAV_SEARCH', [], { root: true });
@@ -34,6 +36,7 @@ export default {
 
                 if(res.status === 200) { commit('search/SET_ADMIN_SEARCH', res.data.users, { root: true }); }
                 if( [401, 500].indexOf(res.status) !== -1 ) { commit('snackbar/SET_SNACKBAR', { text: res.data.error, type: 'error', show : true }, { root: true });}
+                return;
             }
 
             commit('search/SET_ADMIN_SEARCH', [], { root: true });

@@ -5,20 +5,20 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server",
-    "test": "npm run reset && mocha --timeout 5000",
-    "migrate": "npx sequelize-cli db:create  && sequelize db:migrate:undo:all && sequelize db:migrate",
-    "seed": "npx sequelize-cli db:create  && sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
+    "test": "npm run seed && mocha --timeout 5000",
+    "migrate": "npx sequelize-cli db:create && sequelize db:migrate:undo:all && sequelize db:migrate",
+    "seed": "npx sequelize-cli db:create && sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/methos02/LEONFrederic_6_10022021.git"
+    "url": "https://github.com/methos02/LEONFrederic_7_07032021.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/methos02/LEONFrederic_6_10022021/issues"
+    "url": "https://github.com/methos02/LEONFrederic_7_07032021/issues"
   },
-  "homepage": "https://github.com/methos02/LEONFrederic_6_10022021#readme",
+  "homepage": "https://github.com/methos02/LEONFrederic_7_07032021#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",

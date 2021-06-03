@@ -35,7 +35,7 @@ exports.login = async (req, res) => {
     const dateBan = new Date(user.banUntil);
     const now = new Date();
     if(user.banUntil !== null && dateBan > now) {
-        return res.status(401).json({ error: `Votre a été banni jusqu'au ${ formatDateHour(dateBan)}.`, message:  user.messageBan });
+        return res.status(401).json({ error: `Votre compte a été banni jusqu'au ${ formatDateHour(dateBan)}.`, message:  user.messageBan });
     }
 
     if(user.banUntil !== null && dateBan <= now) {

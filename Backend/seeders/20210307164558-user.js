@@ -25,7 +25,7 @@ module.exports = {
                 const lastname = faker.name.lastName();
                 const firstname = faker.name.firstName().toUpperCase();
 
-                if(index === NB_USERS + 1) {
+                if(index === NB_USERS) {
                     return {
                         email: 'ban-user@groupomania.com',
                         firstname: firstname,
@@ -33,6 +33,7 @@ module.exports = {
                         slug: lastname.toLowerCase() + '-' + firstname.toLowerCase(),
                         password: hash,
                         banUntil: addWeek(new Date()),
+                        messageBan: "Comportement non approprié."
                     }
                 }
 

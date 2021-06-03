@@ -5,6 +5,8 @@ services:
       context: ./Backend
       dockerfile: Dockerfile
     env_file: ./.env
+    volumes:
+      - "./Backend/images/:/app/images"
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     environment:

@@ -10,17 +10,17 @@ let admin_token, admin, user_2_token, user_2, user_3_token, user_3;
 
 describe('USER test', () => {
     before((done) => {
-        chai.request(app).post("/api/auth/login").send({email: "leonfrederic@gmx.fr", password: "123123"}).end((err, res) => {
+        chai.request(app).post("/api/auth/login").send({email: "admin@groupomania.com", password: "123123"}).end((err, res) => {
             admin_token = res.body.user.token;
             admin = res.body.user;
         });
 
-        chai.request(app).post("/api/auth/login").send({email: "user2@gmx.fr", password: "123123"}).end((err, res) => {
+        chai.request(app).post("/api/auth/login").send({email: "user2@groupomania.com", password: "123123"}).end((err, res) => {
             user_2_token = res.body.user.token;
             user_2 = res.body.user;
         });
 
-        chai.request(app).post("/api/auth/login").send({email: "user3@gmx.fr", password: "123123"}).end((err, res) => {
+        chai.request(app).post("/api/auth/login").send({email: "user3@groupomania.com", password: "123123"}).end((err, res) => {
             user_3_token = res.body.user.token;
             user_3 = res.body.user;
             done();
@@ -33,7 +33,7 @@ describe('USER test', () => {
             const updated_profil = {
                 lastname: 'super',
                 firstname: 'admin',
-                email: 'leonfrederic@gmx.com'
+                email: 'admin@gmx.com'
             };
 
             chai.request(app).put("/api/profil")
@@ -56,7 +56,7 @@ describe('USER test', () => {
             const updated_profil = {
                 lastname: 'super',
                 firstname: 'admin',
-                email: 'leonfrederic@gmx.com'
+                email: 'admin@gmx.com'
             };
 
             chai.request(app).put("/api/profil")
@@ -108,7 +108,7 @@ describe('USER test', () => {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.message, 'Mot de passe modifié.');
 
-                chai.request(app).post("/api/auth/login").send({email: 'leonfrederic@gmx.com', password: "234567"}).end((err, res) => {
+                chai.request(app).post("/api/auth/login").send({email: 'admin@gmx.com', password: "234567"}).end((err, res) => {
                     assert.equal(res.status, 200);
                     done();
                 });

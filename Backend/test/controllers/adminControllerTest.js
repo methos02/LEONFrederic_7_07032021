@@ -11,13 +11,13 @@ let admin_token, doe_token;
 describe('ADMIN test', () => {
     before((done) => {
         chai.request(app).post("/api/auth/login")
-            .send({email: "leonfrederic@gmx.fr", password: "123123"})
+            .send({email: "admin@groupomania.com", password: "123123"})
             .end((err, res) => {
                 admin_token = res.body.user.token;
             });
 
         chai.request(app).post("/api/auth/login")
-            .send({email: "user2@gmx.fr", password: "123123"})
+            .send({email: "user2@groupomania.com", password: "123123"})
             .end((err, res) => {
                 doe_token = res.body.user.token;
                 done();

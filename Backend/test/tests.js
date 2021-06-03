@@ -15,7 +15,7 @@ describe('Tests', () => {
 })
 
 function resetDir(dir) {
-    const keepFiles = ['.gitignore', 'post_3.webp', 'default_avatar.jpg'];
+    const keepFiles = ['.gitignore', 'post_3.webp', 'default_avatar.png'];
 
     fs.readdir(dir, (err, files) => {
         if (err) throw err;

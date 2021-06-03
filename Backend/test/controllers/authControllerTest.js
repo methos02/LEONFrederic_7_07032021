@@ -10,7 +10,7 @@ describe('test auth controller', () => {
         const signup_data = {
             lastname: "Methos",
             firstname: "Sengien",
-            email: 'methos@gmx.fr',
+            email: 'methos@groupomania.com',
             password: "123123",
             confirm: "123123"
         }
@@ -25,7 +25,7 @@ describe('test auth controller', () => {
         const duplicate_user = {
             lastname:  "LEON",
             firstname: "Frédéric",
-            email: 'leonfrederic@gmx.fr',
+            email: 'admin@groupomania.com',
             password: "123123",
             confirm: "123123"
         }
@@ -39,7 +39,7 @@ describe('test auth controller', () => {
 
     it('login', (done) => {
         const login_data = {
-            email: 'leonfrederic@gmx.fr',
+            email: 'admin@groupomania.com',
             password: '123123'
         }
 

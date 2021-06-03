@@ -11,12 +11,12 @@ let commentTestId, admin, admin_token, user, user_token;
 
 describe('GET Comments', () => {
     before((done) => {
-        chai.request(app).post("/api/auth/login").send({email: "leonfrederic@gmx.fr", password: "123123"}).end((err, res) => {
+        chai.request(app).post("/api/auth/login").send({email: "admin@groupomania.com", password: "123123"}).end((err, res) => {
             admin = res.body.user;
             admin_token = res.body.user.token;
         });
 
-        chai.request(app).post("/api/auth/login").send({email: "user2@gmx.fr", password: "123123"}).end((err, res) => {
+        chai.request(app).post("/api/auth/login").send({email: "user2@groupomania.com", password: "123123"}).end((err, res) => {
             user = res.body.user;
             user_token = res.body.user.token;
             done();
