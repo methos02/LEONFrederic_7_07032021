@@ -63,9 +63,10 @@ export default {
       const res = await this.$store.dispatch('posts/updateImage', {id: this.post.id, content : this.datas.content });
 
       if (res.status === 400) { return this.errors = res.data;}
-
-      await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre entête a été modifié.' });
-      this.isEdit = false;
+      if ( res.status === 200) {
+        await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre entête a été modifié.' });
+        this.isEdit = false;
+      }
     }
   }
 }

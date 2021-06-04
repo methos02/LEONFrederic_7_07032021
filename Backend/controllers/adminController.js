@@ -23,6 +23,7 @@ exports.search = async (req, res) => {
         User.findAll({ where : { lastname: { [Op.like]: `${req.params.slug}%`}, banUntil : null, roles: null  }, limit: 5 }),
     ]).catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la recherche."}) });
 
+    if(users === undefined) { return ;}
     return res.status(200).json({ users : orderSearch(users) });
 }
 
@@ -31,16 +32,16 @@ exports.search = async (req, res) => {
  */
 exports.ban = async (req, res) => {
     const ban = await User.update({
-        banUntil: addWeek(new Date()),
-        nbBan: sequelize.literal('nbBan + 1'),
-        messageBan :  req.store.valideData.message
-    }, { where: { id: req.params.id } }
-    );
+            banUntil: addWeek(new Date()),
+            nbBan: sequelize.literal('nbBan + 1'),
+            messageBan :  req.store.valideData.message
+        }, { where: { id: req.params.id } }
+    ).catch(error => { console.log(error); res.status(500).json({error : "Une erreur est survenue lors du bannissement de l'utilisateur." })});
 
-    if ( ban ) {
-        const res_users = await loadUsers({});
-        return res.status( res_users.error === undefined ? 200 : 500 ).json(res_users);
-    }
+    if ( ban === undefined ) { return; }
+
+    const res_users = await loadUsers({});
+    return res.status( res_users.error === undefined ? 200 : 500 ).json(res_users);
 }
 
 /**
@@ -54,8 +55,9 @@ exports.comments = async (req, res) => {
         offset: constante.PAGINATE_LIMITE * page,
         include: [userJoin],
         order: [['id', 'DESC']]
-    }).catch(error => res.status(500).json({ error }));
+    }).catch(error => { console.log(error); res.status(500).json({error : "Une erreur est survenue lors de la récupération des commentaires." })});
 
+    if(comments === undefined) {return;}
     return res.status(200).json(formatResponse(comments, page));
 };
 
@@ -71,10 +73,8 @@ const loadUsers = async (query) => {
         offset: constante.PAGINATE_LIMITE * page,
         where: { banUntil : null, roles: null },
         order: [['id', 'DESC']]
-    }).catch(error => {
-        console.log(error);
-        return { error: 'Une erreur est survenue lors de la récupération des utilisateurs' }
-    });
+    }).catch(error => {  console.log(error); return { error: 'Une erreur est survenue lors de la récupération des utilisateurs' } });
 
+    if(users === undefined) {return }
     return formatResponse(users, page);
 }

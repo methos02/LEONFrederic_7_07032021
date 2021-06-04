@@ -58,9 +58,10 @@ export default {
       const res = await this.$store.dispatch('auth/updatePassword', this.password);
 
       if (res.status === 400) { return this.errors = res.data;}
-
-      this.password = { old: '', password: '', confirm: ''};
-      await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre mot de passe a été modifié' })
+      if (res.status === 200) {
+        this.password = { old: '', password: '', confirm: ''};
+        await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre mot de passe a été modifié' });
+      }
     }
   }
 }

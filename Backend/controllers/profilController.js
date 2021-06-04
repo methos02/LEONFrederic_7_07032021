@@ -25,6 +25,7 @@ exports.show = async (req, res) => {
         order: [['id', 'DESC']]
     }).catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la recherche.'}) });
 
+    if(posts === undefined) {return;}
     return res.status(200).json({...formatResponse(posts, page), user});
 }
 
@@ -37,6 +38,7 @@ exports.search = async (req, res) => {
         User.findAll({ attributes : defineUserFields(),  where : { lastname: { [Op.like]: `${req.params.slug}%`} }, limit: 5 }),
     ]).catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la recherche.'}) });
 
+    if(users === undefined) {return;}
     return res.status(200).json({ users : orderSearch(users) });
 }
 
@@ -44,7 +46,9 @@ exports.search = async (req, res) => {
  * Met à jour le profile d'utilisateur action reservé à l'utilisateur
  */
 exports.update = async (req, res) => {
-    const user = await User.findOne({where: {email: req.store.valideData.email}}).catch(error => res.status(500).json({ error }));
+    const user = await User.findOne({where: {email: req.store.valideData.email}}).catch(error => { console.log(error); return res.status(500).json({error : 'Une erreur est survenue lors de la vérification de votre email.'});});
+
+    if(user === undefined) {return;}
     if(user !== null && user.id !== req.store.userLog.id) {
         return res.status(422).json({error: 'Adresse email déjà utilisée.'});
     }
@@ -75,7 +79,7 @@ exports.password = async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10).catch(error => res.status(500).json({ error }));
     User.update({ password: hash }, { where: { id: req.store.userLog.id }})
         .then(() => res.status(200).json({ message: 'Mot de passe modifié.'}))
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => { console.log(error); return res.status(500).json({error: 'Une erreur est survenue lors de la mise à jour de votre mot de passe.'}) });
 }
 
 /**
@@ -83,7 +87,10 @@ exports.password = async (req, res) => {
  */
 exports.delete = async (req, res) => {
     if(req.store.userLog.avatar !== defaultAvatar) { deleteImg(req.store.userLog.avatar)}
-    const likes = await Like.findAll({where: {UserId : req.store.userLog.id }}).catch(error => res.status(400).json({ error }));
+
+    const likes = await Like.findAll({where: {UserId : req.store.userLog.id }}).catch(error => { console.log(error); return res.status(500).json({error: 'Une erreur est survenue lors de la récupération des données du post.'}) });
+    if(likes === undefined) { return; }
+
     const postToUpdate = {like : [], dislike : []};
 
     likes.map(( like) => { return like.like === 1 ? postToUpdate.like.push(like.PostId) : postToUpdate.dislike.push(like.PostId); });
@@ -96,6 +103,8 @@ exports.delete = async (req, res) => {
         await t.commit().then(() => res.status(200).json({ message: 'Votre profil a été supprimé.'}));
     } catch (error) {
         await t.rollback();
+        console.log(error)
+        return res.status(500).json({error: 'Une erreur est survenue lors de la suppression de votre compte.'})
     }
 }
 

@@ -21,8 +21,9 @@ exports.index = async (req, res) => {
         include: [userJoin, commentJoin],
         distinct: true,
         order: [['id', 'DESC']]
-    }).catch(error => { return res.status(500).json({error}) });
+    }).catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la récupération des posts."}) });
 
+    if(posts === undefined) { return;}
     return res.status(200).json(formatResponse(posts, page));
 };
 
@@ -43,7 +44,7 @@ exports.show = (req, res) => {
  */
 exports.store = async (req, res) => {
     Post.create( {...req.store.valideData, UserId: req.store.userLog.id }, { fields : defineCreateFields(req.store.valideData.type)} )
-        .then((post) => res.status(201).json({ message: 'Post enregistré !'}))
+        .then( res.status(201).json({ message: 'Post enregistré !'}))
         .catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la crétion du post."}) });
 };
 
@@ -75,10 +76,13 @@ exports.delete = (req, res) => {
  * Like ou Dislike un post en fonction de l'id dans la requête
  */
 exports.like = async (req, res) => {
-    const post = await Post.findByPk(req.params.id).catch(error => res.status(500).json({ error }));
+    const post = await Post.findByPk(req.params.id).catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la récupération du post."}) });
+    if(post === undefined) { return;}
     if(post === null) { return res.status(404).json({ error: 'Post introuvable' }); }
 
-    const like = await Like.findOne({ where: { UserId : req.store.userLog.id, PostId: req.params.id}}).catch(error => res.status(500).json({ error }));
+    const like = await Like.findOne({ where: { UserId : req.store.userLog.id, PostId: req.params.id}}).catch(error => { console.log(error); return res.status(500).json({error : "Une erreur est survenue lors de la vérification de votre appréciation."}) });
+    if(like === undefined) { return;}
+
     const likes = calculLikeDislike(post, like, req.store.valideData.like);
 
     if(like === null) {

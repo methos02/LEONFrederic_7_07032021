@@ -17,7 +17,8 @@ module.exports = async (req, res, next) => {
         return res.status(401).send({ error: 'Token invalide.' });
     }
 
-    const user = await User.findByPk(decodedToken.userId).catch(error => { console.log(error); res.status(500).json({error : error}) });
+    const user = await User.findByPk(decodedToken.userId).catch(error => { console.log(error); res.status(500).json({error : "Une erreur est survenue lors de la récupération de vos données." })});
+    if(user === undefined) {return;}
     if(user === null) {
         if(req.file) { deleteImg(req.file.path)}
         return res.status(404).json({ error: 'Utilisateur introuvable.' });
