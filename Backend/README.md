@@ -49,7 +49,7 @@ Field | Type |
 | password | String | 
 | confirm | String | 
 
-####Réponse
+####Reponse
 
 Status: 201
 
@@ -91,7 +91,7 @@ Field | Type |
 | email | String | 
 | password | String |
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -121,7 +121,7 @@ Permet de récupérer l'utilisateur connecté correspondant au token présent da
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -154,7 +154,7 @@ Paramètre: slug - string
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -214,7 +214,7 @@ Paramètre: slug - string
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -254,7 +254,7 @@ Field | Type |
 | user[email] | String |
 | avatar | binary |
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -290,7 +290,7 @@ Field | Type |
 | password | String |
 | confirm | String |
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -318,7 +318,7 @@ Field | Type |
 |---|---|
 | roles | Array |
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -338,7 +338,7 @@ Permet de supprimer le compte de l'utilisateur connecté
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -359,7 +359,7 @@ Permet de récupérer les derniers posts postés sur le site avec la possibilit�
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -434,7 +434,7 @@ Paramètre: slug - string
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -507,7 +507,7 @@ Field | Type |
 | post[type] | Numb |
 | image | binary |
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -538,7 +538,7 @@ Field | Type |
 | post[type] | Numb |
 | image | binary |
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -561,7 +561,7 @@ Paramètre: id - numb
 Authentification nécessaire: OUI
 
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -583,7 +583,7 @@ Paramètre: id - numb
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Retourne le nombre de likes/dislikes du post
 
@@ -619,7 +619,7 @@ Field | Type |
 | UserId | Numb |
 | content | String |
 
-####Réponse
+####Reponse
 
 Status: 201
 
@@ -665,7 +665,7 @@ Field | Type |
 |---|---|
 | content | String |
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -686,7 +686,7 @@ Paramètre: id - numb
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -707,7 +707,7 @@ Permet de récupérer une partie des utilisateurs.
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -744,7 +744,7 @@ Permet de récupérer une partie des commentaires.
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -791,7 +791,7 @@ Paramètre: slug - string
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Status: 200
 
@@ -832,7 +832,7 @@ Paramètre: id - numb
 
 Authentification nécessaire: OUI
 
-####Réponse
+####Reponse
 
 Status: 200
 
