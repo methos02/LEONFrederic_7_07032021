@@ -131,7 +131,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title || 'Your Website';
+  document.title = to.meta.title || 'Groupomania';
   if(["Auth"].indexOf(to.name) !== -1 && localStorage.getItem('token') !== null) { return next('/');}
   if(["Auth"].indexOf(to.name) !== -1 || localStorage.getItem('token') !== null) { return next(); }
 

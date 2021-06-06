@@ -57,6 +57,7 @@ export default {
 
             if (res.status === 200) {
                 commit('SET_USERS', res.data.rows);
+                commit('search/REMOVE_FROM_ADMIN_SEARCH', data.user_id,  {root : true});
                 commit('paginate/SET_PAGINATE', {model: 'users', params: res.data.paginate}, {root : true});
             }
 

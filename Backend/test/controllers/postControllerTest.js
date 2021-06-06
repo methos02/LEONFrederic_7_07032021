@@ -71,13 +71,7 @@ describe('GET posts', () => {
                 .end((err, res) => {
                     assert.equal(res.status, 201);
                     assert.equal(res.body.message, 'Post enregistré !');
-
-                    Post.findByPk(res.body.post.id).then(article => {
-                        articleTest = article;
-                        assert.equal(create_post.content, article.content);
-                        assert.equal(create_post.title, article.title);
-                        done();
-                    }).catch(err => { console.log(err); done() });
+                    done();
                 })
             ;
         });
@@ -91,36 +85,35 @@ describe('GET posts', () => {
                 .end((err, res) => {
                     assert.equal(res.status, 201);
                     assert.equal(res.body.message, 'Post enregistré !');
-
-                    Post.findByPk(res.body.post.id).then(post => {
-                        assert.equal(null, post.title);
-                        assert.equal(null, post.content);
-                        done();
-                    }).catch(err => { console.log(err); done() });
+                    done();
                 })
             ;
         });
 
         it('update specific post', (done) => {
-            const updated_post = {
-                title : 'Premier post modifié',
-                content: 'Contenu modifié!',
-                type: articleTest.type.toString()
-            };
+            Post.findAll({ order: [['id', 'DESC']],  limit: 1}).then(article => {
+                articleTest = article[0].dataValues;
 
-            chai.request(app).put("/api/posts/" + articleTest.id)
-                .set('Authorization', 'Bearer ' + admin_token)
-                .send(updated_post)
-                .end((err, res) => {
-                    assert.equal(res.status, 200);
-                    assert.equal(res.body.message, 'Post modifié !');
+                const updated_post = {
+                    title : 'Premier post modifié',
+                    content: 'Contenu modifié!',
+                    type: articleTest.type.toString()
+                };
 
-                    Post.findByPk(articleTest.id).then(post => {
-                        assert.equal(post.content, updated_post.content);
-                        assert.equal(post.title, updated_post.title);
-                        done();
-                    }).catch(err => { console.log(err); done() });
-                });
+                chai.request(app).put("/api/posts/" + articleTest.id)
+                    .set('Authorization', 'Bearer ' + admin_token)
+                    .send(updated_post)
+                    .end((err, res) => {
+                        assert.equal(res.status, 200);
+                        assert.equal(res.body.message, 'Post modifié !');
+
+                        Post.findByPk(articleTest.id).then(post => {
+                            assert.equal(post.content, updated_post.content);
+                            assert.equal(post.title, updated_post.title);
+                            done();
+                        }).catch(err => { console.log(err); done() });
+                    });
+            }).catch(err => { console.log(err); done() });
         });
 
         it('update specific post has admin', (done) => {

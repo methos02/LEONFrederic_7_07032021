@@ -14,8 +14,10 @@ export default {
             state.nav_search = [];
         },
         SET_ADMIN_SEARCH(state, users) {
-            console.log(users, 'test');
             state.admin_search = users;
+        },
+        REMOVE_FROM_ADMIN_SEARCH(state, user_id) {
+            state.admin_search = state.admin_search.filter( user => user.id !== user_id);
         }
     },
     actions: {

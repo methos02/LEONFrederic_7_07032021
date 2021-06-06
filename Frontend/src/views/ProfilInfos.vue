@@ -1,7 +1,7 @@
 <template>
   <div class="container-profil">
     <form class="my-3">
-      <h1 class="my-3 text-center"> Modification du profile </h1>
+      <h1 class="my-3 text-center infos-title"> Modification du profile </h1>
       <div class="row px-3">
         <div class="col-12 col-sm-5 col-md-4">
           <div class="text-center">

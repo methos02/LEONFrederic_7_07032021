@@ -3,8 +3,8 @@
     <v-app-bar app class="navbar">
       <div class="d-flex align-center">
         <router-link :to="{name: 'Home'}">
-          <v-img alt="logo groupomania" class="shrink mr-2 hidden-xs-only" contain src="asset/images/groupomania-logo.png" transition="scale-transition" width="220"/>
-          <v-img alt="logo groupomania" class="shrink mr-2 d-sm-none" contain src="asset/images/groupomania-logo-icon.png" transition="scale-transition" width="30"/>
+          <v-img alt="logo groupomania" class="shrink mr-2 hidden-xs-only" contain src="/asset/images/groupomania-logo.png" transition="scale-transition" width="220"/>
+          <v-img alt="logo groupomania" class="shrink mr-2 d-sm-none" contain src="/asset/images/groupomania-logo-icon.png" transition="scale-transition" width="30"/>
         </router-link>
       </div>
       <v-spacer></v-spacer>

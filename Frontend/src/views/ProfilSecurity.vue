@@ -1,7 +1,7 @@
 <template>
   <div class="container-profil">
     <form class="my-3" @keyup.enter="updatePassword">
-      <h1 class="my-3 text-center"> Modification du mot de passe </h1>
+      <h1 class="my-3 text-center security-title"> Modification du mot de passe </h1>
       <div class="row col-12 col-sm-9 mx-auto align-center justify-center">
           <v-text-field
               v-model="password.old"

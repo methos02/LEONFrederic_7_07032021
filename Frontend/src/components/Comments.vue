@@ -21,7 +21,7 @@
               <span class="font-weight-bold text-body-1 comment-meta-name">{{ comment.User.name }}</span>
               <span class="font-weight-light text-body-2">Posté le {{ comment.formatCreatedAt }}</span>
             </div>
-            <div class="d-flex card-actions">
+            <div class="d-flex card-actions" v-if="isAllowed(current_user, comment)">
               <v-btn @click="editComment(comment.id, comment.content)" class="mr-1 green white--text btn-edit" fab small><v-icon> mdi-pencil </v-icon> </v-btn>
               <v-btn @click="openConfirm({ post_id : post.id, comment_id : comment.id })" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
             </div>
@@ -61,7 +61,7 @@
               <span class="font-weight-bold text-body-1 comment-meta-name">{{ answer.User.name }}</span>
               <span class="font-weight-light text-body-2">Posté le {{ answer.formatCreatedAt }}</span>
             </div>
-            <div class="d-flex card-actions align-content-center">
+            <div class="d-flex card-actions align-content-center" v-if="isAllowed(current_user, answer)">
               <v-btn @click="editComment(answer.id, answer.content)" class="mr-1 green white--text btn-edit" fab small><v-icon> mdi-pencil </v-icon> </v-btn>
               <v-btn @click="openConfirm({ post_id : post.id, comment_id : answer.id })" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
             </div>
@@ -85,6 +85,7 @@
 import {mapState} from "vuex";
 import Vue from "vue";
 import confirmAction from "@/components/confirmAction";
+const {isAllowed} = require('../helpers/authHelper');
 
 export default {
   props: ['post', 'show'],
@@ -122,6 +123,7 @@ export default {
     }
   },
   methods: {
+    isAllowed,
     openConfirm(data) {
       this.$emit('openConfirm', true);
       this.dataDelete = data;

@@ -17,7 +17,7 @@
         </div>
         <div class="d-flex card-actions" v-if="current_user.id === post.UserId || current_user.roles.find( role => role === 'modo')">
           <v-btn :to="{ name: 'UpdateArticle', params: { id : post.id } }" class="mr-1 green white--text btn-edit" fab small><v-icon> mdi-pencil </v-icon> </v-btn>
-          <v-btn @click="$emit('delete', { post_id : post.id, type : 'article' })" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
+          <v-btn @click="openConfirm" class="red white--text" fab small><v-icon> mdi-delete </v-icon> </v-btn>
         </div>
       </div>
       <div class="text-center">
@@ -37,6 +37,7 @@
     </div>
     </v-card>
     <comments class="mt-3" :post="post" :show.sync="show"/>
+    <confirm-action @confirm="deletePost"> Êtes vous sûr de vouloir supprimer votre Article </confirm-action>
   </v-container>
 </template>
 
@@ -45,10 +46,11 @@ import { mapState } from "vuex";
 import comments from "@/components/Comments";
 import likes from "@/components/Likes";
 import verifParam from "@/helpers/verifParamHelper";
+import confirmAction from "@/components/confirmAction";
 
 export default {
   name: 'Post',
-  components: { comments, likes },
+  components: { comments, likes, confirmAction },
   async mounted() {
     if( !verifParam('slug', this.$route.params.slug) ) {
       await this.$store.dispatch('snackbar/setSnackbar', { text: 'Le paramètre est invalide.', type: 'error' });
@@ -80,11 +82,22 @@ export default {
     },
   },
   methods: {
+    openConfirm() {
+      this.$emit('openConfirm', true);
+    },
     toggleComments() {
       this.show.comments = !this.show.comments;
     },
     showTextarea() {
       this.show.textarea = true;
+    },
+    async deletePost() {
+      const res = await this.$store.dispatch('posts/deletePost', this.post.id);
+
+      if (res.status === 200) {
+        await this.$store.dispatch('snackbar/setSnackbar', { text: 'Votre article a été supprimée.' });
+        await this.$router.push('/');
+      }
     },
   }
 }

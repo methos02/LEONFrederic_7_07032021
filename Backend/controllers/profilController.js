@@ -50,7 +50,7 @@ exports.update = async (req, res) => {
 
     if(user === undefined) {return;}
     if(user !== null && user.id !== req.store.userLog.id) {
-        return res.status(422).json({error: 'Adresse email déjà utilisée.'});
+        return res.status(400).json({email: 'Adresse email déjà utilisée.'});
     }
 
     if (req.file) {
